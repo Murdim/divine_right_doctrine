@@ -1,0 +1,93 @@
+#DRD-FILE
+
+drd_religion_allows_coronation = {
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_coronation
+				value = both
+			}
+		}
+		OR = {
+			religion_group = christian
+			has_religion_feature = religion_divine_right
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_coronation
+				value = doctrine
+			}
+		}
+		OR = {
+			religion = catholic
+			religion = fraticelli
+			has_religion_feature = religion_divine_right
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_coronation
+				value = christian
+			}
+		}
+		religion_group = christian
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_coronation
+				value = off
+			}
+		}
+		OR = {
+			religion = catholic
+			religion = fraticelli
+		}
+	}
+}
+
+drd_ruler_is_uncrowned = {  # True if a ruler of the appropriate religion, rank and government lacks a crowned trait. False if crowned or inapplicable. Does not check age, DLC or ongoing coronations.
+	higher_real_tier_than = DUKE
+	is_feudal = yes
+	is_vice_royalty = no
+	NOT = { government = order_government }
+	drd_religion_allows_coronation = yes
+	NOR = {
+		trait = crowned_by_priest
+		trait = crowned_by_bishop
+		trait = crowned_by_pope
+		trait = crowned_by_myself
+	}
+}
+
+drd_ruler_is_a_crowned_king = {  # True for rulers with the appropriate rank and government to be crowned. If (and only if) their religion DOES allow coronations, they must also have an actual crowned trait.
+	higher_real_tier_than = DUKE
+	is_feudal = yes
+	is_vice_royalty = no
+	NOT = { government = order_government }
+	OR = {
+		drd_religion_allows_coronation = no
+		trait = crowned_by_priest
+		trait = crowned_by_bishop
+		trait = crowned_by_pope
+		trait = crowned_by_myself
+	}
+}
+
+drd_character_is_powerful_priest = {
+	is_priest = yes
+	controls_religion = no  # Not the "true" religious head.
+	OR = {
+		AND = {  # Autocephalous patriarch, often but not necessarily (e.g pentarchy) ROOT's religious head.
+			has_autocephaly = yes
+			rightful_religious_head_scope = { character = PREV }
+		}
+		AND = {  # Temporal power.
+			is_theocracy = yes 
+			higher_tier_than = BARON  
+		}
+	}
+}

@@ -1,0 +1,21 @@
+#DRD-FILE
+
+drd_opinion_sponsoring_nomination = {
+        opinion = 0
+	years = 1000
+}
+
+drd_opinion_nominated = {
+        opinion = 5
+	years = 1000
+}
+
+drd_opinion_sponsored_nomination = {
+	opinion = 10
+	years = 20
+}
+
+drd_opinion_sponsored_nomination_patriarch = {
+	opinion = 10
+	years = 20
+}

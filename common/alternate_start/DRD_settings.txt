@@ -1,0 +1,13 @@
+#DRD-FILE
+
+divine_right_doctrine_random = {
+	type = selection
+	trigger = {
+		has_alternate_start_parameter = { key = religion_features value = random }
+	}
+	random_default = included
+
+	included = { divine_right_doctrine_random = included }
+	exclude_christians = { divine_right_doctrine_random = exclude_christians }
+	excluded = { divine_right_doctrine_random = excluded }
+}

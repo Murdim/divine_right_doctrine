@@ -1,0 +1,89 @@
+#DRD-FILE
+# Traits
+
+drd_religion_values_celibate = {
+	OR = {
+		religion_group = christian
+		religion = hindu
+		religion = buddhist
+		religion = jain
+		religion = bon
+		has_religion_feature = religion_monastic
+		has_religion_feature = religion_feature_west_african
+		has_religion_feature = religion_feature_bon
+	}
+}
+
+drd_religion_values_temperate = {  # Hellenes should get their orgies, even though it would make sense for them to be here as well.
+	OR = {
+		NOT = { religion_group = pagan }
+		religion = bon
+		has_religion_feature = religion_monastic
+		has_religion_feature = religion_feature_west_african
+		has_religion_feature = religion_feature_bon
+	}
+}
+
+drd_religion_values_cruel = {
+	OR = {
+		religion = aztec
+		has_religion_feature = religion_ritual_sacrifice
+		has_religion_feature = religion_feature_aztec
+	}
+}
+
+drd_religion_values_kind = {
+	drd_religion_values_cruel = no
+	OR = {
+		NOT = { religion_group = pagan }
+		has_religion_feature = religion_peaceful
+		has_religion_feature = religion_cosmopolitan
+	}
+}
+
+drd_religion_values_humble = {
+	OR = {
+		NOT = { religion_group = pagan }
+		religion = bon
+		religion = hellenic_pagan
+		has_religion_feature = religion_feature_bon
+		has_religion_feature = religion_feature_hellenic
+	}
+}
+
+drd_religion_values_proud = {
+	religion_group = pagan
+	NOR = {
+		religion = bon
+		has_religion_feature = religion_feature_bon
+	}
+}
+
+
+# Other
+
+drd_religion_values_female_soldiers = {
+	OR = {
+		has_religion_feature = religion_equal
+		has_religion_feature = religion_matriarchal
+		has_religion_feature = religion_feature_bon
+		has_game_rule = {
+			name = gender
+			value = all
+		}
+	}
+}
+
+drd_religion_rejects_female_soldiers = {
+	OR = {
+		has_religion_feature = religion_patriarchal
+		NOR = {
+			drd_religion_values_female_soldiers = yes
+			religion_group = pagan_group
+			religion = cathar
+			religion = messalian
+			religion = bogomilist
+			religion = mazdaki
+		}
+	}
+}

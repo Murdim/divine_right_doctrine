@@ -1,0 +1,56 @@
+#DRD-FILE
+
+drd_religion_allows_priest_nomination = {
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_priest_nomination
+				value = both
+			}
+		}
+		OR = {
+			religion_group = christian
+			has_religion_feature = religion_divine_right
+		}
+		NOR = {
+			religion = catholic
+			religion = fraticelli
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_priest_nomination
+				value = doctrine
+			}
+		}
+		has_religion_feature = religion_divine_right
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_priest_nomination
+				value = christian
+			}
+		}
+		religion_group = christian
+		NOR = {
+			religion = catholic
+			religion = fraticelli
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_priest_nomination
+				value = off
+			}
+		}
+		NOT = {
+			has_game_rule = {
+				name = drd_priest_nomination
+				value = off
+			}
+		}
+	}
+}

@@ -1,0 +1,8 @@
+#DRD-FILE
+
+spriteTypes = {
+        spriteType = {
+                name = "GFX_religion_feature_divine_right"
+                texturefile = "gfx\\interface\\reformation\\religion_feature_divine_right.dds"  # based on vanilla gfx event_pictures/a_crowning_ceremony.dds
+        }
+}

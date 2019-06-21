@@ -1,0 +1,69 @@
+#DRD-FILE
+
+drd_religion_ghw_unlocked = {  # True if GHWs have ever been available to the religion, regardless of the head's current status
+
+	NOR = {
+		has_religion_feature = religion_peaceful
+		has_religion_feature = religion_no_leader
+	}
+
+	conditional_tooltip = {
+		trigger = {
+			has_alternate_start_parameter = {
+				key = religion_names
+				value = random
+			}
+		}
+		custom_tooltip = {
+			text = ALT_GHW_STARTED
+			has_global_flag = muslim_jihads_unlocked
+			has_global_flag = pagan_ghws_unlocked
+			has_global_flag = christian_crusades_unlocked
+		}
+	}
+
+	conditional_tooltip = {
+		trigger = {
+			NOT = { 
+				has_alternate_start_parameter = {
+					key = religion_names
+					value = random
+				}
+			}
+		}
+		OR = {
+			AND = {
+				religion = zoroastrian
+				has_global_flag = zoroastrian_priesthood_founded
+			}
+			AND = {
+				religion = jewish
+				has_global_flag = third_temple_built
+			}
+			AND = {
+				religion_group = pagan_group
+				custom_tooltip = {
+					text = CTT_PAGAN_GHWS_UNLOCKED
+					has_global_flag = pagan_ghws_unlocked
+				}
+			}
+			AND = {
+				OR = {
+					religion = catholic
+					religion = fraticelli
+				}
+				custom_tooltip = {
+					text = CTT_CHRISTIAN_CRUSADES_UNLOCKED
+					has_global_flag = christian_crusades_unlocked
+				}
+			}
+			AND = {
+				religion_group = muslim
+				custom_tooltip = {
+					text = CTT_MUSLIM_JIHADS_UNLOCKED
+					has_global_flag = muslim_jihads_unlocked
+				}
+			}
+		}
+	}
+}

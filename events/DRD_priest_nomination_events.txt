@@ -1,0 +1,547 @@
+#DRD-FILE
+
+namespace=DRD
+
+# When re-evaluating the priest nomination score for the local clergy, only the candidate's attributes and the ruler's cooldown variables are taken into account.
+# This calculation will only happen if the initial score was 200 or less ("Maybe") and the religious head is either absent, wicked, the sponsor's vassal, or heavily biased towards the candidate and/or sponsor.
+# This means that no matter how impious a ruler is, as long as they do not abuse their power, the lower church will not object to good candidates.
+# On the other hand, a ruler's personal attributes (and relationship with the religious head, if relevant) may allow them to slip poor candidates past everyone else's better judgment.
+
+character_event = {
+	id = DRD.1  # ROOT = candidate, FROM = sponsor
+	hide_window = yes
+	is_triggered_only = yes
+
+	immediate = {  # Check if we need to evaluate the church reaction.
+		if = {  # If the acceptance score is high enough, confirm the nomination.
+			limit = {
+				check_variable = { which = local_ai_acceptance_score value = 201 }  # Yes always means yes.
+			}
+			opinion = { who = FROM modifier = drd_opinion_nominated }
+		}
+		else_if = {  # If there is a religious head AND it is neither wicked, nor a vassal of sponsor, nor the candidate, check its bias.
+			limit = {
+				rightful_religious_head_scope = {
+					NOR = {
+						has_bad_priest_trait_trigger = yes
+						vassal_of = FROM
+						character = ROOT
+					}
+				}
+			}
+			random_list = {
+				5 = {  # The nomination CAN be confirmed right away, but this becomes less likely if there are strong suspicions of bias.
+					opinion = { who = FROM modifier = drd_opinion_nominated }
+				}
+				1 = {
+					additive_modifier = {  # Give the religious head some leeway unless there is an obvious conflict of interest
+						value = -30
+						rightful_religious_head_scope = {
+							NOR = {
+								is_close_relative = ROOT
+								is_close_relative = FROM
+								is_lover = ROOT
+								is_lover = FROM
+								AND = {
+									dynasty = ROOT
+									dynasty = FROM
+								}
+							}
+						}
+					}
+					drd_religious_head_bias_nomination_score = yes  #SEE DRD_priest_nomination_score_values.txt
+					repeat_event = { id = DRD.2 }  # Re-evaluate the candidate, independently from their political connections.
+				}
+			}
+		}
+		else = {  # Otherwise, always evaluate the church reaction to the candidate.
+			repeat_event = { id = DRD.2 }
+		}
+	}
+}
+
+character_event = {
+	id = DRD.2  # ROOT = candidate, FROM = sponsor
+	hide_window = yes
+	is_triggered_only = yes
+
+	option = {
+		text = TEST
+		random_list = {
+			1 = {  # The candidate is confirmed if their personal score, minus the sponsor's cooldown penalties, is at least 20.
+				additive_modifier = {
+					value = -20
+					always = yes
+				}
+				drd_candidate_nomination_score = yes   #SEE DRD_priest_nomination_score_values.txt
+				drd_cooldown_nomination_score = yes
+				opinion = { who = FROM modifier = drd_opinion_nominated }
+			}
+			fallback = {  # Otherwise, the candidate is rejected by the church and the sponsor is given the option to retract.
+				FROM = { character_event = { id = DRD.3 } }
+			}
+		}
+	}
+}
+
+character_event = {
+	id = DRD.3  # ROOT = sponsor, FROM = candidate
+	desc = {
+		text = EVTDESCDRDA3
+		trigger = {
+			NOT = { check_variable = { which = drd_nomination_cooldown value = 1 } }
+		}
+	}
+	desc = {
+		text = EVTDESCDRDB3
+		trigger = {
+			check_variable = { which = drd_nomination_cooldown value = 1 }
+		}
+	}
+
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD3
+		custom_tooltip = {
+			text = drd_retract_nomination
+			hidden_tooltip = {
+				remove_opinion = { who = FROM modifier = drd_opinion_sponsoring_nomination }
+			}
+		}
+		custom_tooltip = {
+			text = drd_nomination_cooldown_increase_1
+			hidden_tooltip = {
+				change_variable = { which = drd_nomination_cooldown value = 1 } 
+			}
+		}
+	}
+	option = {
+		name = EVTOPTBDRD3
+		custom_tooltip = {
+			text = drd_force_nomination
+			hidden_tooltip = {
+				if = {  # Sanity check, do not confirm a nomination that was already invalidated.
+					limit = {
+						has_opinion_modifier = {
+							who = FROM
+							modifier = drd_opinion_sponsoring_nomination
+						}
+					}
+					reverse_opinion = { who = FROM modifier = drd_opinion_nominated }
+				}
+			}
+		}
+		add_character_modifier = {
+			name = drd_angered_church
+			duration = 7300
+			stacking = yes
+		}
+	}
+}
+
+character_event = {
+	id = DRD.4  # on death trigger, if ROOT was a standard theocrat whose liege is of the same religion AND has nominated a potential successor, warn the liege.
+	hide_window = yes
+	is_triggered_only = yes
+	only_rulers = yes
+
+	trigger = {
+		has_dlc = "Holy Fury"
+		government = theocracy_government
+		has_law = succ_open_elective
+		controls_religion = no
+		lower_tier_than = KING
+		liege = {
+			religion = ROOT
+			has_any_opinion_modifier = drd_opinion_sponsoring_nomination
+		}
+	}
+
+	immediate = {
+		liege = {
+			random_opinion_modifier_target = {
+				limit = {
+					has_opinion_modifier = {
+						who = PREV
+						modifier = drd_opinion_nominated
+					}
+				}
+				save_event_target_as = nominee
+				if = {  # Nominee is invalid, usually because they became primary heir; otherwise, it should have been cleaned up by an on_action already.
+					limit = {
+						NAND = {
+							is_alive = yes
+							is_ruler = no
+							religion = PREV
+							vassal_of = PREV
+							NOT = { trait = excommunicated }
+							NOT = { is_primary_heir = PREV }
+							OR = {
+								is_married = no
+								drd_religion_values_celibate = no
+							}
+						}
+					}
+					PREV = { character_event = { id = DRD.9 } }
+				}
+				else_if = {  # Nominee is valid but unavailable.
+					limit = {
+						NAND = {
+							prisoner = no
+							is_incapable = no
+						}
+					}
+					PREV = { character_event = { id = DRD.5 } }
+				}
+				else = {  # Nominee is available.
+					PREV = { letter_event = { id = DRD.6 } }
+				}
+			}
+		}
+	}
+}
+
+character_event = {
+	id = DRD.5  # ROOT = sponsor
+	desc = {
+		text = EVTDESCDRDA5
+		trigger = {
+			event_target:nominee = {
+				prisoner = yes
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRDB5
+		trigger = {
+			event_target:nominee = {
+				prisoner = no
+			}
+		}
+	}
+
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	notification = yes
+
+	trigger = {
+		ai = no
+	}
+
+	option = {
+		name = EVTOPTADRD5
+	}
+}
+
+letter_event = {
+	id = DRD.6  # ROOT = sponsor, FROM = dead priest
+	desc = EVTDESCDRD6
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD6
+		event_target:nominee = {
+			custom_tooltip = {
+				text = drd_nominee_inherits_from_titles
+				hidden_tooltip = {
+					remove_opinion = { who = ROOT modifier = drd_opinion_nominated }
+					reverse_remove_opinion = { who = ROOT modifier = drd_opinion_sponsoring_nomination }
+					if = {  # Last second sanity check, should prevent multiple inheritances among other things.
+						limit = {
+							is_alive = yes
+							is_ruler = no
+							religion = PREV
+							vassal_of = PREV
+							NOT = { trait = excommunicated }
+							NOT = { is_primary_heir = PREV }
+							OR = {
+								is_married = no
+								drd_religion_values_celibate = no
+							}
+						}
+						if = {
+							limit = { 
+								rightful_religious_head_scope = { character = PREV }
+							}
+							opinion = { who = ROOT modifier = drd_opinion_sponsored_nomination_patriarch }
+						}
+						else = {
+							opinion = { who = ROOT modifier = drd_opinion_sponsored_nomination }
+						}
+						FROM = { primary_title = { holder_scope = { abdicate_to = event_target:nominee } } }
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				FROM = { primary_title = { lower_tier_than = COUNT } }
+			}
+			custom_tooltip = {
+				text = drd_nomination_cooldown_increase_5
+				hidden_tooltip = {
+					change_variable = { which = drd_nomination_cooldown value = 5 }
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				FROM = { primary_title = { tier = COUNT } }
+			}
+			custom_tooltip = {
+				text = drd_nomination_cooldown_increase_8
+				hidden_tooltip = {
+					change_variable = { which = drd_nomination_cooldown value = 8 }
+				}
+			}
+		}
+		else = {
+			custom_tooltip = {
+				text = drd_nomination_cooldown_increase_12
+				hidden_tooltip = {
+					change_variable = { which = drd_nomination_cooldown value = 12 }
+				}
+			}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+
+	option = {
+		name = EVTOPTBDRD6
+		custom_tooltip = {
+			text = drd_nomination_cooldown_increase_1
+			hidden_tooltip = {
+				change_variable = { which = drd_nomination_cooldown value = 1 } 
+			}
+		}
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+character_event = { 
+	id = DRD.7  #SEE DRD_on_actions.txt: on multiple triggers, if ROOT was nominated for a priesthood but their candidature is now invalid, warn their sponsor.
+	hide_window = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_any_opinion_modifier = drd_opinion_nominated
+	}
+
+	immediate = {
+		any_opinion_modifier_target = {
+			limit = {
+				has_opinion_modifier = {  # First, find the sponsor...
+					who = ROOT
+					modifier = drd_opinion_sponsoring_nomination
+				}
+				ROOT = {  # ... then check for reasons to invalidate the nomination.
+					NAND = {
+						is_alive = yes
+						is_ruler = no
+						religion = PREV
+						vassal_of = PREV
+						NOT = { trait = excommunicated }
+						NOT = { is_primary_heir = PREV }
+						OR = {
+							is_married = no
+							drd_religion_values_celibate = no
+						}
+					}
+				}
+			}
+			ROOT = { save_event_target_as = nominee }
+			character_event = { id = DRD.9 }
+		}
+	}
+}
+
+character_event = {
+	id = DRD.8  # On marriage trigger, if FROM was nominated for a priesthood that requires celibacy, warn ROOT.
+	hide_window = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_opinion_modifier = {
+			who = FROM
+			modifier = drd_opinion_sponsoring_nomination
+		}
+		drd_religion_values_celibate = yes
+	}
+
+	immediate = {
+		FROM = { save_event_target_as = nominee }
+		repeat_event = { id = DRD.9 }
+	}
+}
+
+character_event = {
+	id = DRD.9  # ROOT = sponsor, FROM = dead priest if triggered by DRD.4, nominee otherwise
+	desc = {  # Dead
+		text = EVTDESCDRDA9
+		trigger = {
+			event_target:nominee = {
+				is_alive = no
+			}
+		}
+	}
+	desc = {  # Gained a title
+		text = EVTDESCDRDB9
+		trigger = {
+			event_target:nominee = {
+				is_alive = yes
+				is_ruler = yes
+			}
+		}
+	}
+	desc = {  # Left the court
+		text = EVTDESCDRDC9
+		trigger = {
+			event_target:nominee = {
+				is_alive = yes
+				is_ruler = no
+				NOT = { vassal_of = ROOT }
+			}
+		}
+	}
+	desc = {  # Became primary heir
+		text = EVTDESCDRDD9
+		trigger = {
+			event_target:nominee = {
+				is_alive = yes
+				is_ruler = no
+				is_primary_heir = ROOT
+			}
+		}
+	}
+	desc = {  # Converted to another religion
+		text = EVTDESCDRDE9
+		trigger = {
+			event_target:nominee = {
+				is_alive = yes
+				NOT = { religion = ROOT }
+			}
+		}
+	}
+	desc = {  # Was excommunicated
+		text = EVTDESCDRDF9
+		trigger = {
+			event_target:nominee = {
+				is_alive = yes
+				religion = ROOT
+				trait = excommunicated
+			}
+		}
+	}
+	desc = {  # By process of elimination... married and was disqualified as a result
+		text = EVTDESCDRDG9
+		trigger = {
+			event_target:nominee = {
+				is_alive = yes
+				is_ruler = no
+				religion = PREV
+				vassal_of = PREV
+				NOT = { trait = excommunicated }
+				NOT = { is_primary_heir = PREV }
+				drd_religion_values_celibate = yes
+			}
+		}
+	}
+
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	notification = yes
+
+	trigger = {
+		ai = no
+		NOT = { has_character_modifier = drd_nomination_cancelled_today }
+	}
+
+	immediate = {
+		remove_opinion = { who = event_target:nominee modifier = drd_opinion_sponsoring_nomination }
+		reverse_remove_opinion = { who = event_target:nominee modifier = drd_opinion_nominated }
+		change_variable = { which = drd_nomination_cooldown value = 1 } 
+		add_character_modifier = { name = drd_nomination_cancelled_today hidden = yes }
+	}
+
+	option = {
+		name = EVTOPTADRD9
+	}
+}
+
+character_event = {
+	id = DRD.10  # On conversion trigger for rulers, reset all variables and modifiers related to priest nomination.
+	hide_window = yes
+	is_triggered_only = yes
+	only_rulers = yes
+
+	trigger = {
+		higher_real_tier_than = DUKE
+		is_feudal = yes
+		is_vice_royalty = no
+		NOT = { government = order_government }
+	}
+
+	immediate = {
+		if = {  # If the new religion allows for priest nomination, set the cooldown to 10 years.
+			limit = {
+				drd_religion_allows_priest_nomination = yes
+				NOT = {  # Pagans who convert to their reformed version are exempt from this.
+					religion_group = pagan_group
+					FROM = { is_heresy_of = ROOT }
+				}
+			}
+			set_variable = { which = drd_nomination_cooldown value = 10 }
+		}
+		if = {  # Cancel any active nomination.
+			limit = {
+				has_any_opinion_modifier = drd_opinion_sponsoring_nomination
+			}
+			any_opinion_modifier_target = {
+				limit = {
+					OR = {
+						reverse_has_opinion_modifier = {
+							who = ROOT
+							modifier = drd_opinion_sponsoring_nomination
+						}
+						has_opinion_modifier = {
+							who = ROOT
+							modifier = drd_opinion_nominated
+						}
+					}
+				}
+				reverse_remove_opinion = { who = ROOT modifier = drd_opinion_sponsoring_nomination }
+				remove_opinion = { who = ROOT modifier = drd_opinion_nominated }
+			}
+		}
+		remove_character_modifiers = { modifier = drd_angered_church amount = 30 }  # Clear angered church modifiers.
+	}
+}
+
+character_event = {
+	id = DRD.11  # On yearly pulse, decrease the nomination cooldown of rulers with no active candidate.
+	hide_window = yes
+	is_triggered_only = yes
+	only_rulers = yes
+
+	trigger = {
+		check_variable = { which = drd_nomination_cooldown value = 1 }
+		NOT = { has_any_opinion_modifier = drd_opinion_sponsoring_nomination }
+	}
+
+	immediate = {
+		change_variable = { which = drd_nomination_cooldown value = -1 } 
+	}
+}

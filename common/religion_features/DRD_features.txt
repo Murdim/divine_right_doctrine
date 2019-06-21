@@ -1,0 +1,103 @@
+#DRD-FILE
+
+religion_doctrine = {
+	religion_divine_right = {
+		picture = GFX_religion_feature_divine_right
+		potential = {
+			NOR = {
+				religion = catholic  # Completely redundant, even in a random world.
+				religion = fraticelli  # idem
+				religion_group = muslim  # The two most important features require a proper clergy.
+			}
+			OR = {  # Available as long as ANY related game rule is active for pagans.
+				has_game_started = no
+				has_game_rule = { name = drd_coronation value = doctrine }
+				has_game_rule = { name = drd_priest_nomination value = doctrine }
+				has_game_rule = { name = drd_homage value = doctrine }
+				AND = {
+					NOT = { religion_group = christian }
+					OR = {
+						has_game_rule = { name = drd_coronation value = both }
+						has_game_rule = { name = drd_priest_nomination value = both }
+						has_game_rule = { name = drd_homage value = both }
+					}
+				}
+			}
+		}
+		trigger = {
+			NOT = {
+				has_selected_religion_feature = religion_temporal_head
+			}
+		}
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						has_game_started = no
+						has_game_rule = { name = drd_priest_nomination value = doctrine }
+						AND = {
+							NOT = { religion_group = christian }
+							has_game_rule = { name = drd_priest_nomination value = both }
+						}
+					}
+				}
+				custom_tooltip = { text = tooltip_religion_feature_drd_priest_nomination }
+			}
+			if = {
+				limit = {
+					OR = {
+						has_game_started = no
+						has_game_rule = { name = drd_coronation value = doctrine }
+						AND = {
+							NOT = { religion_group = christian }
+							has_game_rule = { name = drd_coronation value = both }
+						}
+					}
+				}
+				custom_tooltip = { text = tooltip_religion_feature_drd_coronation }
+			}
+			if = {
+				limit = {
+					OR = {
+						has_game_started = no
+						has_game_rule = { name = drd_homage value = doctrine }
+						AND = {
+							NOT = { religion_group = christian }
+							has_game_rule = { name = drd_homage value = both }
+						}
+					}
+				}
+				custom_tooltip = { text = tooltip_religion_feature_drd_homage }
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {  # AI reformation only validates doctrines as they are selected, bypassing the final check required for players.
+				factor = 0
+				has_game_started = yes
+			}
+			modifier = {  # Random World generated religions do not have this problem since their Leadership is always Unchanged.
+				factor = 0
+				has_game_started = no
+				OR = {
+					religion_group = pagan_group  # Not a "paganish" feature.
+					has_alternate_start_parameter = { key = divine_right_doctrine_random value = excluded }
+					AND = {
+						has_alternate_start_parameter = { key = divine_right_doctrine_random value = exclude_christians }
+						religion_group = christian
+					}
+				}
+			}
+			modifier = {  # prefers temporal leadership
+				factor = 0.1
+				FROM = {
+					character = yes
+					NOR = {
+						religion = norse_pagan
+						religion = aztec
+					}
+				}
+			}
+		}
+	}
+}

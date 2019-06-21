@@ -1,0 +1,87 @@
+#DRD-FILE
+
+drd_coronation = {
+	name = "RULE_DRD_CORONATION"
+	dlc = "Holy Fury"
+	group = "RULE_GROUP_DRD"
+	alt_start_default = doctrine  # Makes more sense in case religion features and/or names are randomized.
+	option = {
+		name = both  # Coronation for all Christians is not balance-breaking, and something of a double-edged sword even without the worst papal requests.
+		text = "RULE_OPTION_BOTH"
+		desc = "RULE_DRD_CORONATION_BOTH"
+	}
+	option = {
+		name = off
+		text = "RULE_OPTION_OFF"
+		desc = "RULE_DRD_CORONATION_OFF"
+	}
+	option = {
+		name = doctrine
+		text = "RULE_OPTION_DOCTRINE"
+		desc = "RULE_DRD_CORONATION_DOCTRINE"
+	}
+	option = {
+		name = christian
+		text = "RULE_OPTION_CHRISTIAN"
+		desc = "RULE_DRD_CORONATION_CHRISTIAN"
+	}
+}
+
+drd_priest_nomination = {
+	name = "RULE_DRD_PRIEST_NOMINATION"
+	dlc = "Holy Fury"
+	group = "RULE_GROUP_DRD"
+	alt_start_default = doctrine
+	option = {
+		name = doctrine  # Not enabled for all Christians by default ; not all players might want to make caesaropapism so easy, even for the Byzantines.
+		text = "RULE_OPTION_DOCTRINE"
+		desc = "RULE_DRD_PRIEST_NOMINATION_DOCTRINE"
+	}
+	option = {
+		name = christian
+		text = "RULE_OPTION_CHRISTIAN"
+		desc = "RULE_DRD_PRIEST_NOMINATION_CHRISTIAN"
+	}
+	option = {
+		name = both
+		text = "RULE_OPTION_BOTH"
+		desc = "RULE_DRD_PRIEST_NOMINATION_BOTH"
+	}
+	option = {
+		name = off
+		text = "RULE_OPTION_OFF"
+		desc = "RULE_DRD_PRIEST_NOMINATION_OFF"
+	}
+}
+
+drd_homage = {
+	name = "RULE_DRD_HOMAGE"
+	dlc = "Holy Fury"
+	group = "RULE_GROUP_DRD"
+	alt_start_default = off
+	option = {
+		name = off
+		text = "RULE_OPTION_OFF"
+		desc = "RULE_DRD_HOMAGE_OFF"
+	}
+	option = {
+		name = catholic
+		text = "RULE_OPTION_CATHOLIC"
+		desc = "RULE_DRD_HOMAGE_CATHOLIC"
+	}
+	option = {
+		name = doctrine
+		text = "RULE_OPTION_DOCTRINE"
+		desc = "RULE_DRD_HOMAGE_DOCTRINE"
+	}
+	option = {
+		name = christian
+		text = "RULE_OPTION_CHRISTIAN"
+		desc = "RULE_DRD_HOMAGE_CHRISTIAN"
+	}
+	option = {
+		name = both
+		text = "RULE_OPTION_BOTH"
+		desc = "RULE_DRD_HOMAGE_BOTH"
+	}
+}

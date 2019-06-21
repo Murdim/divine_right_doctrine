@@ -1,0 +1,80 @@
+#DRD-FILE
+
+
+on_startup = {
+	events = {
+		DRD_HF.20372  #SEE DRD_HF_coronation_events.txt: add crowned traits
+	}
+}
+
+on_yearly_pulse = {
+	events = {
+		DRD.11  #SEE DRD_priest_nomination_events.txt: decrement cooldown
+		DRD_HF.20405  #SEE DRD_HF_coronation_events.txt: add uncrowned modifier
+	}
+}
+
+on_five_year_pulse = {
+	events = {
+		DRD_HF.20375  #SEE DRD_HF_coronation_events.txt: bad events
+	}
+}
+
+on_marriage = {
+	events = {
+		DRD.8  #SEE DRD_priest_nomination_events.txt: cancel nomination
+	}
+}
+
+on_death = {
+        events = {
+		DRD.4  #SEE DRD_priest_nomination_events.txt: check if candidate can inherit
+		DRD_HF.20374  #SEE DRD_HF_coronation_events.txt: uncrowned kings
+		DRD_HF.20393  #SEE DRD_HF_coronation_events.txt: homage
+	}
+}
+
+on_new_holder = {
+	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+	}
+}
+
+on_new_holder_inheritance = {
+	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+	}
+}
+
+on_new_holder_usurpation = {
+	events = {
+		DRD_HF.20417  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
+	}
+}
+
+on_character_convert_religion = {
+	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: for candidates
+		DRD.10  #SEE DRD_priest_nomination_events.txt: for rulers
+		DRD_HF.20408  #SEE DRD_HF_coronation_events.txt: cancel coronation
+		DRD_HF.20416  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
+	}
+}
+
+on_excommunicate_interaction = {
+	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+	}
+}
+
+on_employer_change = {
+	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+	}
+}
+
+on_host_change = {
+	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+	}
+}

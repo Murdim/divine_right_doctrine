@@ -1,0 +1,64 @@
+#DRD-FILE
+
+drd_religion_allows_homage = {
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_homage
+				value = both
+			}
+		}
+		OR = {
+			religion_group = christian
+			has_religion_feature = religion_divine_right
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_homage
+				value = doctrine
+			}
+		}
+		OR = {
+			religion = catholic
+			religion = fraticelli
+			has_religion_feature = religion_divine_right
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_homage
+				value = christian
+			}
+		}
+		religion_group = christian
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_homage
+				value = catholic
+			}
+		}
+		OR = {
+			religion = catholic
+			religion = fraticelli
+		}
+	}
+	conditional_tooltip = {
+		trigger = {
+			has_game_rule = {
+				name = drd_homage
+				value = off
+			}
+		}
+		NOT = {
+			has_game_rule = {
+				name = drd_homage
+				value = off
+			}
+		}
+	}
+}

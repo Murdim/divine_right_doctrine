@@ -1,0 +1,18 @@
+#DRD-FILE
+
+drd_uncrowned_modifier = { #On five years pulse
+	vassal_opinion = -2
+	icon = 25
+}
+
+drd_angered_church = {
+	church_opinion = -10
+	temple_tax_modifier = -0.25
+	global_revolt_risk = 0.01
+	icon = 35
+}
+
+drd_nomination_cancelled_today = {  # Prevent cancellation decisions and/or events from firing multiple times.
+	icon = 35
+	duration = 1  # Used along with remove_opinion, which only takes effect the next day.
+}

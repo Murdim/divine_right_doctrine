@@ -1,0 +1,1458 @@
+#DRD-FILE
+
+# ROOT = THIS = nomination candidate
+# FROM = nomination sponsor
+# rightful_religious_head_scope = { NOT = { ... } } is ALWAYS FALSE for characters without religious heads.
+# NOT = { rightful_religious_head_scope = { ... } } is ALWAYS TRUE for characters without religious heads, and otherwise equivalent to the above.
+
+drd_candidate_nomination_score = {
+	additive_modifier = {
+		value = -100  # Repeatedly hiring new unlanded patriarchs as a way to control theocracy inheritance will anger the church
+		localisation_key = drd_priest_nomination_candidate_is_yet_another_religious_head
+		rightful_religious_head = ROOT
+		FROM = {
+			any_realm_lord = {
+				is_theocracy = yes
+				religion = ROOT
+				reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_sponsored_nomination_patriarch }
+			}
+		}
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_education
+		has_education_learning_trigger = yes
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_learning
+		NOT = { learning = 5 }
+	}
+	additive_modifier = {
+		value = 2
+		localisation_key = drd_priest_nomination_candidate_learning
+		learning = 5
+		NOT = { learning = 8 }
+	}
+	additive_modifier = {
+		value = 4
+		localisation_key = drd_priest_nomination_candidate_learning
+		learning = 8
+		NOT = { learning = 12 }
+	}
+	additive_modifier = {
+		value = 6
+		localisation_key = drd_priest_nomination_candidate_learning
+		learning = 12
+		NOT = { learning = 16 }
+	}
+	additive_modifier = {
+		value = 8
+		localisation_key = drd_priest_nomination_candidate_learning
+		learning = 16
+		NOT = { learning = 20 }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_learning
+		learning = 20
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_has_saintly_bloodline
+		any_owned_bloodline = {
+			has_bloodline_flag = saintly_bloodline
+			NOT = { has_bloodline_flag = wicked_saint }
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_baptized_by_a_religious_head
+		OR = {
+			trait = baptized_by_pope 
+			trait = baptized_by_patriarch
+		}
+	}
+	additive_modifier = {
+		value = -25
+		localisation_key = drd_priest_nomination_candidate_is_kinslayer
+		OR = {
+			trait = kinslayer
+			trait = familial_kinslayer
+			trait = dynastic_kinslayer
+		}
+	}
+	additive_modifier = {
+		value = -40
+		localisation_key = drd_priest_nomination_candidate_is_sinner
+		OR = {
+			has_character_modifier = rampant_sinner_christian
+			has_character_modifier = rampant_sinner_dharmic
+			has_character_modifier = known_satanist
+			has_character_modifier = known_witch
+		}
+	}
+	additive_modifier = {
+		value = -15
+		localisation_key = drd_priest_nomination_candidate_piety
+		NOT = { piety = -250 }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = -250
+		NOT = { piety = -100 }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = -100
+		NOT = { piety = -50 }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = 150
+		NOT = { piety = 350 }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = 350
+		NOT = { piety = 750 }
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = 750
+		NOT = { piety = 1500 }
+	}
+	additive_modifier = {
+		value = 20
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = 1500
+		NOT = { piety = 2000 }
+	}
+	additive_modifier = {
+		value = 25
+		localisation_key = drd_priest_nomination_candidate_piety
+		piety = 2000
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_zealous
+		trait = zealous
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_chaste
+		drd_religion_values_celibate = yes
+		trait = chaste
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_temperate
+		drd_religion_values_temperate = yes
+		trait = temperate
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_charitable
+		trait = charitable
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_diligent
+		trait = diligent
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_patient
+		trait = patient
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_kind
+		drd_religion_values_kind = yes
+		trait = kind
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_humble
+		drd_religion_values_humble = yes
+		trait = humble
+	}
+	additive_modifier = {  # Non-Bön pagans value pride, but do not penalize humility, and Hellenes value both.
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_proud
+		drd_religion_values_proud = yes
+		trait = proud
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_cruel
+		drd_religion_values_cruel = yes
+		trait = cruel
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_cynical
+		trait = cynical
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_lustful
+		drd_religion_values_celibate = yes
+		trait = lustful
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_gluttonous
+		drd_religion_values_temperate = yes
+		trait = gluttonous
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_greedy
+		trait = greedy
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_slothful
+		trait = slothful
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_wroth
+		trait = wroth
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_envious
+		drd_religion_values_kind = yes
+		trait = envious
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_cruel
+		drd_religion_values_kind = yes
+		trait = cruel
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_proud
+		drd_religion_values_humble = yes
+		NOT = { religion_values_proud = yes }
+		trait = proud
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_kind
+		drd_religion_values_cruel = yes
+		trait = kind
+	}
+}
+
+drd_sponsor_nomination_score = {
+	additive_modifier = {
+		value = -1000
+		localisation_key = drd_priest_nomination_sponsor_is_excommunicated
+		FROM = { excommunicated_for = rightful_religious_head_scope }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_has_saintly_bloodline
+		FROM = {
+			any_owned_bloodline = {
+				has_bloodline_flag = saintly_bloodline
+				NOT = { has_bloodline_flag = wicked_saint }
+			}
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_baptized_by_a_religious_head
+		FROM = {
+			OR = {
+				trait = baptized_by_pope 
+				trait = baptized_by_patriarch
+			}
+		}
+	}
+	additive_modifier = {
+		value = -15
+		localisation_key = drd_priest_nomination_sponsor_uncrowned
+		FROM = {
+			age = 16
+			drd_ruler_is_uncrowned = yes
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_crowned_by_a_religious_head
+		FROM = {
+			OR = {
+				AND = {
+					trait = crowned_by_bishop
+					trait = crowned_by_religious_head_hidden
+				}
+				trait = crowned_by_pope  # Necessarily a religious head of the WRONG religion, but the general case doesn't really care about that, either
+			}
+		}
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_sponsor_preparing_crusade
+		FROM = {
+			is_preparing_crusade = yes 
+			has_pledged_crusade_participation = yes
+		}
+	}
+	additive_modifier = {
+		value = 30
+		localisation_key = drd_priest_nomination_sponsor_fighting_in_crusade
+		FROM = {
+			OR = {
+				any_war = { using_cb = new_crusade }
+				any_war = { using_cb = crusade }
+			}
+		}
+	}
+	additive_modifier = {
+		value = -15
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = { NOT = { piety = -250 } }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = {
+			piety = -250
+			NOT = { piety = -100 }
+		}
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = {
+			piety = -100
+			NOT = { piety = -50 }
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = {
+			piety = 150
+			NOT = { piety = 350 }
+		}
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = {
+			piety = 350
+			NOT = { piety = 750 }
+		}
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = {
+			piety = 750
+			NOT = { piety = 1500 }
+		}
+	}
+	additive_modifier = {
+		value = 20
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = {
+			piety = 1500
+			NOT = { piety = 2000 }
+		}
+	}
+	additive_modifier = {
+		value = 25
+		localisation_key = drd_priest_nomination_sponsor_piety
+		FROM = { piety = 2000 }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_zealous
+		FROM = { trait = zealous }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_chaste
+		drd_religion_values_celibate = yes
+		FROM = { trait = chaste }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_temperate
+		drd_religion_values_temperate = yes
+		FROM = { trait = temperate }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_charitable
+		FROM = { trait = charitable }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_diligent
+		FROM = { trait = diligent }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_patient
+		FROM = { trait = patient }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_kind
+		drd_religion_values_kind = yes
+		FROM = { trait = kind }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_humble
+		drd_religion_values_humble = yes
+		FROM = { trait = humble }
+	}
+	additive_modifier = {  # Non-Bön pagans value pride, but do not penalize humility, and Hellenes value both.
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_proud
+		drd_religion_values_proud = yes
+		FROM = { trait = proud }
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_cruel
+		drd_religion_values_cruel = yes
+		FROM = { trait = cruel }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_cynical
+		FROM = { trait = cynical }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_lustful
+		drd_religion_values_celibate = yes
+		FROM = { trait = lustful }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_gluttonous
+		drd_religion_values_temperate = yes
+		FROM = { trait = gluttonous }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_greedy
+		FROM = { trait = greedy }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_slothful
+		FROM = { trait = slothful }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_wroth
+		FROM = { trait = wroth }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_envious
+		drd_religion_values_kind = yes
+		FROM = { trait = envious }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_cruel
+		drd_religion_values_kind = yes
+		FROM = { trait = cruel }
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_proud
+		drd_religion_values_humble = yes
+		NOT = { religion_values_proud = yes }
+		FROM = { trait = proud }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_kind
+		drd_religion_values_cruel = yes
+		FROM = { trait = kind }
+	}
+}
+
+drd_religious_head_bias_nomination_score = {  # Known, unfair bias (e.g nepotism) towards the candidate and sponsor ; does not directly include opinion.
+	# Biases towards the candidate
+	additive_modifier = {
+		value = 200  # Courtier patriarchs are always in favor of gaining some land for themselves
+		localisation_key = drd_priest_nomination_candidate_is_head
+		rightful_religious_head = ROOT
+	}
+	additive_modifier = {
+		value = 5  # on top of the +5 from the trait itself
+		localisation_key = drd_priest_nomination_candidate_baptized_by_current_head
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			ROOT = {
+				OR = {
+					trait = baptized_by_pope 
+					trait = baptized_by_patriarch
+				}
+				persistent_event_target:baptizing_pope_per = { character = PREVPREV }
+			}
+		}
+	}
+	additive_modifier = {
+		value = 5 
+		localisation_key = drd_priest_nomination_candidate_same_dynasty
+		is_lowborn = no
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			dynasty = ROOT
+			NOT = { is_close_relative = ROOT }
+		}
+	}
+	additive_modifier = {
+		value = 10 
+		localisation_key = drd_priest_nomination_candidate_is_close_relative
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_close_relative = ROOT
+			NOT = { is_child_of = ROOT }
+		}
+	}
+	additive_modifier = {
+		value = 15 
+		localisation_key = drd_priest_nomination_candidate_is_parent
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_child_of = ROOT
+		}
+	}
+	additive_modifier = {
+		value = 15  # Friendship also has a massive, "legitimate" impact (up to +25) through its opinion bonus.
+		localisation_key = drd_priest_nomination_candidate_is_friend
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_friend = ROOT
+		}
+	}
+	additive_modifier = {
+		value = 20
+		localisation_key = drd_priest_nomination_candidate_is_lover
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_lover = ROOT
+		}
+	}
+	additive_modifier = {
+		value = -100
+		localisation_key = drd_priest_nomination_candidate_is_rival
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_rival = ROOT
+		}
+	}
+	additive_modifier = {
+		value = 5 
+		localisation_key = drd_priest_nomination_candidate_same_culture
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			culture = ROOT
+		}
+	}
+	# Inverted modifiers for wicked or vicious religious heads
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_zealous
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cynical
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = zealous
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_chaste
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = lustful
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_celibate = yes
+				}
+			}
+		}
+		trait = chaste
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_temperate
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = gluttonous
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_temperate = yes
+				}
+			}
+		}
+		trait = temperate
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_charitable
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = greedy
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = charitable
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_diligent
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = slothful
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = diligent
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_patient
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = wroth
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = patient
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_kind
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cruel
+				trait = envious
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_kind = yes
+				}
+			}
+		}
+		trait = kind
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_humble
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = proud
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_humble = yes
+				}
+			}
+		}
+		trait = humble
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_proud
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = humble
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_proud = yes
+				}
+			}
+		}
+		trait = proud
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_cruel
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = kind
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_cruel = yes
+				}
+			}
+		}
+		trait = cruel
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_candidate_cynical
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cynical
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = cynical
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_lustful
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = lustful
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_celibate = yes
+				}
+			}
+		}
+		trait = lustful
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_gluttonous
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = gluttonous
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_temperate = yes
+				}
+			}
+		}
+		trait = gluttonous
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_greedy
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = greedy
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = greedy
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_slothful
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = slothful
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = slothful
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_wroth
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = wroth
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		trait = wroth
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_envious
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = envious
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_kind = yes
+				}
+			}
+		}
+		trait = envious
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_cruel
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cruel
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_kind = yes
+				}
+			}
+		}
+		trait = cruel
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_proud
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = proud
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_humble = yes
+					NOT = { religion_values_proud = yes }
+				}
+			}
+		}
+		trait = proud
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_candidate_kind
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = kind
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_cruel = yes
+				}
+			}
+		}
+		trait = kind
+	}
+	# Biases towards the sponsor
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_baptized_by_current_head
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			FROM = {
+				OR = {
+					trait = baptized_by_pope 
+					trait = baptized_by_patriarch
+				}
+				persistent_event_target:baptizing_pope_per = { character = PREVPREV }
+			}
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_crowned_by_current_head
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			FROM = {
+				OR = {
+					trait = crowned_by_priest
+					trait = crowned_by_bishop
+					trait = crowned_by_pope
+				}
+				persistent_event_target:coronation_priest_per = { character = PREVPREV }
+			}
+		}
+	}
+	additive_modifier = {
+		value = 5 
+		localisation_key = drd_priest_nomination_sponsor_same_dynasty
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			dynasty = FROM
+			NOT = { is_close_relative = FROM }
+		}
+	}
+	additive_modifier = {
+		value = 10 
+		localisation_key = drd_priest_nomination_sponsor_is_close_relative
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_close_relative = FROM
+			NOT = { is_child_of = FROM }
+		}
+	}
+	additive_modifier = {
+		value = 15 
+		localisation_key = drd_priest_nomination_sponsor_is_parent
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_child_of = FROM
+		}
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_sponsor_is_friend
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_friend = FROM
+		}
+	}
+	additive_modifier = {
+		value = 20
+		localisation_key = drd_priest_nomination_sponsor_is_lover
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_lover = FROM
+		}
+	}
+	additive_modifier = {
+		value = -100
+		localisation_key = drd_priest_nomination_sponsor_is_rival
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			is_rival = FROM
+		}
+	}
+	additive_modifier = {
+		value = 5 
+		localisation_key = drd_priest_nomination_sponsor_same_culture
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			culture = FROM
+		}
+	}
+	# Inverted modifiers for wicked or vicious religious heads
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_zealous
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cynical
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = zealous }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_chaste
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = lustful
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_celibate = yes
+				}
+			}
+		}
+		FROM = { trait = chaste }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_temperate
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = gluttonous
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_temperate = yes
+				}
+			}
+		}
+		FROM = { trait = temperate }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_charitable
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = greedy
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = charitable }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_diligent
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = slothful
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = diligent }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_patient
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = wroth
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = patient }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_kind
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cruel
+				trait = envious
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_kind = yes
+				}
+			}
+		}
+		FROM = { trait = kind }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_humble
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = proud
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_humble = yes
+				}
+			}
+		}
+		FROM = { trait = humble }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_proud
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = humble
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_proud = yes
+				}
+			}
+		}
+		FROM = { trait = proud }
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_cruel
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = kind
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_cruel = yes
+				}
+			}
+		}
+		FROM = { trait = cruel }
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_sponsor_cynical
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cynical
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = cynical }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_lustful
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = lustful
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_celibate = yes
+				}
+			}
+		}
+		FROM = { trait = lustful }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_gluttonous
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = gluttonous
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_temperate = yes
+				}
+			}
+		}
+		FROM = { trait = gluttonous }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_greedy
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = greedy
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = greedy }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_slothful
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = slothful
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = slothful }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_wroth
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = wroth
+				has_bad_priest_trait_trigger = yes
+			}
+		}
+		FROM = { trait = wroth }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_envious
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = envious
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_kind = yes
+				}
+			}
+		}
+		FROM = { trait = envious }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_cruel
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = cruel
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_kind = yes
+				}
+			}
+		}
+		FROM = { trait = cruel }
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_proud
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = proud
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_humble = yes
+					NOT = { religion_values_proud = yes }
+				}
+			}
+		}
+		FROM = { trait = proud }
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_sponsor_kind
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			OR = {
+				trait = kind
+				AND = {
+					has_bad_priest_trait_trigger = yes
+					drd_religion_values_cruel = yes
+				}
+			}
+		}
+		FROM = { trait = kind }
+	}
+}
+
+drd_cooldown_nomination_score = {
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_year_cooldown
+		FROM = { is_variable_equal = { which = drd_nomination_cooldown value = 1 } }
+	}
+	additive_modifier = {
+		value = -20
+		localisation_key = drd_priest_nomination_sponsor_cooldown
+		FROM = { is_variable_equal = { which = drd_nomination_cooldown value = 2 } }
+	}
+	additive_modifier = {
+		value = -30
+		localisation_key = drd_priest_nomination_sponsor_cooldown
+		FROM = { is_variable_equal = { which = drd_nomination_cooldown value = 3 } }
+	}
+	additive_modifier = {
+		value = -40
+		localisation_key = drd_priest_nomination_sponsor_cooldown
+		FROM = { is_variable_equal = { which = drd_nomination_cooldown value = 4 } }
+	}
+	additive_modifier = {
+		value = -50
+		localisation_key = drd_priest_nomination_sponsor_cooldown
+		FROM = { is_variable_equal = { which = drd_nomination_cooldown value = 5 } }
+	}
+	additive_modifier = {
+		value = -100
+		localisation_key = drd_priest_nomination_sponsor_long_cooldown
+		FROM = { check_variable = { which = drd_nomination_cooldown value = 6 } }
+	}
+	additive_modifier = {
+		value = -25
+		localisation_key = drd_priest_nomination_sponsor_angered_church
+		FROM = { has_character_modifier = drd_angered_church }
+	}
+}
+
+drd_religious_head_root_opinion_score = {
+	additive_modifier = {
+		value = -25
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			NOT = { opinion = { who = ROOT value = -99 } }
+		}
+	}
+	additive_modifier = {
+		value = -20
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = -99 }
+			NOT = { opinion = { who = ROOT value = -79 } }
+		}
+	}
+	additive_modifier = {
+		value = -15
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = -79 }
+			NOT = { opinion = { who = ROOT value = -59 } }
+		}
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = -59 }
+			NOT = { opinion = { who = ROOT value = -39 } }
+		}
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = -39 }
+			NOT = { opinion = { who = ROOT value = -19 } }
+		}
+	}
+	additive_modifier = {
+		value = 0
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = -19 }
+			NOT = { opinion = { who = ROOT value = 20 } }
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = 20 }
+			NOT = { opinion = { who = ROOT value = 40 } }
+		}
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = 40 }
+			NOT = { opinion = { who = ROOT value = 60 } }
+		}
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = 60 }
+			NOT = { opinion = { who = ROOT value = 80 } }
+		}
+	}
+	additive_modifier = {
+		value = 20
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = 80 }
+			NOT = { opinion = { who = ROOT value = 100 } }
+		}
+	}
+	additive_modifier = {
+		value = 25
+		localisation_key = drd_priest_nomination_candidate_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = ROOT value = 200 }
+		}
+	}
+}
+
+drd_religious_head_from_opinion_score = {
+	additive_modifier = {
+		value = -25
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			NOT = { opinion = { who = FROM value = -99 } }
+		}
+	}
+	additive_modifier = {
+		value = -20
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = -99 }
+			NOT = { opinion = { who = FROM value = -79 } }
+		}
+	}
+	additive_modifier = {
+		value = -15
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = -79 }
+			NOT = { opinion = { who = FROM value = -59 } }
+		}
+	}
+	additive_modifier = {
+		value = -10
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = -59 }
+			NOT = { opinion = { who = FROM value = -39 } }
+		}
+	}
+	additive_modifier = {
+		value = -5
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = -39 }
+			NOT = { opinion = { who = FROM value = -19 } }
+		}
+	}
+	additive_modifier = {
+		value = 0
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = -19 }
+			NOT = { opinion = { who = FROM value = 20 } }
+		}
+	}
+	additive_modifier = {
+		value = 5
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = 20 }
+			NOT = { opinion = { who = FROM value = 40 } }
+		}
+	}
+	additive_modifier = {
+		value = 10
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = 40 }
+			NOT = { opinion = { who = FROM value = 60 } }
+		}
+	}
+	additive_modifier = {
+		value = 15
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = 60 }
+			NOT = { opinion = { who = FROM value = 80 } }
+		}
+	}
+	additive_modifier = {
+		value = 20
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = 80 }
+			NOT = { opinion = { who = FROM value = 100 } }
+		}
+	}
+	additive_modifier = {
+		value = 25
+		localisation_key = drd_priest_nomination_sponsor_opinion_score
+		rightful_religious_head_scope = {
+			NOT = { character = ROOT }
+			opinion = { who = FROM value = 200 }
+		}
+	}
+}

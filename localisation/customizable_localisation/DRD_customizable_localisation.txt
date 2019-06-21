@@ -1,0 +1,259 @@
+#DRD-FILE
+
+# The following four blocks were heavily altered from GetCrownedByName/Desc in 00_customizable_localisation.txt
+defined_text = {
+	name = GetCrownedByBishopName
+	text = {
+		trigger = {
+			is_alive = yes
+		}
+		localisation_key = string_crowned_by_bishop_alive
+	}
+	text = {
+		trigger = {
+			is_alive = no
+			NOR = {  #DRD-DIFF: different name for Patriarchs and non-Christians
+				trait = crowned_by_religious_head_hidden
+				trait = crowned_nonchristian_hidden
+			}
+		}
+		localisation_key = string_crowned_by_bishop_dead
+	}
+	text = {
+		trigger = {  # Different name for Christian Patriarchs
+			is_alive = no
+			trait = crowned_by_religious_head_hidden
+			NOT = { trait = crowned_nonchristian_hidden }
+			religion_allows_male_temple_holders = yes
+		}
+		localisation_key = string_drd_crowned_by_patriarch
+	}
+	text = {
+		trigger = {  # Take potential Christian Matriarchs into account as well. Random World Enatic Clans Christians can actually pop up in vanilla Random Worlds.
+			is_alive = no
+			trait = crowned_by_religious_head_hidden
+			NOT = { trait = crowned_nonchristian_hidden }
+			religion_allows_male_temple_holders = no
+		}
+		localisation_key = string_drd_crowned_by_matriarch
+	}
+	text = {  # Different name for non-Christian religious heads
+		trigger = {
+			is_alive = no
+			trait = crowned_by_religious_head_hidden
+			trait = crowned_nonchristian_hidden
+		}
+		localisation_key = string_drd_crowned_by_nonchristian_religious_head
+	}
+	text = {  # Different name for powerful non-Christian priests
+		trigger = {
+			is_alive = no
+			NOT = { trait = crowned_by_religious_head_hidden }
+			trait = crowned_nonchristian_hidden
+		}
+		localisation_key = string_drd_crowned_by_nonchristian_bishop
+	}
+}
+
+defined_text = {
+	name = GetCrownedByPriestName
+	text = {  # Vanilla never actually uses this function for crowned_by_priest; keep it static by always referring to the "dead" variant
+		trigger = {
+			NOT = { trait = crowned_nonchristian_hidden }
+		}
+		localisation_key = string_crowned_by_priest_dead
+	}
+	text = {  # Different name for non-Christian priests
+		trigger = {
+			trait = crowned_nonchristian_hidden
+		}
+		localisation_key = string_drd_crowned_by_nonchristian_priest
+	}
+}
+
+defined_text = {
+	name = GetCrownedByBishopDesc
+	
+	text = {
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			persistent_event_target:coronation_priest_per = {
+				primary_title = { controls_religion = yes }  # A religious head eventually loses control of the religion (by dying), while their primary title usually doesn't.
+			}
+		}
+		localisation_key = string_drd_crowned_by_true_religious_head_alive_desc
+	}
+	text = {
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			persistent_event_target:coronation_priest_per = {
+				NOT = { primary_title = { controls_religion = yes } }
+				is_female = no
+			}
+		}
+		localisation_key = string_drd_crowned_by_patriarch
+	}
+	text = {
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			persistent_event_target:coronation_priest_per = {
+				NOT = { primary_title = { controls_religion = yes } }
+				is_female = yes
+			}
+		}
+		localisation_key = string_drd_crowned_by_matriarch
+	}
+	text = {
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			NOT = { trait = crowned_nonchristian_hidden }
+			is_alive = no
+			religion_allows_male_temple_holders = yes
+		}
+		localisation_key = string_drd_crowned_by_patriarch
+	}
+	text = {
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			NOT = { trait = crowned_nonchristian_hidden }
+			is_alive = no
+			religion_allows_male_temple_holders = no
+		}
+		localisation_key = string_drd_crowned_by_matriarch
+	}
+	text = {
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			trait = crowned_nonchristian_hidden
+			is_alive = no 
+		}
+		localisation_key = string_drd_crowned_by_nonchristian_religious_head
+	}
+	text = {
+		trigger = {
+			NOT = { trait = crowned_by_religious_head_hidden }
+			is_alive = yes
+			persistent_event_target:coronation_priest_per = { is_alive = yes }
+		}
+		localisation_key = string_crowned_by_bishop_alive_desc
+	}
+	text = {
+		trigger = {
+			NOT = { trait = crowned_by_religious_head_hidden }
+			NOT = { trait = crowned_nonchristian_hidden }
+			OR = { 
+				is_alive = no 
+				persistent_event_target:coronation_priest_per = { is_alive = no }
+			}
+		}
+		localisation_key = string_crowned_by_bishop_dead_desc
+	}
+	text = {
+		trigger = {
+			NOT = { trait = crowned_by_religious_head_hidden }
+			trait = crowned_nonchristian_hidden
+			OR = { 
+				is_alive = no 
+				persistent_event_target:coronation_priest_per = { is_alive = no }
+			}
+		}
+		localisation_key = string_drd_crowned_by_nonchristian_bishop
+	}
+}
+
+defined_text = {
+	name = GetCrownedByPriestDesc
+	
+	text = {
+		trigger = {
+			NOT = { trait = crowned_nonchristian_hidden }
+		}
+		localisation_key = string_drd_crowned_by_priest_desc
+	}
+	text = {
+		trigger = {
+			trait = crowned_nonchristian_hidden
+		}
+		localisation_key = string_drd_crowned_by_nonchristian_priest_desc
+	}
+}
+
+defined_text = {  # Gives the second line of description for the crowned_by_bishop and crowned_by_priests traits
+	name = GetCrownedBySecondLine
+	text = {
+		trigger = {
+			NOT = { trait = crowned_nonchristian_hidden }
+		}
+		localisation_key = string_drd_crowned_christian_second_line
+	}
+	text = {  # refer to the ruler's current religion; affected by religious conversion, but still beats "proper Christian (or even Pagan) king"
+		trigger = {
+			trait = crowned_nonchristian_hidden
+		}
+		localisation_key = string_drd_crowned_nonchristian_second_line
+	}
+}
+
+defined_text = {  # Gives the second line of description for the crowned_by_bishop and crowned_by_priests traits
+	name = GetCoronationRequirement
+	text = {
+		trigger = {
+			drd_religion_allows_coronation = no
+		}
+		localisation_key = string_drd_disabled_coronation
+	}
+	text = {
+		trigger = {
+			drd_religion_allows_coronation = yes
+		}
+		localisation_key = string_drd_required_coronation
+	}
+}
+
+defined_text = {  # Gives the second line of description for the crowned_by_bishop and crowned_by_priests traits
+	name = GetPriestNominationMaybe
+	text = {
+		trigger = {
+			rightful_religious_head_scope = {
+				OR = {
+					character = no
+					has_bad_priest_trait_trigger = yes
+					vassal_of = FROM
+					character = ROOT
+					is_close_relative = ROOT
+					is_close_relative = FROM
+					is_lover = ROOT
+					is_lover = FROM
+					AND = {
+						dynasty = ROOT
+						dynasty = FROM
+					}
+				}
+			}
+		}
+		localisation_key = string_drd_nominate_priest_maybe_means_maybe
+	}
+	text = {
+		trigger = {
+			rightful_religious_head_scope = {
+				NOR = {
+					has_bad_priest_trait_trigger = yes
+					vassal_of = FROM
+					character = ROOT
+					is_close_relative = ROOT
+					is_close_relative = FROM
+					is_lover = ROOT
+					is_lover = FROM
+					AND = {
+						dynasty = ROOT
+						dynasty = FROM
+					}
+				}
+			}
+		}
+		localisation_key = string_drd_nominate_priest_maybe_means_yes
+	}
+}
