@@ -1,3 +1,5 @@
 .*
 ~*
+/gfx
+/divine_right_doctrine.jpg
 !.gitignore
