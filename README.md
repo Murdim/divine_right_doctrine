@@ -1,9 +1,13 @@
-# Divine Right: Coronation and Priest Nomination for Non-Catholics
+# Divine Right: Coronation and Priest Nomination
+
+A game mod for Crusader Kings II. Only includes text files; the full version must be downloaded on the [Steam Workshop][Steam]. Feel free to [contribute](#modding)!
+
+[Steam]: https://steamcommunity.com/sharedfiles/filedetails/?id=1776124347
 
 
 ## Features
 
-This mod adds new religious doctrine, Divine Right, as an option for Pagan reformation and Random World starts.
+This mod adds a new religious doctrine, Divine Right, as an option for Pagan reformation and Random World starts.
 
 Divine Right is incompatible with Temporal leadership, and adds up to three features to the religion:
 
@@ -13,18 +17,30 @@ Divine Right is incompatible with Temporal leadership, and adds up to three feat
 
 Each feature can be enabled individually for religions with the Divine Right doctrine, all Christians, or both.
 
-For more info, check the mod description on [Steam](https://steamcommunity.com/sharedfiles/filedetails/?id=1776124347).
+For more info, check the mod description on [Steam], which can also be found in the file [workshop.md](workshop.md).
 
 
 ## Compatibility
 
-This mod was developed for Crusader Kings 2 v3.1 with Holy Fury DLC, and should remain compatible with future versions. It should also be compatible with most other mods.
+This mod was developed for Crusader Kings 2 v3.1 with Holy Fury DLC, and should remain compatible with future versions.
+
+It should also be compatible with most other mods.
 
 ### CK2 Overrides
 
-* `localisation/HolyFury.csv` (partial): "Crowned by" trait names and descriptions, one event description.
+* `localisation/HolyFury.csv` (partial): "Crowned by" trait names and descriptions, 1 event description.
 
 ### Notable Dependencies
 
-* `events/HF_coronation_events.txt`: still required for Catholic coronations, as well as some on-action events and event chains.
+* `events/HF_coronation_events.txt`: homage event chain, also contains important on-actions.
+* `common/on_actions/00_on_actions.txt`
 * `common/scripted_triggers/00_scripted_triggers.txt`
+
+
+## Modding
+
+The source code of this mod is publicly available for anyone to fork, reuse, or take inspiration from it. Bug reports, suggestions and pull requests are all very much welcome.
+
+The playable version also includes image files, some of which have been derived from artwork found in the base game. In order to run the mod from this repository, you will need to extract the "gfx" directory from the Steam version, or else use some kind of placeholder.
+
+Finally, do not forget to copy the .mod file to the root of your "mod" directory.
