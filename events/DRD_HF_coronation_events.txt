@@ -235,7 +235,20 @@ character_event = {
 		}
 		custom_tooltip = { text = EVTTOOLTIPCDRDHF20200 }
 		if = { #Emperors not crowned by a powerful priest receive an additional penalty
-			limit = { tier = EMPEROR }
+			limit = {  #DRD-DIFF: ... unless there is no other option available right now.
+				OR = {
+					religion_head = {
+						is_alive = yes 
+						NOT = { block_general_event_trigger = yes }
+					} 
+					any_realm_character = {
+						drd_character_is_powerful_priest = yes
+						any_liege = { character = ROOT }
+						religion = ROOT
+						NOT = { block_general_event_trigger = yes }
+					}
+				}
+			}
 			prestige = -300
 			piety = -75
 		}
@@ -7890,7 +7903,7 @@ character_event = {
 	
 	only_playable = yes
 
-	trigger = {  #DRD-NOTE: duplicate event for non-Catholics
+	trigger = {  # Duplicate event for non-Catholics
 		is_save_game = no
 		has_dlc = "Holy Fury"
 		drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
@@ -7918,7 +7931,7 @@ character_event = {
 						save_persistent_event_target = { name = coronation_priest_per scope = PREV } #Needed to localize the trait properly.
 					}
 				}
-				add_trait = crowned_by_bishop  #DRD-NOTE: other religious heads give a less powerful trait than the Pope, since they are not as hard to please
+				add_trait = crowned_by_bishop  # Other religious heads give a less powerful trait than the Pope, since they are not as hard to please
 				set_character_flag = flag_crowned_by_pope
 			}
 			80 = { 
@@ -7941,12 +7954,12 @@ character_event = {
 				character_event = { id = DRD_HF.20373 }
 			}
 			10 = { 
-				modifier = { # Emperors always crowned by somebody important.
+				modifier = { # Emperors always crowned by somebody important...
 					factor = 0
 					NOT = { trait = excommunicated }
 					NOT = { trait = possessed }
 					tier = EMPEROR
-					NOR = {
+					NOR = {  # ... unless none are available.
 						religion_head = { always = yes }
 						any_realm_character = { 
 							drd_character_is_powerful_priest = yes
@@ -7954,14 +7967,17 @@ character_event = {
 						}
 					}
 				}
-				modifier = { #Respectable Kings are crowned by Bishops.
+				modifier = { #Respectable Kings are crowned by Bishops...
 					factor = 0
 					NOT = { trait = excommunicated }
 					NOT = { trait = possessed }
 					tier = KING
-					any_realm_character = { 
-						drd_character_is_powerful_priest = yes
-						religion = ROOT
+					NOR = {  # ... unless none are available
+						religion_head = { always = yes }
+						any_realm_character = { 
+							drd_character_is_powerful_priest = yes
+							religion = ROOT
+						}
 					}
 				}
 				add_trait = crowned_by_priest
