@@ -1,3 +1,10 @@
+2019-06-21 v0.1.1
+-----------------
+
+- Let uncrowned pick any priest if no RH or powerful vassal is available.
+- Add option to drop nominee when they could inherit a title.
+
+
 2019-06-21 v0.1 for CK2 v3.2
 ----------------------------
 
