@@ -83,7 +83,7 @@ drd_character_is_powerful_priest = {
 	OR = {
 		AND = {  # Autocephalous patriarch, often but not necessarily (e.g pentarchy) ROOT's religious head.
 			has_autocephaly = yes
-			rightful_religious_head_scope = { character = PREV }
+			rightful_religious_head = THIS
 		}
 		AND = {  # Temporal power.
 			is_theocracy = yes 

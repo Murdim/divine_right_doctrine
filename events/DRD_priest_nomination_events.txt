@@ -267,9 +267,7 @@ letter_event = {
 							}
 						}
 						if = {
-							limit = { 
-								rightful_religious_head_scope = { character = PREV }
-							}
+							limit = { rightful_religious_head_scope = THIS }
 							opinion = { who = ROOT modifier = drd_opinion_sponsored_nomination_patriarch }
 						}
 						else = {

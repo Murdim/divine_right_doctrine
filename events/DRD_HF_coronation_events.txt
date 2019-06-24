@@ -200,11 +200,11 @@ character_event = {
 			}
 			preferred_limit = {  # The ruler's autocephalous religious head.
 				has_autocephaly = yes
-				ROOT = { rightful_religious_head_scope = { character = PREVPREV } }
+				ROOT = { rightful_religious_head = PREV }
 			}
 			preferred_limit = {  # Another religious head vassal (e.g from a pentarchy seat)
 				has_autocephaly = yes
-				rightful_religious_head_scope = { character = PREV }
+				rightful_religious_head = THIS
 			}
 			preferred_limit = {  # Temporal power
 				higher_tier_than = COUNT
@@ -277,7 +277,7 @@ character_event = {
 					NOT = {  # The Emperor's religious head is already angry for 30 years.
 						ROOT = {
 							tier = EMPEROR
-							rightful_religious_head_scope = { character = PREVPREV }
+							rightful_religious_head = PREV
 						}
 					}
 					any_liege = { character = ROOT }
@@ -293,7 +293,7 @@ character_event = {
 						NOT = {  # The Emperor's religious head is already angry for 30 years.
 							ROOT = {
 								tier = EMPEROR
-								rightful_religious_head_scope = { character = PREVPREV }
+								rightful_religious_head = PREV
 							}
 						}
 						any_liege = { character = ROOT }
@@ -578,7 +578,7 @@ letter_event = {
 			40 = { 
 				modifier = {
 					factor = 0
-					rightful_religious_head_scope = { character = ROOT }
+					rightful_religious_head = ROOT
 				}
 				modifier = {
 					factor = 0
@@ -7173,7 +7173,7 @@ character_event = {
 			limit = {
 				OR = {
 					has_character_flag = flag_crowned_by_pope 
-					rightful_religious_head_scope = { character = event_target:coronation_priest }
+					rightful_religious_head = event_target:coronation_priest
 				}
 			}
 			add_trait = crowned_by_religious_head_hidden
@@ -8034,7 +8034,7 @@ character_event = {
 			}
 			preferred_limit = {  # Autocephalous ecclesiarch
 				has_autocephaly = yes
-				rightful_religious_head_scope = { character = PREV }
+				rightful_religious_head = THIS
 			}
 			preferred_limit = {  # Temporal power
 				higher_tier_than = COUNT
