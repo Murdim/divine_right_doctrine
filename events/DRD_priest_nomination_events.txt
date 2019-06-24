@@ -104,6 +104,10 @@ character_event = {
 
 	is_triggered_only = yes
 
+	immediate = {
+		FROM = { save_event_target_as = nominee }
+	}
+
 	option = {
 		name = EVTOPTADRD3
 		custom_tooltip = {
@@ -245,6 +249,10 @@ letter_event = {
 
 	is_triggered_only = yes
 
+	trigger = {
+		NOT = { has_character_modifier = drd_nomination_cancelled_today }
+	}
+
 	option = {
 		name = EVTOPTADRD6
 		event_target:nominee = {
@@ -267,7 +275,7 @@ letter_event = {
 							}
 						}
 						if = {
-							limit = { rightful_religious_head_scope = THIS }
+							limit = { rightful_religious_head = THIS }
 							opinion = { who = ROOT modifier = drd_opinion_sponsored_nomination_patriarch }
 						}
 						else = {
@@ -323,6 +331,24 @@ letter_event = {
 		}
 		ai_chance = {
 			factor = 0
+		}
+	}
+
+	option = {
+		name = EVTOPTCDRD6
+		custom_tooltip = {
+			text = drd_retract_nomination
+			hidden_tooltip = {
+				remove_opinion = { who = event_target:nominee modifier = drd_opinion_sponsoring_nomination }
+				reverse_remove_opinion = { who = event_target:nominee modifier = drd_opinion_nominated }
+				add_character_modifier = { name = drd_nomination_cancelled_today hidden = yes }
+			}
+		}
+		custom_tooltip = {
+			text = drd_nomination_cooldown_increase_1
+			hidden_tooltip = {
+				change_variable = { which = drd_nomination_cooldown value = 1 } 
+			}
 		}
 	}
 }
