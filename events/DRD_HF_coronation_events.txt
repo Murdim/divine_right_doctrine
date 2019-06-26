@@ -7169,24 +7169,15 @@ character_event = {
 		}
 		ROOT = { save_persistent_event_target = { name = coronation_priest_per scope = event_target:coronation_priest } } #Needed to localize the trait properly.
 
-		if = {  #DRD-DIFF: assign hidden trait to keep track of the priest's religious head status (only important for crowned_by_bishop)
+		if = {  #DRD-DIFF: flag to keep track of the priest's religious head status (only important for crowned_by_bishop)
 			limit = {
 				OR = {
 					has_character_flag = flag_crowned_by_pope 
 					rightful_religious_head = event_target:coronation_priest
 				}
 			}
-			add_trait = crowned_by_religious_head_hidden
+			set_character_flag = drd_crowned_by_religious_head
 		}
-		if = {  #DRD-DIFF: assign hidden trait to keep track of the priest's religion group
-			limit = {
-				event_target:coronation_priest = {
-					NOT = { religion_group = christian }
-				}
-			}
-			add_trait = crowned_nonchristian_hidden
-		}
-
 	} 
 	option = { # Napoleon option
 		name = EVTOPTZHF20366

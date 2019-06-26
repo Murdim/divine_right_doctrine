@@ -294,7 +294,7 @@ drd_sponsor_nomination_score = {
 			OR = {
 				AND = {
 					trait = crowned_by_bishop
-					trait = crowned_by_religious_head_hidden
+					has_character_flag = drd_crowned_by_religious_head
 				}
 				trait = crowned_by_pope  # Necessarily a religious head of the WRONG religion, but the general case doesn't really care about that, either
 			}
