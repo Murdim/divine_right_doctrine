@@ -116,11 +116,17 @@ character_event = {
 				remove_opinion = { who = FROM modifier = drd_opinion_sponsoring_nomination }
 			}
 		}
-		custom_tooltip = {
-			text = drd_nomination_cooldown_increase_1
-			hidden_tooltip = {
-				change_variable = { which = drd_nomination_cooldown value = 1 } 
+		if = {
+			limit = { ai = no }
+			custom_tooltip = {
+				text = drd_nomination_cooldown_increase_1
+				hidden_tooltip = {
+					change_variable = { which = drd_nomination_cooldown value = 1 }
+				}
 			}
+		}
+		ai_chance = {
+			factor = 100
 		}
 	}
 	option = {
@@ -143,6 +149,9 @@ character_event = {
 			name = drd_angered_church
 			duration = 7300
 			stacking = yes
+		}
+		ai_chance = {
+			factor = 0
 		}
 	}
 }
@@ -349,6 +358,9 @@ letter_event = {
 			hidden_tooltip = {
 				change_variable = { which = drd_nomination_cooldown value = 1 } 
 			}
+		}
+		ai_chance = {
+			factor = 0
 		}
 	}
 }
