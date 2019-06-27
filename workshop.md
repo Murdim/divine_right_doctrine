@@ -50,7 +50,7 @@ This feature is **disabled** by default.
 
 This mod does not replace any file from the main game. It should be compatible with future versions as well as most other mods.
 
-Using this mod with an old save might break it if the save already contains modded traits, A traitless version is available for those who encounter this issue: <https://steamcommunity.com/sharedfiles/filedetails/?id=1782206051>
+Using this mod with an old save might break it if the save already contains modded traits. A traitless version is available for those who encounter this issue: <https://steamcommunity.com/sharedfiles/filedetails/?id=1782206051>
 
 ## Links
 
