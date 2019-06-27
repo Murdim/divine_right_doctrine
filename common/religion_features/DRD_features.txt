@@ -15,7 +15,7 @@ religion_doctrine = {
 				has_game_rule = { name = drd_priest_nomination value = doctrine }
 				has_game_rule = { name = drd_homage value = doctrine }
 				AND = {
-					NOT = { religion_group = christian }
+					NOT = { drd_religion_uses_christian_features = yes }
 					OR = {
 						has_game_rule = { name = drd_coronation value = both }
 						has_game_rule = { name = drd_priest_nomination value = both }
@@ -36,7 +36,7 @@ religion_doctrine = {
 						has_game_started = no
 						has_game_rule = { name = drd_priest_nomination value = doctrine }
 						AND = {
-							NOT = { religion_group = christian }
+							NOT = { drd_religion_uses_christian_features = yes }
 							has_game_rule = { name = drd_priest_nomination value = both }
 						}
 					}
@@ -49,7 +49,7 @@ religion_doctrine = {
 						has_game_started = no
 						has_game_rule = { name = drd_coronation value = doctrine }
 						AND = {
-							NOT = { religion_group = christian }
+							NOT = { drd_religion_uses_christian_features = yes }
 							has_game_rule = { name = drd_coronation value = both }
 						}
 					}
@@ -62,7 +62,7 @@ religion_doctrine = {
 						has_game_started = no
 						has_game_rule = { name = drd_homage value = doctrine }
 						AND = {
-							NOT = { religion_group = christian }
+							NOT = { drd_religion_uses_christian_features = yes }
 							has_game_rule = { name = drd_homage value = both }
 						}
 					}
@@ -84,7 +84,7 @@ religion_doctrine = {
 					has_alternate_start_parameter = { key = divine_right_doctrine_random value = excluded }
 					AND = {
 						has_alternate_start_parameter = { key = divine_right_doctrine_random value = exclude_christians }
-						religion_group = christian
+						drd_religion_uses_christian_features = yes
 					}
 				}
 			}

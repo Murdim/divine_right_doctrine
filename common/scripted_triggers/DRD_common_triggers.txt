@@ -1,0 +1,31 @@
+#DRD-FILE
+
+drd_religion_uses_christian_features = {
+	OR = {
+		religion_group = christian
+		conditional_tooltip = {
+			trigger = {
+				has_game_rule = { name = drd_affected_religions value = zoroastrian }
+			}
+			religion = zoroastrian
+		}
+		conditional_tooltip = {
+			trigger = {
+				OR = {
+					has_game_rule = { name = drd_affected_religions value = mazdan }
+					has_game_rule = { name = drd_affected_religions value = all }
+				}
+			}
+			religion_group = zoroastrian_group
+		}
+		condiitonal_tooltip = {
+			trigger = {
+				OR = {
+					has_game_rule = { name = drd_affected_religions value = jewish }
+					has_game_rule = { name = drd_affected_religions value = all }
+				}
+			}
+			religion_group = jewish_group
+		}
+	}
+}
