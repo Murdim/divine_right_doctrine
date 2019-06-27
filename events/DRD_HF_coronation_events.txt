@@ -9391,7 +9391,7 @@ character_event = {
 				}
 			} 
 
-			character_event = { id = HF.20410 }  #DRD-NOTE: redirect to vanilla event chain
+			character_event = { id = DRD_HF.20410 }
 		}
 		ai_chance = { 	
 			factor = 95
@@ -9399,7 +9399,7 @@ character_event = {
 	}
 	option = { #Refuse homage
 		name = EVTOPTBHF20396
-		hidden_tooltip = { FROM = { character_event = { id = HF.20398 } } }  #DRD-NOTE: redirect to vanilla event
+		hidden_tooltip = { FROM = { character_event = { id = DRD_HF.20398 } } }
 		prestige = 100
 		FROM = {
 				show_scope_change = no	
@@ -9483,7 +9483,31 @@ character_event = {
 	}
 }
 
-#DRD-DIFF: did not copy events 20397-20398, nothing to change from vanilla.
+#Vassal notified liege did not accept homage.
+character_event = {
+	id = DRD_HF.20398
+	desc = EVTDESCHFA20398
+
+	picture = GFX_evt_emissary
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTAHF20398
+		prestige = -75
+		tooltip = {
+			opinion = {
+				modifier = opinion_offended
+				years = 15
+				who = FROM
+			}
+		}
+		ai_chance = { 	
+			factor = 100
+		}
+	}
+}
 
 #DRD-DIFF: did not copy events 20399-20404, related to artifact crowns.
 
@@ -9660,7 +9684,785 @@ character_event = {
 
 #########################################################
 
-#DRD-DIFF: did not copy events 20410-20413, nothing to change from vanilla.
+#Liege receives homage from vassal - Expanded flavor.
+character_event = {
+	id = DRD_HF.20410
+	desc = {
+		text = EVTDESCHFA20410
+		trigger = { 
+			has_character_flag = flag_homage_infidel
+		}
+	}
+	desc = {
+		text = EVTDESCHFB20410
+		trigger = { 
+			has_character_flag = flag_homage_child
+		}
+	}
+	desc = {
+		text = EVTDESCHFC20410
+		trigger = { 
+			has_character_flag = flag_homage_old
+		}
+	}
+	desc = {
+		text = EVTDESCHFD20410
+		trigger = { 
+			has_character_flag = flag_homage_attractive
+			FROMFROM = { is_female = no }
+		}
+	}
+	desc = {
+		text = EVTDESCHFDD20410
+		trigger = { 
+			has_character_flag = flag_homage_attractive
+			FROMFROM = { is_female = yes }
+		}
+	}
+	desc = {
+		text = EVTDESCHFF20410
+		trigger = { 
+			has_character_flag = flag_homage_deformed
+		}
+	}
+	desc = {
+		text = EVTDESCHFG20410
+		trigger = { 
+			has_character_flag = flag_homage_sex
+		}
+	}
+	desc = {
+		text = EVTDESCHFH20410
+		trigger = { 
+			has_character_flag = flag_homage_evil
+		}
+	}
+	desc = {
+		text = EVTDESCHFI20410
+		trigger = { 
+			has_character_flag = flag_homage_good
+		}
+	}
+	desc = {
+		text = EVTDESCHFL20410
+		trigger = { 
+			has_character_flag = flag_homage_generic
+		}
+	}
+	show_from_from = yes #Vassal
+
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = no
+			} 
+		} 
+		picture = GFX_evt_throne_room
+	}
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = yes
+			} 
+		} 
+		picture = GFX_evt_homage_hf
+	}
+	border = GFX_event_normal_frame_diplomacy
+
+	immediate = { 
+		FROMFROM = { #Setup reaction for vassal.
+			random_list = { 
+				20 = { 
+					modifier = {
+						factor = 0
+						religion = ROOT 
+					}
+					set_character_flag = flag_homage_infidel
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						ROOT = { age = 16 }
+					}
+					set_character_flag = flag_homage_child
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						NOT = { ROOT = { age = 50 } }
+					}
+					set_character_flag = flag_homage_old
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						NOT = { ROOT = { is_attractive_trigger = yes } }
+					}
+					modifier = {
+						factor = 0
+						FROM = { is_female = yes }
+						prefers_men_trigger = yes
+					}
+					modifier = {
+						factor = 0
+						FROM = { is_female = no }
+						prefers_men_trigger = no
+					}
+					set_character_flag = flag_homage_attractive
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						NOT = { ROOT = { is_unattractive_trigger = yes } } 
+					}
+					set_character_flag = flag_homage_deformed
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						ROOT = { is_female = no }
+						OR = { 
+							has_law = agnatic_succession
+							has_law = cognatic_succession 
+						}
+					}
+					modifier = {
+						factor = 0
+						ROOT = { is_female = yes }
+						OR = { 
+							has_law = enatic_cognatic_succession
+							has_law = enatic_succession 
+						}
+					}
+					set_character_flag = flag_homage_sex
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						NOT = { ROOT = { is_evil_trigger = yes } }  
+					}
+					set_character_flag = flag_homage_evil
+				}
+				20 = { 
+					modifier = {
+						factor = 0
+						NOT = { ROOT = { has_virtue_trigger = yes } }  
+					}
+					set_character_flag = flag_homage_good
+				}
+				1 = {
+					set_character_flag = flag_homage_generic
+				}
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Children play
+		name = EVTOPTAHF20410
+		custom_tooltip = { text = tooltip_HF20410_A }
+		trigger = { 
+			has_character_flag = flag_homage_child 
+			NOT = { age = 16 }
+		}
+		hidden_tooltip = { 
+			random_list = {
+				75 = {
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = timid }
+					}
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = shy }
+					}
+					modifier = {
+						factor = 1.5
+						FROMFROM = { trait = playful }
+					}
+					modifier = {
+						factor = 1.5
+						FROMFROM = { trait = idolizer }
+					}
+					FROMFROM = { set_character_flag = flag_homage_play_success } 
+				}
+				25 = { 
+					FROMFROM = { set_character_flag = flag_homage_play_failure } 
+				}
+			}
+		} 
+		ai_chance = { 	
+			factor = 100
+			modifier = {
+				factor = 0.5
+				trait = shy
+			}
+			modifier = {
+				factor = 0.5
+				trait = timid
+			}
+		}
+	}
+	option = { #Attracted
+		name = EVTOPTBHF20410
+		custom_tooltip = { text = tooltip_HF20410_B }
+		trigger = { 
+			has_character_flag = flag_homage_attractive 
+			age = 16
+			OR = { 
+				AND = { 
+					FROMFROM = { is_female = yes } 
+					prefers_men_trigger = no
+				}
+				AND = { 
+					FROMFROM = { is_female = no } 
+					prefers_men_trigger = yes
+				}
+			}
+		}
+		hidden_tooltip = { 
+			random_list = {
+				50 = {
+					modifier = {
+						factor = 0
+						FROMFROM = { prefers_men_trigger = yes }
+						is_female = yes
+					}
+					modifier = {
+						factor = 0
+						FROMFROM = { prefers_men_trigger = no }
+						is_female = no
+					}
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = chaste }
+					}
+					modifier = {
+						factor = 0.1
+						FROMFROM = { trait = celibate }
+					}
+					modifier = {
+						factor = 0.25
+						is_unattractive_trigger = yes
+					}
+					modifier = {
+						factor = 1.75
+						is_attractive_trigger = yes
+					}
+					modifier = {
+						factor = 1.5
+						FROMFROM = { trait = lustful }
+					}
+					modifier = {
+						factor = 1.5
+						FROMFROM = { trait = hedonist }
+					}
+					FROMFROM = { set_character_flag = flag_homage_seduce_success } 
+				}
+				50 = { 
+					FROMFROM = { set_character_flag = flag_homage_seduce_failure } 
+				}
+			}
+		}
+		ai_chance = { 	
+			factor = 50
+			modifier = {
+				factor = 0.5
+				trait = chaste
+			}
+			modifier = {
+				factor = 0
+				trait = celibate
+			}
+			modifier = {
+				factor = 1.5
+				trait = lustful
+			}
+			modifier = {
+				factor = 1.5
+				trait = hedonist
+			}
+		}
+	}
+	option = { #Mock
+		name = EVTOPTCHF20410
+		custom_tooltip = { text = tooltip_HF20410_C }
+		trigger = { 
+			has_character_flag = flag_homage_deformed
+		}
+		hidden_tooltip = { 
+			random_list = {
+				30 = {
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = envious }
+					}
+					modifier = {
+						factor = 0.1
+						FROMFROM = { trait = proud }
+					}
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = ambitious }
+					}
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = wroth }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = humble }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = content }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = kind }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = patient }
+					}
+					FROMFROM = { set_character_flag = flag_homage_mock_success } 
+				}
+				70 = { 
+					FROMFROM = { set_character_flag = flag_homage_mock_failure } 
+				}
+			}
+		}
+		ai_chance = { 	
+			factor = 50
+			modifier = {
+				factor = 0.5
+				trait = kind
+			}
+			modifier = {
+				factor = 0.5
+				trait = humble
+			}
+			modifier = {
+				factor = 1.5
+				trait = cruel
+			}
+			modifier = {
+				factor = 1.5
+				trait = envious
+			}
+		}
+	}
+	option = { #Formal greeting
+		name = EVTOPTDHF20410
+		custom_tooltip = { text = tooltip_HF20410_D }
+		hidden_tooltip = { 
+			random_list = {
+				65 = {
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = gregarious }
+					}
+					modifier = {
+						factor = 0.1
+						FROMFROM = { trait = socializer }
+					}
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = arbitrary }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = shy }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = content }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = trusting }
+					}
+					FROMFROM = { set_character_flag = flag_homage_formal_success } 
+				}
+				35 = { 
+					FROMFROM = { set_character_flag = flag_homage_formal_failure } 
+				}
+			}
+		}
+		ai_chance = { 	
+			factor = 30
+			modifier = {
+				factor = 0.5
+				trait = gregarious
+			}
+			modifier = {
+				factor = 0.5
+				trait = socializer
+			}
+			modifier = {
+				factor = 0.5
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 1.5
+				trait = paranoid
+			}
+		}
+	}
+	option = { #Informal greeting
+		name = EVTOPTEHF20410
+		custom_tooltip = { text = tooltip_HF20410_E }
+		hidden_tooltip = { 
+			random_list = {
+				65 = {
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = shy }
+					}
+					modifier = {
+						factor = 0.1
+						FROMFROM = { trait = humble }
+					}
+					modifier = {
+						factor = 0.5
+						FROMFROM = { trait = just }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = gregarious }
+					}
+					modifier = {
+						factor = 1.5
+						FROMFROM = { trait = proud }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = content }
+					}
+					modifier = {
+						factor = 1.75
+						FROMFROM = { trait = trusting }
+					}
+					FROMFROM = { set_character_flag = flag_homage_informal_success } 
+				}
+				35 = { 
+					FROMFROM = { set_character_flag = flag_homage_informal_failure } 
+				}
+			}
+		}
+		ai_chance = { 	
+			factor = 30
+			modifier = {
+				factor = 0.5
+				trait = shy
+			}
+			modifier = {
+				factor = 0.5
+				trait = humble
+			}
+			modifier = {
+				factor = 0.5
+				trait = just
+			}
+			modifier = {
+				factor = 1.5
+				trait = trusting
+			}
+		}
+	}
+	after = { 
+		clr_character_flag = flag_homage_infidel
+		clr_character_flag = flag_homage_child
+		clr_character_flag = flag_homage_old
+		clr_character_flag = flag_homage_attractive
+		clr_character_flag = flag_homage_deformed
+		clr_character_flag = flag_homage_sex
+		clr_character_flag = flag_homage_evil
+		clr_character_flag = flag_homage_good
+		clr_character_flag = flag_homage_generic
+		hidden_tooltip = { FROMFROM = { character_event = { id = DRD_HF.20411 } } } 
+	}
+}
+
+#Vassal receives homage from vassal - Expanded flavor.
+character_event = {
+	id = DRD_HF.20411
+	desc = {
+		text = EVTDESCHFA20411
+		trigger = { 
+			has_character_flag = flag_homage_infidel
+		}
+	}
+	desc = {
+		text = EVTDESCHFB20411
+		trigger = { 
+			has_character_flag = flag_homage_child
+		}
+	}
+	desc = {
+		text = EVTDESCHFC20411
+		trigger = { 
+			has_character_flag = flag_homage_old
+		}
+	}
+	desc = {
+		text = EVTDESCHFD20411
+		trigger = { 
+			has_character_flag = flag_homage_attractive
+			is_female = no
+		}
+	}
+	desc = {
+		text = EVTDESCHFDD20411
+		trigger = { 
+			has_character_flag = flag_homage_attractive
+			is_female = yes
+		}
+	}
+	desc = {
+		text = EVTDESCHFF20411
+		trigger = { 
+			has_character_flag = flag_homage_deformed
+		}
+	}
+	desc = {
+		text = EVTDESCHFG20411
+		trigger = { 
+			has_character_flag = flag_homage_sex
+		}
+	}
+	desc = {
+		text = EVTDESCHFH20411
+		trigger = { 
+			has_character_flag = flag_homage_evil
+		}
+	}
+	desc = {
+		text = EVTDESCHFI20411
+		trigger = { 
+			has_character_flag = flag_homage_good
+		}
+	}
+	desc = {
+		text = EVTDESCHFL20411
+		trigger = { 
+			has_character_flag = flag_homage_generic
+		}
+	}
+
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = no
+			} 
+		} 
+		picture = GFX_evt_emissary
+	}
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = yes
+			} 
+		} 
+		picture = GFX_evt_homage_hf
+	}
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = { #Pleased.
+		name = {
+			text = EVTOPTAHF20411_A
+			trigger = { 
+				OR = {
+					has_character_flag = flag_homage_play_success
+					has_character_flag = flag_homage_seduce_success
+					has_character_flag = flag_homage_mock_success
+					has_character_flag = flag_homage_formal_success 
+					has_character_flag = flag_homage_informal_success
+				}
+			}
+		}
+		name = {
+			text = EVTOPTAHF20411_B
+			trigger = { 
+				OR = {
+					has_character_flag = flag_homage_play_failure
+					has_character_flag = flag_homage_seduce_failure
+					has_character_flag = flag_homage_mock_failure
+					has_character_flag = flag_homage_formal_failure
+					has_character_flag = flag_homage_informal_failure
+				}
+			}
+		}
+		opinion = { 
+			modifier = opinion_pleased
+			who = FROM
+			years = 5
+		}
+		hidden_tooltip = { FROM = { character_event = { id = DRD_HF.20412 } } } 
+		ai_chance = { 
+			factor = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_character_flag = flag_homage_play_failure
+					has_character_flag = flag_homage_seduce_failure
+					has_character_flag = flag_homage_mock_failure
+					has_character_flag = flag_homage_formal_failure
+					has_character_flag = flag_homage_informal_failure
+				}
+			}
+		}
+	} 
+	option = { #Offended
+		name = {
+			text = EVTOPTBHF20411_A
+			trigger = { 
+				OR = {
+					has_character_flag = flag_homage_play_success
+					has_character_flag = flag_homage_seduce_success
+					has_character_flag = flag_homage_mock_success
+					has_character_flag = flag_homage_formal_success 
+					has_character_flag = flag_homage_informal_success
+				}
+			}
+		}
+		name = {
+			text = EVTOPTBHF20411_B
+			trigger = { 
+				OR = {
+					has_character_flag = flag_homage_play_failure
+					has_character_flag = flag_homage_seduce_failure
+					has_character_flag = flag_homage_mock_failure
+					has_character_flag = flag_homage_formal_failure
+					has_character_flag = flag_homage_informal_failure
+				}
+			}
+		}
+		opinion = { 
+			modifier = opinion_irritated
+			who = FROM
+			years = 5
+		}
+		hidden_tooltip = { FROM = { character_event = { id = DRD_HF.20413 } } } 
+		ai_chance = { 
+			factor = 50
+			modifier = {
+				factor = 0
+				OR = {
+					has_character_flag = flag_homage_play_success
+					has_character_flag = flag_homage_seduce_success
+					has_character_flag = flag_homage_mock_success
+					has_character_flag = flag_homage_formal_success 
+					has_character_flag = flag_homage_informal_success
+				}
+			}
+		}
+	}
+	after = { 
+		clr_character_flag = flag_homage_infidel
+		clr_character_flag = flag_homage_child
+		clr_character_flag = flag_homage_old
+		clr_character_flag = flag_homage_attractive
+		clr_character_flag = flag_homage_deformed
+		clr_character_flag = flag_homage_sex
+		clr_character_flag = flag_homage_evil
+		clr_character_flag = flag_homage_good
+		clr_character_flag = flag_homage_generic
+		clr_character_flag = flag_homage_play_success
+		clr_character_flag = flag_homage_seduce_success
+		clr_character_flag = flag_homage_mock_success
+		clr_character_flag = flag_homage_formal_success
+		clr_character_flag = flag_homage_informal_success
+		clr_character_flag = flag_homage_play_failure
+		clr_character_flag = flag_homage_seduce_failure
+		clr_character_flag = flag_homage_mock_failure
+		clr_character_flag = flag_homage_formal_failure
+		clr_character_flag = flag_homage_informal_failure 
+	}
+}
+
+#King notified: New vassal was pleased with your greeting.
+character_event = {
+	id = DRD_HF.20412
+	desc = EVTDESCHFA20412
+
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = no
+			} 
+		} 
+		picture = GFX_evt_throne_room
+	}
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = yes
+			} 
+		} 
+		picture = GFX_evt_homage_hf
+	}
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTAHF20412
+		tooltip = { 
+			FROM = {
+				show_scope_change = no 
+				opinion = { 
+					modifier = opinion_pleased
+					who = ROOT
+					years = 5
+				}
+			}
+		}
+	}
+}
+#King notified: New vassal was not pleased with your greeting.
+character_event = {
+	id = DRD_HF.20413
+	desc = EVTDESCHFA20413
+
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = no
+			} 
+		} 
+		picture = GFX_evt_throne_room
+	}
+	picture = { 
+		trigger = { 
+			ROOT = { 
+				is_female = yes
+			} 
+		} 
+		picture = GFX_evt_homage_hf
+	}
+	border = GFX_event_normal_frame_diplomacy
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTAHF20413
+		tooltip = { 
+			FROM = {
+				show_scope_change = no 
+				opinion = { 
+					modifier = opinion_irritated
+					who = ROOT
+					years = 5
+				}
+			}
+		}
+	}
+}
+
 
 #DRD-DIFF: did not copy events 20414-20415, related to artifact crowns.
 
