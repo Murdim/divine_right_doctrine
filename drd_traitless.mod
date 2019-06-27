@@ -1,4 +1,4 @@
-name="Divine Right Doctrine"
+name="Divine Right Doctrine (traitless)"
 path="mod/divine_right_doctrine"
 tags=
 {
