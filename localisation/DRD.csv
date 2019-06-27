@@ -37,6 +37,17 @@ RULE_DRD_HOMAGE_CATHOLIC;The homage mechanic is enabled for Catholics and Fratic
 RULE_DRD_HOMAGE_DOCTRINE;The homage mechanic is enabled for reformed religions with the Divine Right doctrine.;La fonctionnalité d'hommage est activée pour religions réformées avec la doctrine Droit Divin.;;;;;;;;;;;;x
 RULE_DRD_HOMAGE_CHRISTIAN;The homage mechanic is enabled for all Christians.;La fonctionnalité d'hommage est activée pour tous les chrétiens.;;;;;;;;;;;;x
 RULE_DRD_HOMAGE_BOTH;The homage mechanic is enabled for all Christians as well as reformed religions with the Divine Right doctrine.;La fonctionnalité d'hommage est activée pour tous les chrétiens ainsi que les religions réformées avec la doctrine Droit Divin.;;;;;;;;;;;;x
+RULE_DRD_AFFECTED;§ZDivine Right:§! Affected Religions;§ZDroit Divin :§! Religions affectées;;;;;;;;;;;;x
+RULE_OPTION_CHRISTIAN_ONLY;Christian Only;Chrétien uniquement;;;;;;;;;;;;x
+RULE_DRD_AFFECTED_OFF;Divine Right features are reserved to Christians and reformed Pagans with the namesake doctrine.;Les fonctionnalités de Droit Divin sont réservées aux chrétiens et aux païens réformés avec la doctrine éponyme;;;;;;;;;;;;x
+RULE_OPTION_CHRISTIAN_ZOROASTRIAN;Christian and Zoroastrian;Chrétien et Zoroastrien;;;;;;;;;;;;x
+RULE_DRD_AFFECTED_ZOROASTRIAN;Divine Right features enabled for Christians are also available to Zoroastrian rulers.;Les fonctionnalités de Droit Divin activées pour les chrétiens sont également accessibles aux dirigeants zoroastriens.;;;;;;;;;;;;x
+RULE_OPTION_CHRISTIAN_MAZDAN;Christian and Mazdan;Chrétien et mazdéen;;;;;;;;;;;;x
+RULE_DRD_AFFECTED_MAZDAN;Divine Right features enabled for Christians are also available to Mazdan rulers.;Les fonctionnalités de Droit Divin activées pour les chrétiens sont également accessibles aux dirigeants mazdéens.;;;;;;;;;;;;x
+RULE_OPTION_CHRISTIAN_JEWISH;Christian and Israelite;Chrétien et israélite;;;;;;;;;;;;x
+RULE_DRD_AFFECTED_JEWISH;Divine Right features enabled for Christians are also available to Israelite rulers.;Les fonctionnalités de Droit Divin activées pour les chrétiens sont également accessibles aux dirigeants israélites.;;;;;;;;;;;;x
+RULE_OPTION_CHRISTIAN_OTHERS;All Three;Les trois;;;;;;;;;;;;x
+RULE_DRD_AFFECTED_ALL;Divine Right features enabled for Christians are also available to Mazdan and Israelite rulers.;Les fonctionnalités de Droit Divin activées pour les chrétiens sont également accessibles aux dirigeants mazdéens et israélites.;;;;;;;;;;;;x
 # ./common/opinion_modifiers/DRD_opinion_modifiers.txt
 drd_opinion_sponsoring_nomination;Sponsoring nomination;Supporte la nomination;;;;;;;;;;;;x
 drd_opinion_nominated;Nominated for priesthood;Candidat à la succession d'un prêtre;;;;;;;;;;;;x

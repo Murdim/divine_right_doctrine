@@ -9,7 +9,7 @@ drd_religion_allows_coronation = {
 			}
 		}
 		OR = {
-			religion_group = christian
+			drd_religion_uses_christian_features = yes
 			has_religion_feature = religion_divine_right
 		}
 	}
@@ -33,7 +33,7 @@ drd_religion_allows_coronation = {
 				value = christian
 			}
 		}
-		religion_group = christian
+		drd_religion_uses_christian_features = yes
 	}
 	conditional_tooltip = {
 		trigger = {

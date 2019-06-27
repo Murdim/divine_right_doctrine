@@ -9,7 +9,7 @@ drd_religion_allows_priest_nomination = {
 			}
 		}
 		OR = {
-			religion_group = christian
+			drd_religion_uses_christian_features = yes
 			has_religion_feature = religion_divine_right
 		}
 		NOR = {
@@ -33,7 +33,7 @@ drd_religion_allows_priest_nomination = {
 				value = christian
 			}
 		}
-		religion_group = christian
+		drd_religion_uses_christian_features = yes
 		NOR = {
 			religion = catholic
 			religion = fraticelli

@@ -1,6 +1,11 @@
 # Divine Right: Coronation for non-Catholics
 
-**Extends Catholic-style coronation ceremonies and priest nomination to non-Catholic Christians, reformed Pagans, and/or Random World religions, based on game rules.**
+**Extends Catholic-style coronation ceremonies, priest nomination, and homage to non-Catholic Christians and reformed Pagans.**
+
+This mod provides the following **game rules**:
+
+ - Each feature can be enabled for Christians, Pagans with the Divine Right doctrine, or both.
+ - Mazdan and/or Israelite rulers can be allowed to access the same features as Christians.
 
 ***Localised in English and French.***
 
@@ -26,6 +31,7 @@ By default, this feature is enabled for both **Christians** (except in Random Wo
 ## Priest Nomination
 
 Crowned rulers (see above) can use the "Nominate Priest" action on a single member of their court of the appropriate religion, gender and marital status.
+
  - If an independent religious head exists, this works similarly to the "Nominate Bishop" action available to Catholic rulers with Papal investiture.
  - If the religion has no head, the lower clergy may judge the candidate to be unworthy if their personal score is lower than 20.
  - Finally, both checks will be applied if the religious head is wicked, the sponsor's vassal, or (sometimes) compromised in some other way.
@@ -49,6 +55,8 @@ This feature is **disabled** by default.
 ## Compatibility
 
 This mod does not replace any file from the main game. It should be compatible with future versions as well as most other mods.
+
+Using this mod with an old save might break it if the save already contains modded traits. A traitless version is available for those who encounter this issue: <https://steamcommunity.com/sharedfiles/filedetails/?id=1782206051>
 
 ## Links
 

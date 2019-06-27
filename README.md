@@ -2,7 +2,7 @@
 
 A game mod for Crusader Kings II. Only includes text files; the full version must be downloaded on the [Steam Workshop][Steam]. Feel free to [contribute](#modding)!
 
-[Steam]: https://steamcommunity.com/sharedfiles/filedetails/?id=1776124347
+[Steam]: https://steamcommunity.com/sharedfiles/filedetails/?id=1780291286
 
 
 ## Features
