@@ -2038,6 +2038,7 @@ character_event = {
 
 	immediate = {
 		set_defacto_liege = THIS
+		emf_liege_change = yes  #DRD-DIFF: HIP/EMF compatibilty, no effect otherwise.
 	}
 }
 
@@ -9173,7 +9174,7 @@ character_event = {
 				who = ROOT
 			}
 		}
-		ai_chance = { 	
+		ai_chance = {  #DRD-TODO: should probably happen less often, once more serious consequences are implemented.
 			factor = 20
 			modifier = {
 				factor = 0
@@ -9285,6 +9286,7 @@ character_event = {
 			factor = 100
 		}
 	}
+	#DRD-TODO: this is treason! An ambiguous vassalage status should have serious consequences, and the liege be given the option to react more strongly.
 }
 
 #Liege receives homage from vassal.
@@ -9507,6 +9509,7 @@ character_event = {
 			factor = 100
 		}
 	}
+	#DRD-TODO see DRD_HF.20395, the vassal should be more upset, and have the opportunity to take this rejection quite literally.
 }
 
 #DRD-DIFF: did not copy events 20399-20404, related to artifact crowns.
