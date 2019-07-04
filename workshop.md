@@ -46,7 +46,7 @@ By default, this feature is only enabled for religions with the Divine Right **d
 
 Shortly after the death of a powerful feudal vassal (Duke or King-tier), their primary heir is expected to pay homage to their liege.
 
-Rulers gain prestige from receiving homage and lose it from being denied it. The relationship between liege and vassal will also be impacted.
+The outcome of this event chain will impact the relationship between liege and vassal, as well as their prestige.
 
 This event chain was actually recovered from the base game's files: a bug in its initial on-death trigger prevented it from working correctly. The mod simply re-implements the first few steps of the chain in order to make it functional and adapt the religious restrictions.
 
