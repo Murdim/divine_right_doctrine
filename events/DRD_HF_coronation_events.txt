@@ -9313,7 +9313,15 @@ character_event = {
 				20 = { 
 					modifier = {
 						factor = 0
-						religion = FROM 
+						OR = {  #DRD-DIFF: check if the vassal is actually someone ROOT could call an "unbeliever"...
+							AND = {
+								religion_group = FROM
+								NOT = { religion_group = pagan }
+							}
+							religion = FROM 
+							is_heresy_of = FROM
+							is_parent_religion = FROM
+						}
 					}
 					set_character_flag = flag_homage_infidel
 				}
@@ -9351,7 +9359,17 @@ character_event = {
 				20 = { 
 					modifier = {
 						factor = 0
-						NOT = { FROM = { is_unattractive_trigger = yes } } 
+						FROM = {  #DRD-DIFF: Unattractive trigger is too broad, only fire for characters that are PHYSICALLY repellent.
+							OR = {
+								has_fair_trait_trigger = yes
+								NOR = {
+									has_ugly_trait_trigger = yes
+									has_trait = inbred
+									has_trait = disfigured
+									has_trait = leper
+								}
+							}
+						}
 					}
 					set_character_flag = flag_homage_deformed
 				}
@@ -9776,9 +9794,9 @@ character_event = {
 		FROMFROM = { #Setup reaction for vassal.
 			random_list = { 
 				20 = { 
-					modifier = {
+					modifier = {  #DRD-DIFF: only makes sense if the vassal's religion does not practice homage.
 						factor = 0
-						religion = ROOT 
+                        			drd_religion_allows_homage = yes  #SEE DRD_homage_triggers.txt
 					}
 					set_character_flag = flag_homage_infidel
 				}
@@ -9816,7 +9834,17 @@ character_event = {
 				20 = { 
 					modifier = {
 						factor = 0
-						NOT = { ROOT = { is_unattractive_trigger = yes } } 
+						ROOT = {  # Unattractive trigger is too broad, only fire for characters that are PHYSICALLY repellent.
+							OR = {
+								has_fair_trait_trigger = yes
+								NOR = {
+									has_ugly_trait_trigger = yes
+									has_trait = inbred
+									has_trait = disfigured
+									has_trait = leper
+								}
+							}
+						}
 					}
 					set_character_flag = flag_homage_deformed
 				}
@@ -9927,6 +9955,14 @@ character_event = {
 		hidden_tooltip = { 
 			random_list = {
 				50 = {
+					modifier = {  #DRD-DIFF: already stated to be repulsed by the liege.
+						factor = 0
+						FROMFROM = { has_character_flag = flag_homage_deformed }
+					}
+					modifier = {  #DRD-DIFF: already stated to be attracted to the liege.
+						factor = 2
+						FROMFROM = { has_character_flag = flag_homage_attractive }
+					}
 					modifier = {
 						factor = 0
 						FROMFROM = { prefers_men_trigger = yes }
@@ -10120,13 +10156,21 @@ character_event = {
 		hidden_tooltip = { 
 			random_list = {
 				65 = {
+					modifier = {  #DRD-DIFF: familiarity seems threatening.
+						factor = 0.5
+						FROMFROM = { has_character_flag = flag_homage_evil }
+					}
+					modifier = {  #DRD-DIFF: familiarity seems authentic.
+						factor = 2
+						FROMFROM = { has_character_flag = flag_homage_good }
+					}
 					modifier = {
 						factor = 0.5
 						FROMFROM = { trait = shy }
 					}
-					modifier = {
-						factor = 0.1
-						FROMFROM = { trait = humble }
+					modifier = {  #DRD-DIFF: makes more sense than humble.
+						factor = 0.5
+						FROMFROM = { trait = ambitious }
 					}
 					modifier = {
 						factor = 0.5
