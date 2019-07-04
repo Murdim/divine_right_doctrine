@@ -2038,6 +2038,7 @@ character_event = {
 
 	immediate = {
 		set_defacto_liege = THIS
+		emf_liege_change = yes  #DRD-DIFF: HIP/EMF compatibilty, no effect otherwise.
 	}
 }
 
@@ -9160,11 +9161,11 @@ character_event = {
 				show_scope_change = no	
 			opinion = {
 				modifier = opinion_didnot_pay_homage
-				years = 15
+				years = 100  #DRD-DIFF: at the very least, make it effectively life-long.
 				who = ROOT
 			}
 		}
-		ai_chance = { 	
+		ai_chance = {  #DRD-TODO: should probably happen less often, once more serious consequences are implemented.
 			factor = 20
 			modifier = {
 				factor = 0
@@ -9268,7 +9269,7 @@ character_event = {
 		tooltip = {
 			opinion = {
 				modifier = opinion_didnot_pay_homage
-				years = 15
+				years = 100  #DRD-DIFF: at the very least, make it effectively life-long.
 				who = FROM
 			}
 		}
@@ -9276,6 +9277,7 @@ character_event = {
 			factor = 100
 		}
 	}
+	#DRD-TODO: this is treason! An ambiguous vassalage status should have serious consequences, and the liege be given the option to react more strongly.
 }
 
 #Liege receives homage from vassal.
@@ -9302,7 +9304,15 @@ character_event = {
 				20 = { 
 					modifier = {
 						factor = 0
-						religion = FROM 
+						OR = {  #DRD-DIFF: check if the vassal is actually someone ROOT could call an "unbeliever"...
+							AND = {
+								religion_group = FROM
+								NOT = { religion_group = pagan }
+							}
+							religion = FROM 
+							is_heresy_of = FROM
+							is_parent_religion = FROM
+						}
 					}
 					set_character_flag = flag_homage_infidel
 				}
@@ -9340,7 +9350,17 @@ character_event = {
 				20 = { 
 					modifier = {
 						factor = 0
-						NOT = { FROM = { is_unattractive_trigger = yes } } 
+						FROM = {  #DRD-DIFF: Unattractive trigger is too broad, only fire for characters that are PHYSICALLY repellent.
+							OR = {
+								has_fair_trait_trigger = yes
+								NOR = {
+									has_ugly_trait_trigger = yes
+									has_trait = inbred
+									has_trait = disfigured
+									has_trait = leper
+								}
+							}
+						}
 					}
 					set_character_flag = flag_homage_deformed
 				}
@@ -9396,7 +9416,7 @@ character_event = {
 				show_scope_change = no	
 			opinion = {
 				modifier = opinion_offended
-				years = 15
+				years = 100  #DRD-DIFF: at the very least, make it effectively life-long.
 				who = ROOT
 			}
 		} 
@@ -9490,7 +9510,7 @@ character_event = {
 		tooltip = {
 			opinion = {
 				modifier = opinion_offended
-				years = 15
+				years = 100  #DRD-DIFF: at the very least, make it effectively life-long.
 				who = FROM
 			}
 		}
@@ -9498,6 +9518,7 @@ character_event = {
 			factor = 100
 		}
 	}
+	#DRD-TODO see DRD_HF.20395, the vassal should be more upset, and have the opportunity to take this rejection quite literally.
 }
 
 #DRD-DIFF: did not copy events 20399-20404, related to artifact crowns.
@@ -9764,9 +9785,9 @@ character_event = {
 		FROMFROM = { #Setup reaction for vassal.
 			random_list = { 
 				20 = { 
-					modifier = {
+					modifier = {  #DRD-DIFF: only makes sense if the vassal's religion does not practice homage.
 						factor = 0
-						religion = ROOT 
+                        			drd_religion_allows_homage = yes  #SEE DRD_homage_triggers.txt
 					}
 					set_character_flag = flag_homage_infidel
 				}
@@ -9804,7 +9825,17 @@ character_event = {
 				20 = { 
 					modifier = {
 						factor = 0
-						NOT = { ROOT = { is_unattractive_trigger = yes } } 
+						ROOT = {  # Unattractive trigger is too broad, only fire for characters that are PHYSICALLY repellent.
+							OR = {
+								has_fair_trait_trigger = yes
+								NOR = {
+									has_ugly_trait_trigger = yes
+									has_trait = inbred
+									has_trait = disfigured
+									has_trait = leper
+								}
+							}
+						}
 					}
 					set_character_flag = flag_homage_deformed
 				}
@@ -9915,6 +9946,14 @@ character_event = {
 		hidden_tooltip = { 
 			random_list = {
 				50 = {
+					modifier = {  #DRD-DIFF: already stated to be repulsed by the liege.
+						factor = 0
+						FROMFROM = { has_character_flag = flag_homage_deformed }
+					}
+					modifier = {  #DRD-DIFF: already stated to be attracted to the liege.
+						factor = 2
+						FROMFROM = { has_character_flag = flag_homage_attractive }
+					}
 					modifier = {
 						factor = 0
 						FROMFROM = { prefers_men_trigger = yes }
@@ -9982,6 +10021,7 @@ character_event = {
 		trigger = { 
 			has_character_flag = flag_homage_deformed
 		}
+		prestige = 50
 		hidden_tooltip = { 
 			random_list = {
 				30 = {
@@ -10107,13 +10147,21 @@ character_event = {
 		hidden_tooltip = { 
 			random_list = {
 				65 = {
+					modifier = {  #DRD-DIFF: familiarity seems threatening.
+						factor = 0.5
+						FROMFROM = { has_character_flag = flag_homage_evil }
+					}
+					modifier = {  #DRD-DIFF: familiarity seems authentic.
+						factor = 2
+						FROMFROM = { has_character_flag = flag_homage_good }
+					}
 					modifier = {
 						factor = 0.5
 						FROMFROM = { trait = shy }
 					}
-					modifier = {
-						factor = 0.1
-						FROMFROM = { trait = humble }
+					modifier = {  #DRD-DIFF: makes more sense than humble.
+						factor = 0.5
+						FROMFROM = { trait = ambitious }
 					}
 					modifier = {
 						factor = 0.5
@@ -10287,10 +10335,99 @@ character_event = {
 				}
 			}
 		}
-		opinion = { 
-			modifier = opinion_pleased
-			who = FROM
-			years = 5
+		if = {  #DRD-DIFF: actual effect of a positive outcome depends on the option chosen by the liege.
+			limit = { has_character_flag = flag_homage_informal_success }
+			opinion = {
+				modifier = opinion_thoroughly_impressed
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_character_flag = flag_homage_play_success
+					has_character_flag = flag_homage_play_failure
+				}
+			}
+			random_list = {
+				50 = {
+					trigger = {
+						has_character_flag = flag_homage_play_failure
+						NOT = { has_opinion_modifier = { modifier = opinion_budding_friendship who = FROM } }
+						NOT = { is_friend = FROM }
+					}
+					opinion = {
+						modifier = opinion_annoyed
+						who = FROM
+						years = 10
+					}
+				}
+				40 = {
+					trigger = {
+						NOT = { has_opinion_modifier = { modifier = opinion_budding_friendship who = FROM } }
+					}
+					opinion = {
+						modifier = opinion_budding_friendship
+						who = FROM
+						years = 10
+					}
+					reverse_opinion = {
+						modifier = opinion_budding_friendship
+						who = FROM
+						years = 10
+					}
+				}
+				10 = {
+					add_friend = FROM
+				}
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = flag_homage_seduce_success }
+			opinion = {
+				modifier = opinion_seduced_attracted
+				who = FROM
+				years = 5
+			}
+			reverse_opinion = {
+				modifier = opinion_seduced_attracted
+				who = FROM
+				years = 5
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_character_flag = flag_homage_mock_success
+					has_character_flag = flag_homage_mock_failure
+				}
+			}
+			prestige = -100
+			random_list = {
+				10 = {
+					trigger = { NOT = { trait = humble } }
+					add_trait = humble
+				}
+				10 = {
+					trigger = { NOT = { trait = patient } }
+					add_trait = patient
+				}
+				20 = {
+					trigger = { has_character_flag = flag_homage_mock_failure }
+					add_trait = craven
+				}
+				fallback = {
+					piety = 50
+				}
+			}
+		}
+		else = {  # Default for formal or failed homages.
+			opinion = {
+				modifier = opinion_pleased
+				who = FROM
+				years = 5
+			}
 		}
 		hidden_tooltip = { FROM = { character_event = { id = DRD_HF.20412 } } } 
 		ai_chance = { 
@@ -10332,10 +10469,51 @@ character_event = {
 				}
 			}
 		}
-		opinion = { 
-			modifier = opinion_irritated
-			who = FROM
-			years = 5
+		if = {  #DRD-DIFF: actual effect of a negative outcome depends on the option chosen by the liege.
+			limit = { has_character_flag = flag_homage_informal_failure }
+			opinion = {
+				modifier = opinion_insulted
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_character_flag = flag_homage_play_success
+					has_character_flag = flag_homage_play_failure
+				}
+			}
+			opinion = {
+				modifier = opinion_annoyed
+				who = FROM
+				years = 10
+			}
+		}
+		else_if = {
+			limit = { has_character_flag = flag_homage_seduce_failure }
+			opinion = {
+				modifier = opinion_seduced_repelled
+				who = FROM
+				years = 20
+			}
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_character_flag = flag_homage_mock_success
+					has_character_flag = flag_homage_mock_failure
+				}
+			}
+			prestige = -100
+			add_rival = FROM
+		}
+		else = {  # Default for formal or successful homages.
+			opinion = {
+				modifier = opinion_irritated
+				who = FROM
+				years = 5
+			}
 		}
 		hidden_tooltip = { FROM = { character_event = { id = DRD_HF.20413 } } } 
 		ai_chance = { 
@@ -10352,7 +10530,8 @@ character_event = {
 			}
 		}
 	}
-	after = { 
+	
+	after = {  # DRD-DIFF: only clear success/failure flags after the liege is informed.
 		clr_character_flag = flag_homage_infidel
 		clr_character_flag = flag_homage_child
 		clr_character_flag = flag_homage_old
@@ -10362,16 +10541,6 @@ character_event = {
 		clr_character_flag = flag_homage_evil
 		clr_character_flag = flag_homage_good
 		clr_character_flag = flag_homage_generic
-		clr_character_flag = flag_homage_play_success
-		clr_character_flag = flag_homage_seduce_success
-		clr_character_flag = flag_homage_mock_success
-		clr_character_flag = flag_homage_formal_success
-		clr_character_flag = flag_homage_informal_success
-		clr_character_flag = flag_homage_play_failure
-		clr_character_flag = flag_homage_seduce_failure
-		clr_character_flag = flag_homage_mock_failure
-		clr_character_flag = flag_homage_formal_failure
-		clr_character_flag = flag_homage_informal_failure 
 	}
 }
 
@@ -10405,12 +10574,84 @@ character_event = {
 		tooltip = { 
 			FROM = {
 				show_scope_change = no 
-				opinion = { 
-					modifier = opinion_pleased
-					who = ROOT
-					years = 5
+				if = {  #DRD-DIFF: actual effect of a positive outcome depends on the option chosen by the liege.
+					limit = { has_character_flag = flag_homage_informal_success }
+					opinion = {
+						modifier = opinion_thoroughly_impressed
+						who = ROOT
+						years = 20
+					}
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_character_flag = flag_homage_play_success
+							has_character_flag = flag_homage_play_failure
+						}
+					}
+					if = {
+						limit = { is_friend = ROOT }
+						add_friend = ROOT
+					}
+					else_if = {
+						limit = {
+							has_opinion_modifier = { modifier = opinion_budding_friendship who = ROOT }
+						}
+						opinion = {
+							modifier = opinion_budding_friendship
+							who = ROOT
+							years = 10
+						}
+					}
+					else = {
+						opinion = {
+							modifier = opinion_annoyed
+							who = ROOT
+							years = 10
+						}
+					}
+				}
+				else_if = {
+					limit = { has_character_flag = flag_homage_seduce_success }
+					opinion = {
+						modifier = opinion_seduced_attracted
+						who = ROOT
+						years = 5
+					}
+					reverse_opinion = {
+						modifier = opinion_seduced_attracted
+						who = ROOT
+						years = 5
+					}
+				}
+				else_if = {
+					limit = {
+						NOR = {
+							has_character_flag = flag_homage_mock_success
+							has_character_flag = flag_homage_mock_failure
+						}
+					}
+					opinion = {
+						modifier = opinion_pleased
+						who = ROOT
+						years = 5
+					}
 				}
 			}
+		}
+	}
+	after = {  # DRD-DIFF: clear success/failure flags now that the liege is informed.
+		FROM = {
+			clr_character_flag = flag_homage_play_success
+			clr_character_flag = flag_homage_seduce_success
+			clr_character_flag = flag_homage_mock_success
+			clr_character_flag = flag_homage_formal_success
+			clr_character_flag = flag_homage_informal_success
+			clr_character_flag = flag_homage_play_failure
+			clr_character_flag = flag_homage_seduce_failure
+			clr_character_flag = flag_homage_mock_failure
+			clr_character_flag = flag_homage_formal_failure
+			clr_character_flag = flag_homage_informal_failure 
 		}
 	}
 }
@@ -10444,12 +10685,66 @@ character_event = {
 		tooltip = { 
 			FROM = {
 				show_scope_change = no 
-				opinion = { 
-					modifier = opinion_irritated
-					who = ROOT
-					years = 5
+				if = {  #DRD-DIFF: actual effect of a negative outcome depends on the option chosen by the liege.
+					limit = { has_character_flag = flag_homage_informal_failure }
+					opinion = {
+						modifier = opinion_insulted
+						who = ROOT
+						years = 20
+					}
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_character_flag = flag_homage_play_success
+							has_character_flag = flag_homage_play_failure
+						}
+					}
+					opinion = {
+						modifier = opinion_annoyed
+						who = ROOT
+						years = 10
+					}
+				}
+				else_if = {
+					limit = { has_character_flag = flag_homage_seduce_failure }
+					opinion = {
+						modifier = opinion_seduced_repelled
+						who = ROOT
+						years = 20
+					}
+				}
+				else_if = {
+					limit = {
+						OR = {
+							has_character_flag = flag_homage_mock_success
+							has_character_flag = flag_homage_mock_failure
+						}
+					}
+					add_rival = ROOT
+				}
+				else = {
+					opinion = {
+						modifier = opinion_irritated
+						who = ROOT
+						years = 5
+					}
 				}
 			}
+		}
+	}
+	after = {  # DRD-DIFF: clear success/failure flags now that the liege is informed.
+		FROM = {
+			clr_character_flag = flag_homage_play_success
+			clr_character_flag = flag_homage_seduce_success
+			clr_character_flag = flag_homage_mock_success
+			clr_character_flag = flag_homage_formal_success
+			clr_character_flag = flag_homage_informal_success
+			clr_character_flag = flag_homage_play_failure
+			clr_character_flag = flag_homage_seduce_failure
+			clr_character_flag = flag_homage_mock_failure
+			clr_character_flag = flag_homage_formal_failure
+			clr_character_flag = flag_homage_informal_failure 
 		}
 	}
 }

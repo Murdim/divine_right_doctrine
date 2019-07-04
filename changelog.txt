@@ -1,5 +1,12 @@
-v0.2
-----
+2019-07-03 v0.2.1
+-----------------
+
+- Added more varied outcomes to the homage event chain.
+- Solved conflict with HIP and EMF-style coronation.
+
+
+2019-06-28 v0.2
+---------------
 
 - Add game rule enabling mod features for Mazdans and Israelites.
 - Always allow uncrowned rulers to pick a random priest with no penalty, if no
@@ -10,4 +17,4 @@ religious head or powerful vassal is available.
 2019-06-21 v0.1 for CK2 v3.2
 ----------------------------
 
-- Initial release
+- Initial release.
