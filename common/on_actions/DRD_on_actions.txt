@@ -34,6 +34,12 @@ on_death = {
 	}
 }
 
+on_reform_religion = {
+	events = {
+		DRD.100  #SEE DRD_coronation_artifact_events.txt: replace Temporal heads artifacts with their slotless, coronation-locked version.
+	}
+}
+
 on_new_holder = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
@@ -48,6 +54,7 @@ on_new_holder_inheritance = {
 
 on_new_holder_usurpation = {
 	events = {
+		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
 		DRD_HF.20417  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
 	}
 }

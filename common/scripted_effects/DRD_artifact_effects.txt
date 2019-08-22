@@ -1,0 +1,137 @@
+#DRD-FILE
+
+drd_title_replace_or_create_artifact_rh_character = {
+	trigger_switch = {
+		on_trigger = title
+		d_norse_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_fylkir
+				add_artifact = crown_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_tengri_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_tengri_fylkir
+				add_artifact = crown_tengri_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_finnish_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_finnish_fylkir
+				add_artifact = crown_finnish_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_west_african_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_west_african_fylkir
+				add_artifact = crown_west_african_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_zun_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_zun_fylkir
+				add_artifact = crown_zun_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_slavic_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_slavic_fylkir
+				add_artifact = crown_slavic_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_baltic_pagan_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_romuva_fylkir
+				add_artifact = crown_romuva_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_aztec_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_aztec_fylkir
+				add_artifact = crown_aztec_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_bon_reformed = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = scepter_bon_fylkir
+				add_artifact = scepter_bon_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		k_hellenic_pagan = {
+			event_target:rh_character = {
+				unsafe_destroy_artifact = scepter_hellenic_fylkir
+				add_artifact = scepter_hellenic_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+	}
+}
+
+drd_title_add_dead_crown_trait_to_prev = {
+	trigger_switch = {
+		on_trigger = title
+		d_norse_pagan_reformed = {
+			PREV = { add_trait = dead_crown_fylkir }
+		}
+		d_tengri_pagan_reformed = {
+			PREV = { add_trait = dead_crown_tengri_fylkir }
+		}
+		d_finnish_pagan_reformed = {
+			PREV = { add_trait = dead_crown_finnish_fylkir }
+		}
+		d_west_african_pagan_reformed = {
+			PREV = { add_trait = dead_crown_west_african_fylkir }
+		}
+		d_zun_pagan_reformed = {
+			PREV = { add_trait = dead_crown_zun_fylkir }
+		}
+		d_slavic_pagan_reformed = {
+			PREV = { add_trait = dead_crown_slavic_fylkir }
+		}
+		d_baltic_pagan_reformed = {
+			PREV = { add_trait = dead_crown_romuva_fylkir }
+		}
+		d_aztec_reformed = {
+			PREV = { add_trait = dead_crown_aztec_fylkir }
+		}
+	}
+}
+
+drd_title_remove_dead_crown_trait_from_prev = {
+	trigger_switch = {
+		on_trigger = title
+		d_norse_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_fylkir }
+		}
+		d_tengri_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_tengri_fylkir }
+		}
+		d_finnish_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_finnish_fylkir }
+		}
+		d_west_african_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_west_african_fylkir }
+		}
+		d_zun_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_zun_fylkir }
+		}
+		d_slavic_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_slavic_fylkir }
+		}
+		d_baltic_pagan_reformed = {
+			PREV = { remove_trait = dead_crown_romuva_fylkir }
+		}
+		d_aztec_reformed = {
+			PREV = { remove_trait = dead_crown_aztec_fylkir }
+		}
+	}
+}

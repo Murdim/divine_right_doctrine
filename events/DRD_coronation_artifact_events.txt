@@ -1,0 +1,87 @@
+#DRD-FILE
+# Events that involve special crowns and other artifacts that should only be active for crowned rulers.
+
+namespace=DRD  # 100-199
+
+character_event = {  # On reformation with Divine Right and Temporal leadership, ROOT = reformer.
+	id = DRD.100
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		drd_religion_allows_coronation = yes  #SEE DRD_coronation_triggers.txt
+		has_religion_feature = religion_temporal_head
+	}
+
+	immediate = {  # One day after the main reformation event that should have created the artifact.
+		any_demesne_title = {
+			limit = { controls_religion = yes }
+			save_event_target_as = rh_title
+		}
+		1 = { province_event = { id = DRD.101 days = 1 } }
+	}
+}
+
+province_event = {  # FROM = reformer.
+	id = DRD.101
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = { FROM = { is_alive = yes } }
+			FROM = { save_event_target_as = rh_character }
+		}
+		else = {
+			rh_title = { holder_scope = { save_event_target_as = rh_character } }
+		}
+
+		event_target:rh_title = {
+			drd_title_replace_or_create_artifact_rh_character = yes  #SEE DRD_artifact_effects.txt
+		}
+		# As a fallback, do not try to look for an artifact to replace. If it HAS been created, just let it coexist with the slotless one.
+		event_target:rh_artifact = {
+			event_target:rh_character = { piety = 10000 }
+			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
+		}
+
+		province_event = { id = DRD.103 }
+	}
+}
+
+province_event = {  # Monthly upkeep event, show or hide the special crown in the owner's portrait.
+	id = DRD.103
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		event_target:rh_artifact = {
+			artifact_owner = {
+				if = {  # On owner change, remove the trait from the old one if they are still alive, then register the new one.
+					limit = { NOT = { character = event_target:rh_character } }
+					event_target:rh_character = {
+						if = {
+							limit = { is_alive = yes }
+							event_target:rh_title = {
+								drd_title_remove_dead_crown_trait_from_prev = yes  #SEE DRD_artifact_effects.txt
+							}
+						}
+					}
+					save_event_target_as = rh_character
+				}
+				event_target:rh_title = {
+					if = {
+						limit = { event_target:rh_artifact = { is_artifact_active = yes } }
+						event_target:rh_character = { piety = 1000 }
+						drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+					} else = {
+						event_target:rh_character = { piety = -1000 }
+						drd_title_remove_dead_crown_trait_from_prev = yes
+					}
+				}
+			}
+		}
+		
+		repeat_event = { id = DRD.103 days = 30 }
+	}
+}

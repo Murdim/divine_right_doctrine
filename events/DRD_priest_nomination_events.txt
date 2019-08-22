@@ -1,6 +1,6 @@
 #DRD-FILE
 
-namespace=DRD
+namespace=DRD  # 0-99
 
 # When re-evaluating the priest nomination score for the local clergy, only the candidate's attributes and the ruler's cooldown variables are taken into account.
 # This calculation will only happen if the initial score was 200 or less ("Maybe") and the religious head is either absent, wicked, the sponsor's vassal, or heavily biased towards the candidate and/or sponsor.

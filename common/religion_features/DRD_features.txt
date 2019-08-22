@@ -7,7 +7,6 @@ religion_doctrine = {
 			NOR = {
 				religion = catholic  # Completely redundant, even in a random world.
 				religion = fraticelli  # idem
-				religion_group = muslim  # The two most important features require a proper clergy.
 			}
 			OR = {  # Available as long as ANY related game rule is active for pagans.
 				has_game_started = no
@@ -22,11 +21,6 @@ religion_doctrine = {
 						has_game_rule = { name = drd_homage value = both }
 					}
 				}
-			}
-		}
-		trigger = {
-			NOT = {
-				has_selected_religion_feature = religion_temporal_head
 			}
 		}
 		effect = {
@@ -72,10 +66,6 @@ religion_doctrine = {
 		}
 		ai_will_do = {
 			factor = 1
-			modifier = {  # AI reformation only validates doctrines as they are selected, bypassing the final check required for players.
-				factor = 0
-				has_game_started = yes
-			}
 			modifier = {  # Random World generated religions do not have this problem since their Leadership is always Unchanged.
 				factor = 0
 				has_game_started = no
@@ -88,14 +78,41 @@ religion_doctrine = {
 					}
 				}
 			}
-			modifier = {  # prefers temporal leadership
+			modifier = {  # Lower weight if coronation wouldn't become available.
+				factor = 0.5
+				has_game_started = yes
+				OR = {
+					has_game_rule = { name = drd_coronation value = christian }
+					has_game_rule = { name = drd_coronation value = off }
+					AND = {  # Feature is already available without the doctrine.
+						has_game_rule = { name = drd_coronation value = both }
+						drd_religion_uses_christian_features = yes
+					}
+				}
+			}
+			modifier = {  # Lower weight if priest nomination wouldn't become available.
+				factor = 0.25
+				OR = {
+					religion_group = muslim  # No priests under Iqta.
+					cns_religion_features_clergyless = yes  #MOD church_and_state CNS_religion_feature_triggers.txt
+					AND = {
+						has_game_started = yes
+						OR = {
+							has_game_rule = { name = drd_priest_nomination value = christian }
+							has_game_rule = { name = drd_priest_nomination value = off }
+							AND = {  # Feature is already available without the doctrine.
+								has_game_rule = { name = drd_priest_nomination value = both }
+								drd_religion_uses_christian_features = yes
+							}
+						}
+					}
+				}
+			}
+			modifier = {  # No appeal for republican leaders.
 				factor = 0.1
 				FROM = {
 					character = yes
-					NOR = {
-						religion = norse_pagan
-						religion = aztec
-					}
+					is_republic = yes
 				}
 			}
 		}

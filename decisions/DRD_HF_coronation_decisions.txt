@@ -10,7 +10,14 @@ decisions = {
 			age = 11
 			prisoner = no
 			NOT = { trait = incapable }
-			drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
+			OR = {
+				drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
+				AND = {  # Temporal heads can crown themselves even when they aren't required to do so.
+					controls_religion = yes
+					is_theocracy = no
+					NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
+				}
+			}
 			NOR = { 
 				religion = catholic
 				religion = fraticelli

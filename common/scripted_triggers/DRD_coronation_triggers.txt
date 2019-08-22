@@ -55,12 +55,7 @@ drd_ruler_is_uncrowned = {  # True if a ruler of the appropriate religion, rank 
 	is_vice_royalty = no
 	NOT = { government = order_government }
 	drd_religion_allows_coronation = yes
-	NOR = {
-		trait = crowned_by_priest
-		trait = crowned_by_bishop
-		trait = crowned_by_pope
-		trait = crowned_by_myself
-	}
+	NOT = { drd_character_is_crowned = yes }
 }
 
 drd_ruler_is_a_crowned_king = {  # True for rulers with the appropriate rank and government to be crowned. If (and only if) their religion DOES allow coronations, they must also have an actual crowned trait.
@@ -68,12 +63,22 @@ drd_ruler_is_a_crowned_king = {  # True for rulers with the appropriate rank and
 	is_feudal = yes
 	is_vice_royalty = no
 	NOT = { government = order_government }
-	OR = {
-		drd_religion_allows_coronation = no
-		trait = crowned_by_priest
-		trait = crowned_by_bishop
-		trait = crowned_by_pope
-		trait = crowned_by_myself
+	conditional_tooltip = {
+		trigger = { drd_religion_allows_coronation = yes }
+		drd_character_is_crowned = yes
+	}
+}
+
+drd_character_is_crowned = {  # Check if the character has any Crowned trait or flag, whether it means anything for them or not.
+	custom_tooltip = {
+		text = drd_character_is_crowned_tt
+		OR = {
+			trait = crowned_by_priest
+			trait = crowned_by_bishop
+			trait = crowned_by_pope
+			trait = crowned_by_myself
+			has_flag = crowned_no_trait
+		}
 	}
 }
 

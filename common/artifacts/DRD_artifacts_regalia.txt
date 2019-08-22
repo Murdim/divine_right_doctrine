@@ -1,0 +1,203 @@
+#DRD-FILE
+# Slotless, coronation-locked versions of the temporal head artifacts.
+
+crown_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	martial = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_norse_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_tengri_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	diplomacy = 2
+	martial = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_tengri_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_tengri_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_finnish_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	intrigue = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_finnish_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_finnish_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_west_african_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	intrigue = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_west_african_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_west_african_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_zun_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	intrigue = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_zun_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_zun_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_slavic_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	learning = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_slavic_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_slavic_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_romuva_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	intrigue = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_baltic_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_slavic_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_aztec_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	martial = 2
+	intrigue = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_aztec_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_aztec_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+scepter_bon_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	learning = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = d_bon_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious scepter unique jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_scepter_bon_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+scepter_hellenic_fylkir_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	diplomacy = 2
+	learning = 2
+	tribal_opinion = 10
+	quality = 4
+	active = { 
+		has_landed_title = k_hellenic_pagan
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious scepter unique jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_scepter_hellenic_fylkir"
+	stacking = no
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}

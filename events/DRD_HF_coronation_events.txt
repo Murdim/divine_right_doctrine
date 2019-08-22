@@ -1,4 +1,5 @@
 #DRD-COPY of HF_coronation_events.txt, edited for non-Catholic/Fraticelli coronations. Does not conflict with the original, but should ideally be maintained in sync with it.
+# New events relating to coronations and/or artifact crowns should be implemented in a separate file (e.g DRD_coronation_events.txt DRD_coronation_artifact_events.txt)
 
 namespace=DRD_HF
 # Explain coronation preparation, ask whom to ask to be crowned by.
@@ -11,13 +12,37 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
+
+	immediate = {  #DRD-DIFF: If ROOT is a temporal head, find their artifact.
+		if = {
+			limit = { controls_religion = yes }
+			random_artifact = {
+				limit = {
+					has_flag = divine_right_regalia
+					persistent_event_target:rh_title = {
+						holder_scope = { character = ROOT }
+					}
+				}
+				save_event_target_as = coronation_artifact
+			}
+			if = {
+				limit = { ai = no }  # For l10 purposes only.
+				any_demesne_title = {
+					limit = { controls_religion = yes }
+					save_event_target_as = rh_title
+				}
+			}
+			
+		}
+	}
 	
 	option = { #Ask to be crowned by the Pope
 		name = EVTOPTADRDHF20200
 		trigger = { 
 			NOT = { trait = excommunicated }
-			religion_head = {  #DRD-DIFF: The religious head is always an option, even under autocephaly.
+			religion_head = {  #DRD-DIFF: The "real" religious head is always an option if theocratic, even under autocephaly.
 				is_alive = yes 
+				is_theocracy = yes
 				NOT = { block_general_event_trigger = yes }
 			} 
 		}
@@ -32,9 +57,11 @@ character_event = {
 			}
 			modifier = {  #DRD-DIFF: don't insist on being crowned by a religious head who requested their independence
 				factor = 0
-				has_opinion_modifier = {
-					who = FROM 
-					modifier = opinion_requested_independence 
+				religion_head = {
+					has_opinion_modifier = {
+						who = ROOT
+						modifier = opinion_requested_independence 
+					}
 				}
 			}
 			modifier = {
@@ -162,6 +189,10 @@ character_event = {
 	option = { #Invested by powerful priest
 		name = EVTOPTBDRDHF20200
 		trigger = { 
+			NOR = {  # DRD-DIFF: use different choices if the religion is Non-Clerical or a temporal head exists.
+				religion_head = { is_theocracy = no }
+				cns_religion_uses_clergyless_government = yes
+			}
 			NOT = { trait = excommunicated }
 			#DRD-DIFF: investiture is assumed to be disabled for the religion
 			any_realm_character = {  #DRD-DIFF: scripted trigger includes autocephaly
@@ -172,11 +203,15 @@ character_event = {
 			}
 		}
 		custom_tooltip = { text = EVTTOOLTIPBDRDHF20200 }
-		if = { #DRD-DIFF: if a hierocratic head is snubbed by an Emperor, they'll get mad.
+		if = { #DRD-DIFF: if a hierocratic(-like) head is snubbed by an Emperor, they'll get mad.
 			limit = { 
 				tier = EMPEROR
-				has_religion_feature = religion_theocratic_head
-				religion_head = { is_alive = yes }
+				has_autocephaly = no
+				religion_head = {
+					is_alive = yes
+					is_theocracy = yes
+					NOT = { block_general_event_trigger = yes }
+				}
 			}
 			custom_tooltip = { text = drd_scorned_the_pope }
 			hidden_tooltip = { 
@@ -222,6 +257,10 @@ character_event = {
 	option = { #Invested by random priest
 		name = EVTOPTCHF20200
 		trigger = { 
+			NOR = {  # DRD-DIFF: use different choices if the religion is Non-Clerical or a temporal head exists.
+				religion_head = { is_theocracy = no }
+				cns_religion_uses_clergyless_government = yes
+			}
 			#DRD-DIFF: investiture is assumed to be disabled for the religion
 			any_realm_character = {   #DRD-DIFF: scripted trigger includes autocephaly
 				is_theocracy = yes 
@@ -239,6 +278,7 @@ character_event = {
 				OR = {
 					religion_head = {
 						is_alive = yes 
+						is_theocracy = yes
 						NOT = { block_general_event_trigger = yes }
 					} 
 					any_realm_character = {
@@ -362,6 +402,156 @@ character_event = {
 			modifier = {
 				factor = 0.5
 				has_landed_title = e_hre
+			}
+		}
+	}
+	option = {  #DRD-DIFF: Do not seek sanction from the church.
+		name = {  # Bonuses are covered by the artifact, NOT the self-crowned trait.
+			text = EVTOPTGDRDHF20200_as_head_crown_artifact
+			trigger = {
+				event_target:coronation_artifact = { has_flag = crown }
+			}
+		}
+		name = {
+			text = EVTOPTGDRDHF20200_as_head_other_artifact
+			trigger = {
+				event_target:coronation_artifact = { NOT = { has_flag = crown } }
+			}
+		}
+		name = {
+			text = EVTOPTGDRDHF20200_as_head_no_artifact
+			trigger = {
+				NOT = { event_target:coronation_artifact = { always = yes } }
+				controls_religion = yes
+			}
+		}
+		name = {
+			text = EVTOPTGDRDHF20200_head_is_not_theocracy
+			trigger = {
+				controls_religion = no
+				religion_head = { is_theocracy = no }
+			}
+		}
+		name = {
+			text = EVTOPTGDRDHF20200_clergyless
+			trigger = {
+				controls_religion = no
+				NOT = { religion_head = { is_theocracy = no } }
+				cns_religion_uses_clergyless_government = yes  #MOD church_and_state CNS_clergyless_government_triggers.txt
+			}
+		}
+		trigger = { 
+			OR = {
+				religion_head = { is_theocracy = no }
+				cns_religion_uses_clergyless_government = yes
+			}
+			job_spiritual = { religion = ROOT }
+		}
+		custom_tooltip = { text = EVTTOOLTIPGDRDHF20200 }
+		if = { #DRD-DIFF: if a hierocratic(-like) vassal head is snubbed by an Emperor, they'll get mad.
+			limit = { 
+				tier = EMPEROR
+				has_autocephaly = no
+				religion_head = {
+					is_alive = yes
+					is_theocracy = yes
+					is_vassal_or_below_of = ROOT
+					NOT = { block_general_event_trigger = yes }
+				}
+			}
+			custom_tooltip = { text = drd_scorned_the_pope }
+			prestige = -200
+			hidden_tooltip = { 
+				religion_head = { 		
+					show_scope_change = no	
+					opinion = {
+						modifier = opinion_offended
+						years = 30
+						who = ROOT
+					} 
+				} 
+			}
+		}
+		else_if = {  #DRD-TODO: short-circuit the rest of this else_if chain until more options are implemented.
+			limit = { always = yes }
+		}
+		else_if = {
+			limit = {
+				religion_head = {
+					is_alive = yes
+					is_theocracy = no
+					is_vassal_or_below_of = ROOT
+				}
+			}
+			prestige = -200
+			piety = 100
+		}
+		else_if = {
+			limit = {
+				tier = EMPEROR
+				religion_head = {
+					is_alive = yes
+					is_theocracy = no
+					lower_tier_than = KING
+				}
+			}
+			prestige = -200
+		}
+		else_if = {
+			limit = {
+				religion_head = {
+					is_alive = yes
+					is_theocracy = no
+					lower_tier_than = ROOT
+				}
+			}
+			prestige = -50
+		}
+		set_character_flag = flag_crowned_by_spiritual
+		job_spiritual = { 
+			save_event_target_as = coronation_priest 
+			show_scope_change = no	
+			opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+			reverse_opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+		}
+		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
+		ai_chance = { 
+			factor = 10
+			modifier = {  # If the RH is a vassal, always try asking them first.
+				factor = 0
+				religion_head = {
+					any_liege = { character = ROOT }
+					NOT = {
+						has_opinion_modifier = {
+							who = ROOT
+							modifier = opinion_requested_independence 
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 1.25
+				trait = content
+			}
+			modifier = {
+				factor = 0.7
+				trait = proud
+			}
+			modifier = {
+				factor = 0.7
+				trait = ambitious
+			}
+			modifier = {
+				factor = 0.7
+				tier = EMPEROR
 			}
 		}
 	}
@@ -2038,7 +2228,7 @@ character_event = {
 
 	immediate = {
 		set_defacto_liege = THIS
-		emf_liege_change = yes  #DRD-DIFF: HIP/EMF compatibilty, no effect otherwise.
+		emf_liege_change = yes  #MOD HIP/EMF: compatibilty, no effect otherwise.
 	}
 }
 
@@ -2675,11 +2865,18 @@ character_event = {
 		}
 		text = EVTDESCHFB20300
 	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			has_character_flag = flag_crowned_by_spiritual
+			war = no
+		}
+		text = EVTDESCDRDHFD20300
+	}
 	desc = {
 		trigger = {
 			war = yes
 		}
-		text = EVTDESCHFC20300
+		text = EVTDESCDRDHFC20300
 		picture = GFX_evt_mounted_combat_day_hf
 	}
 
@@ -2887,6 +3084,7 @@ letter_event = {
 	trigger = {
 		FROM = {
 			OR = {
+				has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
@@ -2988,6 +3186,7 @@ letter_event = {
 	trigger = {
 		FROM = {
 			OR = {
+				has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
@@ -3092,6 +3291,7 @@ letter_event = {
 	trigger = {
 		#DRD-DIFF: avoid checking for distinct religions
 		OR = {
+			has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
@@ -3113,6 +3313,7 @@ letter_event = {
 	trigger = {
 		#DRD-DIFF: avoid checking for distinct religions
 		OR = {
+			has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
@@ -3166,6 +3367,7 @@ character_event = {
 	trigger = { 
 		#DRD-DIFF: avoid checking for distinct religions
 		OR = {
+			has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
@@ -6940,19 +7142,14 @@ character_event = {
 	hide_window = yes
 
 	trigger = { 
-		event_target:coronation_ruler = {
-			#DRD-DIFF: avoid checking for distinct religions
+		event_target:coronation_ruler = {  #DRD-DIFF: coronation and religion checks.
 			OR = {
+				has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
 			}
-			NOR = {
-				trait = crowned_by_priest
-				trait = crowned_by_bishop
-				trait = crowned_by_pope
-				trait = crowned_by_myself
-			} 
+			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		} 
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
 		event_target:coronation_ruler = { is_alive = yes } #Check if the ruler supposed to be crownied is still alive.
@@ -7041,7 +7238,10 @@ character_event = {
 			ROOT = { 
 				war = no
 				NOT = { has_character_flag = flag_secluded_coronation }
-				NOT = { has_character_flag = flag_crowned_by_pope }
+				OR = {   #DRD-DIFF: not by the Lord Spiritual.
+					has_character_flag = flag_crowned_by_bishop
+					has_character_flag = flag_crowned_by_priest
+				}
 				age = 16
 			}
 		}
@@ -7084,12 +7284,41 @@ character_event = {
 		text = EVTDESCDRDHFI20366		# Localization for any child ruler crowned by the Pope in a barn.
 		picture = GFX_evt_a_crowning_ceremony
 	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			ROOT = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = no
+			}
+		}
+		text = EVTDESCDRDHFJ20366		# Localization for any non-RH adult ruler crowned by their Lord Spiritual (not in a barn).
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			ROOT = { 
+				war = no
+				has_character_flag = flag_secluded_coronation
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = no
+			}
+		}
+		text = EVTDESCDRDHFK20366		# Localization for any non-RH adult ruler crowned by their Lord Spiritual in a barn.
+		picture = GFX_evt_a_crowning_ceremony
+	}
 	desc = {
 		trigger = {
 			ROOT = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				NOT = { has_character_flag = flag_crowned_by_pope }
+				OR = {   #DRD-DIFF: not by the Lord Spiritual.
+					has_character_flag = flag_crowned_by_bishop
+					has_character_flag = flag_crowned_by_priest
+				}
 			}
 		}
 		text = EVTDESCHFL20366		# Localization for any ruler crowned by a Bishop or Priest in a barn.
@@ -7116,6 +7345,47 @@ character_event = {
 		text = EVTDESCDRDHFN20366		# War Coronation description.
 		picture = GFX_evt_mounted_combat_day_hf
 	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			ROOT = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = yes
+			}
+			event_scope:coronation_artifact = { has_flag = crown }
+		}
+		text = EVTDESCDRDHFO20366		# Localization for any religious head with an artifact crown (not in a barn).
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			ROOT = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = yes
+			}
+			NOT = { event_scope:coronation_artifact = { has_flag = crown } }
+		}
+		text = EVTDESCDRDHFP20366		# Localization for any religious head without an artifact crown (not in a barn).
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			ROOT = { 
+				war = no
+				has_character_flag = flag_secluded_coronation
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = yes
+			}
+		}
+		text = EVTDESCDRDHFQ20366		# Localization for any religious head crowned in a barn.
+		picture = GFX_evt_a_crowning_ceremony
+	}
 
 
 	picture = GFX_evt_found_hre
@@ -7124,19 +7394,14 @@ character_event = {
 
 	trigger = { 
 		NOT = { has_character_flag = flag_being_coronated }
-		event_target:coronation_ruler = { 
-			#DRD-DIFF: avoid checking for distinct religions
+		event_target:coronation_ruler = {  #DRD-DIFF: coronation and religion checks.
 			OR = {
+				has_character_flag = flag_crowned_by_spiritual
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
 			}
-			NOR = { 
-				trait = crowned_by_myself
-				trait = crowned_by_pope
-				trait = crowned_by_bishop
-				trait = crowned_by_priest
-			} 
+			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		}
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
 		event_target:coronation_ruler = { is_alive = yes } #Check if the ruler supposed to be crowned is still alive. (check for guests)
@@ -7169,12 +7434,16 @@ character_event = {
 			set_character_flag = flag_being_coronated #Safety check to avoid double event.
 		}
 		ROOT = { save_persistent_event_target = { name = coronation_priest_per scope = event_target:coronation_priest } } #Needed to localize the trait properly.
+		save_persistent_event_target = { name = coronation_religion scope = religion_scope }
 
 		if = {  #DRD-DIFF: assign hidden trait to keep track of the priest's religious head status (only important for crowned_by_bishop)
 			limit = {
 				OR = {
 					has_character_flag = flag_crowned_by_pope 
-					rightful_religious_head = event_target:coronation_priest
+					AND = {
+						has_character_flag = flag_crowned_by_bishop
+						rightful_religious_head = event_target:coronation_priest
+					}
 				}
 			}
 			add_trait = crowned_by_religious_head_hidden
@@ -7186,6 +7455,15 @@ character_event = {
 				}
 			}
 			add_trait = crowned_nonchristian_hidden
+		}
+		event_target:coronation_artifact = {  #DRD-DIFF: if using a special crown, add trait to display it.
+			persistent_event_target:rh_title = {
+				ROOT = {
+					PREV = {
+						drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+					}
+				}
+			}
 		}
 
 	} 
@@ -7279,6 +7557,10 @@ character_event = {
 				has_character_flag = flag_crowned_by_priest
 			} 
 			add_trait = crowned_by_priest  #DRD-DIFF: localization fix, no need for a tooltip anymore
+		}
+		if = {  #DRD-DIFF: crowned by Lord Spiritual.
+			limit = { has_character_flag = flag_crowned_by_spiritual }
+			set_flag = crowned_no_trait
 		}
 
 		#Assign possible modifier.
@@ -7462,6 +7744,32 @@ character_event = {
 		text = EVTDESCDRDHFI20367		# Localization for any child ruler crowned by the Pope in a barn.
 		picture = GFX_evt_a_crowning_ceremony
 	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			FROM = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = no
+			}
+		}
+		text = EVTDESCDRDHFJ20367		# Localization for any non-RH adult ruler crowned by their Lord Spiritual (not in a barn).
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			FROM = { 
+				war = no
+				has_character_flag = flag_secluded_coronation
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = no
+			}
+		}
+		text = EVTDESCDRDHFK20367		# Localization for any non-RH adult ruler crowned by their Lord Spiritual in a barn.
+		picture = GFX_evt_a_crowning_ceremony
+	}
 	desc = {
 		trigger = {
 			FROM = { 
@@ -7492,6 +7800,47 @@ character_event = {
 		}
 		text = EVTDESCDRDHFN20367		# War Coronation description.
 		picture = GFX_evt_mounted_combat_day_hf
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			FROM = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = yes
+			}
+			event_scope:coronation_artifact = { has_flag = crown }
+		}
+		text = EVTDESCDRDHFO20367		# Localization for any religious head with an artifact crown (not in a barn).
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			FROM = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = yes
+			}
+			NOT = { event_scope:coronation_artifact = { has_flag = crown } }
+		}
+		text = EVTDESCDRDHFP20366		# Localization for any religious head without an artifact crown (not in a barn).
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = {
+			FROM = { 
+				war = no
+				has_character_flag = flag_secluded_coronation
+				has_character_flag = flag_crowned_by_spiritual
+				age = 16
+				controls_religion = yes
+			}
+		}
+		text = EVTDESCDRDHFQ20366		# Localization for any religious head crowned in a barn.
+		picture = GFX_evt_a_crowning_ceremony
 	}
 
 	picture = GFX_evt_a_crowning_ceremony
@@ -7707,6 +8056,7 @@ character_event = {
 		clr_character_flag = flag_regular_coronation
 		clr_character_flag = flag_secluded_coronation
 
+		clr_character_flag = flag_crowned_by_spiritual
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
@@ -7785,14 +8135,9 @@ character_event = {
 				FROM = { has_character_modifier = extravagant_coronation }
 				independent = yes
 				higher_real_tier_than = DUKE
-				OR = { 
+				OR = {  #DRD-DIFF: coronation checks. 
 					has_character_modifier = crowned_in_barn
-					NOR = { 
-						trait = crowned_by_priest
-						trait = crowned_by_bishop
-						trait = crowned_by_pope
-						trait = crowned_by_myself
-					}
+					NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 				}
 			}
 			hidden_tooltip = { character_event = { id = DRD_HF.20392 days = 50 random = 50 } } #Envious ruler who isn't crowned or is crowned in barn is upset that his host had a good coronation.
@@ -7918,7 +8263,7 @@ character_event = {
 		random_list = {
 			10 = { 
 				trigger = {
-					religion_head = { always = yes }
+					religion_head = { is_theocracy = yes }
 				}
 				modifier = {
 					factor = 0
@@ -7936,6 +8281,12 @@ character_event = {
 				set_character_flag = flag_crowned_by_pope
 			}
 			80 = { 
+				trigger = {
+					NOR = {
+						religion_head = { is_theocracy = no }
+						cns_religion_uses_clergyless_government = yes
+					}
+				}
 				modifier = { #Checking if there is no Antipope, and you are not excommunicated, go for the Pope.
 					factor = 0.1
 					NOT = { trait = excommunicated }
@@ -7955,6 +8306,12 @@ character_event = {
 				character_event = { id = DRD_HF.20373 }
 			}
 			10 = { 
+				trigger = {
+					NOR = {
+						religion_head = { is_theocracy = no }
+						cns_religion_uses_clergyless_government = yes
+					}
+				}
 				modifier = { # Emperors always crowned by somebody important...
 					factor = 0
 					NOT = { trait = excommunicated }
@@ -7982,6 +8339,23 @@ character_event = {
 					}
 				}
 				add_trait = crowned_by_priest
+			}
+			30 = {
+				trigger = {
+					OR = {
+						religion_head = { is_theocracy = no }
+						cns_religion_uses_clergyless_government = yes
+					}
+				}
+				modifier = {
+					factor = 0.5
+					tier = EMPEROR
+				}
+				modifier = {
+					factor = 0.5
+					religion_head = { is_vassal_or_below_of = ROOT }
+				}
+				set_flag = crowned_no_trait
 			}
 		}
 		random_list = { #Second list to determine which modifier.
@@ -8088,6 +8462,7 @@ character_event = {
 		drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
 		ruled_years = 5
 		NOR =  { 
+			has_character_flag = flag_crowned_by_spiritual
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
@@ -8131,13 +8506,8 @@ character_event = {
 				}
 				modifier = { 
 					factor = 1.75
-					spouse = { 
-						OR = { 
-							trait = crowned_by_priest
-							trait = crowned_by_bishop
-							trait = crowned_by_pope
-							trait = crowned_by_myself
-						}
+					spouse = {  #DRD-DIFF: coronation checks. 
+						drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
 					}
 				}
 				modifier = { 
@@ -8834,14 +9204,9 @@ character_event = {
 
 	is_triggered_only = yes
 
-	trigger = { 
+	trigger = {  #DRD-DIFF: coronation checks. 
 		tier = EMPEROR
-		OR = { 
-			trait = crowned_by_priest
-			trait = crowned_by_bishop
-			trait = crowned_by_pope
-			trait = crowned_by_myself
-		}
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
 		has_character_modifier = crowned_in_barn
 	 } 
 
@@ -8891,13 +9256,8 @@ character_event = {
 
 	is_triggered_only = yes
 
-	trigger = { 
-		OR = { 
-			trait = crowned_by_priest
-			trait = crowned_by_bishop
-			trait = crowned_by_pope
-			trait = crowned_by_myself
-		}
+	trigger = {  #DRD-DIFF: coronation checks. 
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
 		has_character_modifier = extravagant_coronation
 	 } 
 
@@ -8958,13 +9318,8 @@ character_event = {
 
 	is_triggered_only = yes
 
-	trigger = { 
-		OR = { 
-			trait = crowned_by_priest
-			trait = crowned_by_bishop
-			trait = crowned_by_pope
-			trait = crowned_by_myself
-		}
+	trigger = {  #DRD-DIFF: coronation checks. 
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
 		has_character_modifier = extravagant_coronation
 	 } 
 
@@ -8987,13 +9342,8 @@ character_event = {
 
 	is_triggered_only = yes
 
-	trigger = { 
-		OR = { 
-			trait = crowned_by_priest
-			trait = crowned_by_bishop
-			trait = crowned_by_pope
-			trait = crowned_by_myself
-		}
+	trigger = {  #DRD-DIFF: coronation checks. 
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
 		has_character_modifier = extravagant_coronation
 	 } 
 
@@ -9036,14 +9386,9 @@ character_event = {
 
 	trigger = { 
 		FROMFROM = { has_character_modifier = extravagant_coronation }
-		OR = { 
+		OR = {  #DRD-DIFF: coronation checks. 
 			has_character_modifier = crowned_in_barn
-			NOR = { 
-				trait = crowned_by_priest
-				trait = crowned_by_bishop
-				trait = crowned_by_pope
-				trait = crowned_by_myself
-			}
+			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		}
 	 } 
 	option = { 
@@ -9553,6 +9898,7 @@ character_event = {
 		}
 		NOT = { check_variable = { which = uncrowned_count value = 30 } } #Stop at minus thirty.
 		NOR =  { 
+			has_character_flag = flag_crowned_by_spiritual
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
@@ -9587,6 +9933,7 @@ character_event = {
 	trigger = { 
 		OR = { 
 			has_character_flag = flag_preparing_coronation
+			has_character_flag = flag_crowned_by_spiritual
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
@@ -9605,6 +9952,7 @@ character_event = {
 
 	immediate = { 
 		clr_character_flag = flag_preparing_coronation
+		clr_character_flag = flag_crowned_by_spiritual
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
@@ -9624,6 +9972,7 @@ character_event = {
 		clr_character_flag = flag_extravagant_coronation
 		clr_character_flag = flag_regular_coronation
 		clr_character_flag = flag_secluded_coronation
+		clr_character_flag = flag_crowned_by_spiritual
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
