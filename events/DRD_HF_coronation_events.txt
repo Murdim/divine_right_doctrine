@@ -7826,7 +7826,7 @@ character_event = {
 			}
 			NOT = { event_scope:coronation_artifact = { has_flag = crown } }
 		}
-		text = EVTDESCDRDHFP20366		# Localization for any religious head without an artifact crown (not in a barn).
+		text = EVTDESCDRDHFP20367		# Localization for any religious head without an artifact crown (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
 	}
 	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
@@ -7839,7 +7839,7 @@ character_event = {
 				controls_religion = yes
 			}
 		}
-		text = EVTDESCDRDHFQ20366		# Localization for any religious head crowned in a barn.
+		text = EVTDESCDRDHFQ20367		# Localization for any religious head crowned in a barn.
 		picture = GFX_evt_a_crowning_ceremony
 	}
 

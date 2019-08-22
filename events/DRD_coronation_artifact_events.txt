@@ -41,7 +41,6 @@ province_event = {  # FROM = reformer.
 		}
 		# As a fallback, do not try to look for an artifact to replace. If it HAS been created, just let it coexist with the slotless one.
 		event_target:rh_artifact = {
-			event_target:rh_character = { piety = 10000 }
 			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
 		}
 
@@ -72,10 +71,8 @@ province_event = {  # Monthly upkeep event, show or hide the special crown in th
 				event_target:rh_title = {
 					if = {
 						limit = { event_target:rh_artifact = { is_artifact_active = yes } }
-						event_target:rh_character = { piety = 1000 }
 						drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
 					} else = {
-						event_target:rh_character = { piety = -1000 }
 						drd_title_remove_dead_crown_trait_from_prev = yes
 					}
 				}
