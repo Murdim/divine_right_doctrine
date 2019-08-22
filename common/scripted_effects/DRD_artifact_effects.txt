@@ -1,6 +1,6 @@
 #DRD-FILE
 
-drd_title_replace_or_create_artifact_rh_character = {
+drd_title_replace_or_create_artifact_for_rh_character = {
 	trigger_switch = {
 		on_trigger = title
 		d_norse_pagan_reformed = {
@@ -76,62 +76,115 @@ drd_title_replace_or_create_artifact_rh_character = {
 	}
 }
 
-drd_title_add_dead_crown_trait_to_prev = {
+drd_character_create_generic_crown = {
+	if = {
+		limit = { has_religion_feature = religion_peaceful }
+		add_artifact = crown_generic_peaceful_divine_right
+		new_artifact = { save_event_target_as = rh_artifact }
+	} else_if = {
+		limit = { has_religion_feature = religion_warlike }
+		add_artifact = crown_generic_warlike_divine_right
+		new_artifact = { save_event_target_as = rh_artifact }
+	} else_if = {
+		limit = { has_religion_feature = religion_proselytizing }
+		add_artifact = crown_generic_proselytizing_divine_right
+		new_artifact = { save_event_target_as = rh_artifact }
+	} else_if = {
+		limit = { has_religion_feature = religion_cosmopolitan }
+		add_artifact = crown_generic_cosmopolitan_divine_right
+		new_artifact = { save_event_target_as = rh_artifact }
+	} else = {
+		add_artifact = crown_generic_other_divine_right
+		new_artifact = { save_event_target_as = rh_artifact }
+	}
+}
+
+drd_artifact_add_dead_crown_trait_to_prev = {
 	trigger_switch = {
-		on_trigger = title
-		d_norse_pagan_reformed = {
+		on_trigger = artifact_type
+		crown_fylkir = {
 			PREV = { add_trait = dead_crown_fylkir }
 		}
-		d_tengri_pagan_reformed = {
+		crown_tengri_fylkir= {
 			PREV = { add_trait = dead_crown_tengri_fylkir }
 		}
-		d_finnish_pagan_reformed = {
+		crown_finnish_fylkir = {
 			PREV = { add_trait = dead_crown_finnish_fylkir }
 		}
-		d_west_african_pagan_reformed = {
+		crown_west_african_fylkir = {
 			PREV = { add_trait = dead_crown_west_african_fylkir }
 		}
-		d_zun_pagan_reformed = {
+		crown_zun_fylkir = {
 			PREV = { add_trait = dead_crown_zun_fylkir }
 		}
-		d_slavic_pagan_reformed = {
+		crown_slavic_fylkir = {
 			PREV = { add_trait = dead_crown_slavic_fylkir }
 		}
-		d_baltic_pagan_reformed = {
+		crown_romuva_fylkir = {
 			PREV = { add_trait = dead_crown_romuva_fylkir }
 		}
-		d_aztec_reformed = {
+		crown_aztec_fylkir = {
 			PREV = { add_trait = dead_crown_aztec_fylkir }
+		}
+		crown_generic_peaceful_divine_right = {
+			PREV = { add_trait = dead_crown_zun_fylkir }
+		}
+		crown_generic_warlike_divine_right = {
+			PREV = { add_trait = dead_crown_fylkir }
+		}
+		crown_generic_proselytizing_divine_right = {
+			PREV = { add_trait = dead_crown_tengri_fylkir }
+		}
+		crown_generic_cosmopolitan_divine_right = {
+			PREV = { add_trait = dead_crown_pahlavi }
+		}
+		crown_generic_other_divine_right = {
+			PREV = { add_trait = dead_crown_west_african_fylkir }
 		}
 	}
 }
 
-drd_title_remove_dead_crown_trait_from_prev = {
+drd_artifact_remove_dead_crown_trait_from_prev = {
 	trigger_switch = {
-		on_trigger = title
-		d_norse_pagan_reformed = {
+		on_trigger = artifact_type
+		crown_fylkir = {
 			PREV = { remove_trait = dead_crown_fylkir }
 		}
-		d_tengri_pagan_reformed = {
+		crown_tengri_fylkir= {
 			PREV = { remove_trait = dead_crown_tengri_fylkir }
 		}
-		d_finnish_pagan_reformed = {
+		crown_finnish_fylkir = {
 			PREV = { remove_trait = dead_crown_finnish_fylkir }
 		}
-		d_west_african_pagan_reformed = {
+		crown_west_african_fylkir = {
 			PREV = { remove_trait = dead_crown_west_african_fylkir }
 		}
-		d_zun_pagan_reformed = {
+		crown_zun_fylkir = {
 			PREV = { remove_trait = dead_crown_zun_fylkir }
 		}
-		d_slavic_pagan_reformed = {
+		crown_slavic_fylkir = {
 			PREV = { remove_trait = dead_crown_slavic_fylkir }
 		}
-		d_baltic_pagan_reformed = {
+		crown_romuva_fylkir = {
 			PREV = { remove_trait = dead_crown_romuva_fylkir }
 		}
-		d_aztec_reformed = {
+		crown_aztec_fylkir = {
 			PREV = { remove_trait = dead_crown_aztec_fylkir }
+		}
+		crown_generic_peaceful_divine_right = {
+			PREV = { remove_trait = dead_crown_zun_fylkir }
+		}
+		crown_generic_warlike_divine_right = {
+			PREV = { remove_trait = dead_crown_fylkir }
+		}
+		crown_generic_proselytizing_divine_right = {
+			PREV = { remove_trait = dead_crown_tengri_fylkir }
+		}
+		crown_generic_cosmopolitan_divine_right = {
+			PREV = { remove_trait = dead_crown_pahlavi }
+		}
+		crown_generic_other_divine_right = {
+			PREV = { remove_trait = dead_crown_west_african_fylkir }
 		}
 	}
 }

@@ -4,6 +4,7 @@
 on_startup = {
 	events = {
 		DRD_HF.20372  #SEE DRD_HF_coronation_events.txt: add crowned traits
+		DRD.104  #SEE DRD_coronation_artifact_events.txt: create or replace artifacts for Temporal heads with Divine Right.
 	}
 }
 
@@ -34,15 +35,10 @@ on_death = {
 	}
 }
 
-on_reform_religion = {
-	events = {
-		DRD.100  #SEE DRD_coronation_artifact_events.txt: replace Temporal heads artifacts with their slotless, coronation-locked version.
-	}
-}
-
 on_new_holder = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+		DRD.100  #SEE DRD_coronation_artifact_events.txt: create or replace artifacts for Temporal heads with Divine Right.
 	}
 }
 

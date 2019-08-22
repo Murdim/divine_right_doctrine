@@ -7457,13 +7457,7 @@ character_event = {
 			add_trait = crowned_nonchristian_hidden
 		}
 		event_target:coronation_artifact = {  #DRD-DIFF: if using a special crown, add trait to display it.
-			persistent_event_target:rh_title = {
-				ROOT = {
-					PREV = {
-						drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
-					}
-				}
-			}
+			drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
 		}
 
 	} 

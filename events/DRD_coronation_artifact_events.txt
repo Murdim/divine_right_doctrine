@@ -3,27 +3,32 @@
 
 namespace=DRD  # 100-199
 
-character_event = {  # On reformation with Divine Right and Temporal leadership, ROOT = reformer.
+character_event = {  # On religious head title creation, ROOT = holder (usually a reformer), FROM = title.
 	id = DRD.100
 	is_triggered_only = yes
 	hide_window = yes
 
 	trigger = {
+		FROM = {
+			controls_religion = yes
+			NOT = { has_flag = created_divine_right_artifact }
+		}
+		is_landed = yes
+		is_theocracy = no
 		drd_religion_allows_coronation = yes  #SEE DRD_coronation_triggers.txt
-		has_religion_feature = religion_temporal_head
 	}
 
-	immediate = {  # One day after the main reformation event that should have created the artifact.
+	immediate = {  # Wait for one day, another event (e.g reformation) may be creating an artifact at the same time.
 		set_flag = crowned_no_trait
-		any_demesne_title = {
-			limit = { controls_religion = yes }
+		FROM = {
+			set_flag = created_divine_right_artifact
 			save_event_target_as = rh_title
 		}
 		1 = { province_event = { id = DRD.101 days = 1 } }
 	}
 }
 
-province_event = {  # FROM = reformer.
+province_event = {  # FROM = new religious head title holder.
 	id = DRD.101
 	is_triggered_only = yes
 	hide_window = yes
@@ -38,14 +43,20 @@ province_event = {  # FROM = reformer.
 		}
 
 		event_target:rh_title = {
-			drd_title_replace_or_create_artifact_rh_character = yes  #SEE DRD_artifact_effects.txt
+			drd_title_replace_or_create_artifact_for_rh_character = yes  #SEE DRD_artifact_effects.txt
+			# If a special artifact WAS already created, just let it coexist with the slotless one.
 		}
-		# As a fallback, do not try to look for an artifact to replace. If it HAS been created, just let it coexist with the slotless one.
+		event_target:rh_character = {
+			if = {
+				limit = { NOT = { event_target:rh_artifact = { always = yes } } }
+				drd_character_create_generic_crown = yes  #SEE DRD_artifact_effects.txt
+			}
+			character_event = { id = DRD.102 }
+		}
 		event_target:rh_artifact = {
 			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
 		}
 
-		event_target:rh_character = { character_event = { id = DRD.102 } }
 		province_event = { id = DRD.103 days = 30 }
 	}
 }
@@ -65,8 +76,8 @@ character_event = {  # ROOT = religious head (almost always the reformer).
 	}
 
 	immediate = {
-		event_target:rh_title = {
-			drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+		event_target:rh_artifact = {
+			drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
 		}
 	}
 
@@ -100,17 +111,56 @@ province_event = {  # Monthly upkeep event, show or hide the special crown in th
 					}
 					save_event_target_as = rh_character
 				}
-				event_target:rh_title = {
+				PREV = {
 					if = {
-						limit = { event_target:rh_artifact = { is_artifact_active = yes } }
-						drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+						limit = { is_artifact_active = yes }
+						drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
 					} else = {
-						drd_title_remove_dead_crown_trait_from_prev = yes
+						drd_artifact_remove_dead_crown_trait_from_prev = yes
 					}
 				}
 			}
 		}
 		
 		repeat_event = { id = DRD.103 days = 30 }
+	}
+}
+
+character_event = {  # On starting a new campaign. ROOT = temporal head with coronation mechanics.
+	id = DRD.104
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		controls_religion = yes
+		is_theocracy = no
+		drd_religion_allows_coronation = yes  #SEE DRD_coronation_triggers.txt
+	}
+
+	immediate = {
+		set_flag = crowned_no_trait
+		save_event_target_as = rh_character
+		any_demesne_title = {
+			limit = { controls_religion = yes }
+			set_flag = created_divine_right_artifact
+			save_event_target_as = rh_title
+		}
+		event_target:rh_title = {
+			drd_title_replace_or_create_artifact_for_rh_character = yes  #SEE DRD_artifact_effects.txt
+		}
+		event_target:rh_character = {
+			if = {
+				limit = { NOT = { event_target:rh_artifact = { always = yes } } }
+				drd_character_create_generic_crown = yes  #SEE DRD_artifact_effects.txt
+			}
+		}
+		event_target:rh_artifact = {
+			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
+			drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+		}
+
+		1 = { province_event = { id = DRD.103 days = 30 } }
 	}
 }
