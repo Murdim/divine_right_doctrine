@@ -14,6 +14,7 @@ character_event = {  # On reformation with Divine Right and Temporal leadership,
 	}
 
 	immediate = {  # One day after the main reformation event that should have created the artifact.
+		set_flag = crowned_no_trait
 		any_demesne_title = {
 			limit = { controls_religion = yes }
 			save_event_target_as = rh_title
@@ -44,7 +45,38 @@ province_event = {  # FROM = reformer.
 			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
 		}
 
-		province_event = { id = DRD.103 }
+		event_target:rh_character = { character_event = { id = DRD.102 } }
+		province_event = { id = DRD.103 days = 30 }
+	}
+}
+
+character_event = {  # ROOT = religious head (almost always the reformer).
+	id = DRD.102
+	is_triggered_only = yes
+	desc = {
+		trigger = { event_target:rh_artifact = { has_flag = crown } }
+		text = EVTDESCDRDA102
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+		trigger = { NOT = { event_target:rh_artifact = { has_flag = crown } } }
+		text = EVTDESCDRDB102
+		picture = GFX_evt_a_crowning_ceremony
+	}
+
+	immediate = {
+		event_target:rh_title = {
+			drd_title_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+		}
+	}
+
+	option = {
+		name = EVTOPTAHF20366
+		set_flag = crowned_no_trait  # Just in case the reformer died after a single day...
+		add_character_modifier = {
+			name = extravagant_coronation
+			days = 7300
+		}
 	}
 }
 
