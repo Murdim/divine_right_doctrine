@@ -8,9 +8,10 @@ targetted_decisions = {
 		ai_check_interval = 24  # Every 2 years.
 
 		from_potential = {
-			drd_religion_allows_priest_nomination = yes
-			drd_ruler_is_a_crowned_king = yes
-			NOT = { religion_head = { is_theocracy = no } }  #TODO version of this decision for theocratic heads.
+			drd_religion_allows_priest_nomination = yes  #SEE DRD_priest_nomination_triggers.txt
+			drd_religion_has_a_clergy = yes  #SEE DRD_common_triggers.txt
+			drd_ruler_is_a_crowned_king = yes  #SEE DRD_coronation_triggers.txt
+			religion_head = { is_theocracy = yes }
 			prisoner = no
 			is_incapable = no
 			NOT = { has_any_opinion_modifier = drd_opinion_sponsoring_nomination }
@@ -46,13 +47,8 @@ targetted_decisions = {
 
 		ai_acceptance = {
 			factor = -50
-			yes_threshold = 200  # "Maybe" means the lower clergy might object to the nomination, if the religious head is inexistant or compromised
+			yes_threshold = 200  # "Maybe" means the lower clergy might object to the nomination, if the religious head is compromised.
 			show_maybe_for_human = yes 
-			additive_modifier = {
-				value = 200  # No religious head means no one can straight up reject the nomination
-				localisation_key = drd_priest_nomination_no_religious_head
-				NOT = { rightful_religious_head_scope = { always = yes } }
-			}
 			additive_modifier = {
 				value = 50
 				localisation_key = drd_priest_nomination_is_vassal_of_sponsor
@@ -75,6 +71,103 @@ targetted_decisions = {
 			drd_sponsor_nomination_score = yes
 			drd_religious_head_from_opinion_score = yes  # Opinion of sponsor
 			drd_religious_head_bias_nomination_score = yes
+			drd_cooldown_nomination_score = yes
+		}
+
+		effect = {
+			hidden_effect = {
+				FROM = {
+					opinion = { who = ROOT modifier = drd_opinion_sponsoring_nomination }
+				}
+				repeat_event = { id = DRD.1 }  #SEE DRD_HF_priest_nomination_events.txt
+			}
+		}
+
+		revoke_allowed = {
+			always = no
+		}
+
+		ai_will_do = {
+			factor = 0.005
+			modifier = {
+				factor = 0
+				NOT = { host = { character = FROM } }
+			}
+			modifier = {
+				factor = 0
+				FROM = { check_variable = { which = drd_nomination_cooldown value = 1 } }
+			}
+			modifier = {
+				factor = 0
+				FROM = { trait = cynical }
+			}
+			modifier = {
+				factor = 3
+				FROM = { trait = zealous }
+			}
+			modifier = {
+				factor = 4
+				is_close_relative = FROM
+			}
+		}
+	}
+
+	drd_nominate_priest_no_rh = {
+		only_playable = yes
+		filter = court
+		ai_target_filter = court
+		ai_check_interval = 24  # Every 2 years.
+
+		from_potential = {
+			drd_religion_allows_priest_nomination = yes  #SEE DRD_priest_nomination_triggers.txt
+			drd_religion_has_a_clergy = yes  #SEE DRD_common_triggers.txt
+			drd_ruler_is_a_crowned_king = yes  #SEE DRD_coronation_triggers.txt
+			OR = {  # Either no religious head or FROM is temporal head.
+				NOT = { religion_head = { always = yes } }
+				AND = {
+					controls_religion = yes
+					is_theocracy = no
+				}
+			}
+			prisoner = no
+			is_incapable = no
+			NOT = { has_any_opinion_modifier = drd_opinion_sponsoring_nomination }
+			NOT = { has_character_modifier = drd_nomination_cancelled_today }
+		}
+
+		potential = {
+			is_adult = yes
+			is_ruler = no
+			religion = FROM
+			vassal_of = FROM
+			OR = {
+				AND = {	
+					is_female = no
+					religion_allows_male_temple_holders = yes
+				}
+				AND = {	
+					is_female = yes
+					religion_allows_female_temple_holders = yes
+				}
+			}
+		}
+		allow = {
+			prisoner = no
+			is_incapable = no
+			NOT = { trait = excommunicated }
+			NOT = { is_primary_heir = FROM }
+			OR = {
+				is_married = no
+				drd_religion_values_celibate = no
+			}
+		}
+
+		ai_acceptance = {
+			factor = 150
+			yes_threshold = 200  # "Maybe" means the lower clergy might object to the nomination.
+			show_maybe_for_human = yes 
+			drd_candidate_nomination_score = yes  #SEE DRD_priest_nomination_score_values.txt
+			drd_sponsor_nomination_score = yes
 			drd_cooldown_nomination_score = yes
 		}
 

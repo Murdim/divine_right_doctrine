@@ -29,3 +29,8 @@ drd_religion_uses_christian_features = {
 		}
 	}
 }
+
+drd_religion_has_a_clergy = {
+	NOT = { religion_group = muslim }  # No priests under Iqta.
+	NOT = { cns_religion_features_clergyless = yes }  #MOD church_and_state CNS_religion_feature_triggers.txt
+}

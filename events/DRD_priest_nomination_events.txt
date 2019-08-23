@@ -19,9 +19,10 @@ character_event = {
 			}
 			opinion = { who = FROM modifier = drd_opinion_nominated }
 		}
-		else_if = {  # If there is a religious head AND it is neither wicked, nor a vassal of sponsor, nor the candidate, check its bias.
+		else_if = {  # If there is a theocratic head AND it is neither wicked, nor a vassal of sponsor, nor the candidate, check its bias.
 			limit = {
 				rightful_religious_head_scope = {
+					is_theocracy = yes
 					NOR = {
 						has_bad_priest_trait_trigger = yes
 						vassal_of = FROM

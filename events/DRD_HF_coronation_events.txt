@@ -191,7 +191,7 @@ character_event = {
 		trigger = { 
 			NOR = {  # DRD-DIFF: use different choices if the religion is Non-Clerical or a temporal head exists.
 				religion_head = { is_theocracy = no }
-				cns_religion_uses_clergyless_government = yes
+				drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 			}
 			NOT = { trait = excommunicated }
 			#DRD-DIFF: investiture is assumed to be disabled for the religion
@@ -259,7 +259,7 @@ character_event = {
 		trigger = { 
 			NOR = {  # DRD-DIFF: use different choices if the religion is Non-Clerical or a temporal head exists.
 				religion_head = { is_theocracy = no }
-				cns_religion_uses_clergyless_government = yes
+				drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 			}
 			#DRD-DIFF: investiture is assumed to be disabled for the religion
 			any_realm_character = {   #DRD-DIFF: scripted trigger includes autocephaly
@@ -437,13 +437,13 @@ character_event = {
 			trigger = {
 				controls_religion = no
 				NOT = { religion_head = { is_theocracy = no } }
-				cns_religion_uses_clergyless_government = yes  #MOD church_and_state CNS_clergyless_government_triggers.txt
+				drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 			}
 		}
 		trigger = { 
 			OR = {
 				religion_head = { is_theocracy = no }
-				cns_religion_uses_clergyless_government = yes
+				drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 			}
 			job_spiritual = { religion = ROOT }
 		}
@@ -8278,7 +8278,7 @@ character_event = {
 				trigger = {
 					NOR = {
 						religion_head = { is_theocracy = no }
-						cns_religion_uses_clergyless_government = yes
+						drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 					}
 				}
 				modifier = { #Checking if there is no Antipope, and you are not excommunicated, go for the Pope.
@@ -8303,7 +8303,7 @@ character_event = {
 				trigger = {
 					NOR = {
 						religion_head = { is_theocracy = no }
-						cns_religion_uses_clergyless_government = yes
+						drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 					}
 				}
 				modifier = { # Emperors always crowned by somebody important...
@@ -8338,7 +8338,7 @@ character_event = {
 				trigger = {
 					OR = {
 						religion_head = { is_theocracy = no }
-						cns_religion_uses_clergyless_government = yes
+						drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 					}
 				}
 				modifier = {

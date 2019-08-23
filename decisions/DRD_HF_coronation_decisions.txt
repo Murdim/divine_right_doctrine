@@ -106,21 +106,29 @@ decisions = {
 					} 
 				} 
 			} 
-			OR = {  #DRD-DIFF: no Pope, no investiture, no additional requirement for emperors
-				custom_tooltip = {
-					text = drd_coronation_religious_head
-					religion_head = {
-						religion = ROOT
-						NOT = { block_general_event_trigger = yes }
+			conditional_tooltip = {  # DRD-DIFF: no priest required if the religion is Non-Clerical or a temporal head exists.
+				trigger = {
+					NOR = {
+						religion_head = { is_theocracy = no }
+						drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
 					}
 				}
-				custom_tooltip = {
-					text = drd_coronation_vassal_priest
-					any_realm_character = { 
-						NOT = { block_general_event_trigger = yes }
-						is_theocracy = yes 
-						religion = ROOT
-						any_liege = { character = ROOT }
+				OR = {  #DRD-DIFF: no Pope, no investiture, no additional requirement for emperors
+					custom_tooltip = {
+						text = drd_coronation_religious_head
+						religion_head = {
+							religion = ROOT
+							NOT = { block_general_event_trigger = yes }
+						}
+					}
+					custom_tooltip = {
+						text = drd_coronation_vassal_priest
+						any_realm_character = { 
+							NOT = { block_general_event_trigger = yes }
+							is_theocracy = yes 
+							religion = ROOT
+							any_liege = { character = ROOT }
+						}
 					}
 				}
 			}
