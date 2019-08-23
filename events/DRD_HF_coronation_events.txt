@@ -1692,7 +1692,7 @@ letter_event = {
 			}
 			if = {
 				limit = {
-					FROM = { is_ruler = no }
+					FROM = { is_landed = no }
 				}
 				random_direct_de_jure_vassal_title = {
 					limit = {
