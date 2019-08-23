@@ -39,18 +39,21 @@ on_new_holder = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
 		DRD.100  #SEE DRD_coronation_artifact_events.txt: create or replace artifacts for Temporal heads with Divine Right.
+		DRD.110  #SEE DRD_coronation_artifact_events.txt: add the Uncrowned hidden trait to new Kings and Emperors.
 	}
 }
 
 on_new_holder_inheritance = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+		DRD.110  #SEE DRD_coronation_artifact_events.txt: add the Uncrowned hidden trait to new Kings and Emperors.
 	}
 }
 
 on_new_holder_usurpation = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+		DRD.110  #SEE DRD_coronation_artifact_events.txt: add the Uncrowned hidden trait to new Kings and Emperors.
 		DRD_HF.20417  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
 	}
 }

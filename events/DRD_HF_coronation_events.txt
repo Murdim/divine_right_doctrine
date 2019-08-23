@@ -7556,6 +7556,7 @@ character_event = {
 			limit = { has_character_flag = flag_crowned_by_spiritual }
 			set_flag = crowned_no_trait
 		}
+		hidden_tooltip = { remove_trait = uncrowned }
 
 		#Assign possible modifier.
 		if = { 
@@ -8350,6 +8351,9 @@ character_event = {
 					religion_head = { is_vassal_or_below_of = ROOT }
 				}
 				set_flag = crowned_no_trait
+			}
+			fallback = {
+				add_trait = uncrowned
 			}
 		}
 		random_list = { #Second list to determine which modifier.

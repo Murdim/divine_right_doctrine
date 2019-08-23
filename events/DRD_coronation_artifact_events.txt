@@ -8,12 +8,13 @@ character_event = {  # On religious head title creation, ROOT = holder (usually 
 	is_triggered_only = yes
 	hide_window = yes
 
+	only_playable = yes
+
 	trigger = {
 		FROM = {
 			controls_religion = yes
 			NOT = { has_flag = created_divine_right_artifact }
 		}
-		is_landed = yes
 		is_theocracy = no
 		drd_religion_allows_coronation = yes  #SEE DRD_coronation_triggers.txt
 	}
@@ -162,5 +163,27 @@ character_event = {  # On starting a new campaign. ROOT = temporal head with cor
 		}
 
 		1 = { province_event = { id = DRD.103 days = 30 } }
+	}
+}
+
+character_event = {  # On uncrowned character becoming king, ROOT = holder, FROM = title.
+	id = DRD.110
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {  # Only applied if the new title is already primary, which usually means ROOT has gone up in rank.
+		FROM = { higher_tier_than = DUKE }
+		primary_title = { title = FROM }
+		drd_ruler_is_uncrowned = yes
+		NOR = {  # Catholics have their own logic built into the interface files.
+			religion = catholic
+			religion = fraticelli
+		}
+	}
+
+	immediate = {  # Portraits are intentionally not "un-crowned" at reformation.
+		add_trait = uncrowned
 	}
 }
