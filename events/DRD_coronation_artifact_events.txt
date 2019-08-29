@@ -45,19 +45,19 @@ province_event = {  # FROM = new religious head title holder.
 
 		event_target:rh_title = {
 			drd_title_replace_or_create_artifact_for_rh_character = yes  #SEE DRD_artifact_effects.txt
-			# If a special artifact WAS already created, just let it coexist with the slotless one.
-		}
-		event_target:rh_character = {
 			if = {
 				limit = { NOT = { event_target:rh_artifact = { always = yes } } }
-				drd_character_create_generic_crown = yes  #SEE DRD_artifact_effects.txt
-			}
-			character_event = { id = DRD.102 }
+				event_target:rh_character = {
+					drd_character_create_generic_crown = yes  #SEE DRD_artifact_effects.txt
+				}
+			}  # If a special artifact WAS already created, just let it coexist with the slotless one.
+			save_persistent_event_target = { name = rh_artifact scope = event_target:rh_artifact }
 		}
 		event_target:rh_artifact = {
 			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
 		}
 
+		event_target:rh_character = { character_event = { id = DRD.102 } }
 		province_event = { id = DRD.103 days = 30 }
 	}
 }
@@ -70,7 +70,7 @@ character_event = {  # ROOT = religious head (almost always the reformer).
 		text = EVTDESCDRDA102
 		picture = GFX_evt_a_crowning_ceremony
 	}
-	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+	desc = {
 		trigger = { NOT = { event_target:rh_artifact = { has_flag = crown } } }
 		text = EVTDESCDRDB102
 		picture = GFX_evt_a_crowning_ceremony
@@ -150,12 +150,13 @@ character_event = {  # On starting a new campaign. ROOT = temporal head with cor
 		}
 		event_target:rh_title = {
 			drd_title_replace_or_create_artifact_for_rh_character = yes  #SEE DRD_artifact_effects.txt
-		}
-		event_target:rh_character = {
 			if = {
 				limit = { NOT = { event_target:rh_artifact = { always = yes } } }
-				drd_character_create_generic_crown = yes  #SEE DRD_artifact_effects.txt
+				event_target:rh_character = {
+					drd_character_create_generic_crown = yes  #SEE DRD_artifact_effects.txt
+				}
 			}
+			save_persistent_event_target = { name = rh_artifact scope = event_target:rh_artifact }
 		}
 		event_target:rh_artifact = {
 			save_persistent_event_target = { name = rh_title scope = event_target:rh_title }

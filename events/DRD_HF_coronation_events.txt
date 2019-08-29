@@ -1,5 +1,5 @@
 #DRD-COPY of HF_coronation_events.txt, edited for non-Catholic/Fraticelli coronations. Does not conflict with the original, but should ideally be maintained in sync with it.
-# New events relating to coronations and/or artifact crowns should be implemented in a separate file (e.g DRD_coronation_events.txt DRD_coronation_artifact_events.txt)
+# New events relating to coronations and/or artifact crowns should be implemented in a separate file (e.g DRD_coronation_events.txt, DRD_coronation_artifact_events.txt)
 
 namespace=DRD_HF
 # Explain coronation preparation, ask whom to ask to be crowned by.
@@ -419,9 +419,18 @@ character_event = {
 			}
 		}
 		name = {
+			text = EVTOPTGDRDHF20200_as_head_lost_artifact
+			trigger = {
+				NOT = { event_target:coronation_artifact = { always = yes } }
+				event_target:rh_title = { persistent_event_target:rh_artifact = { always = yes } }
+				controls_religion = yes
+			}
+		}
+		name = {
 			text = EVTOPTGDRDHF20200_as_head_no_artifact
 			trigger = {
 				NOT = { event_target:coronation_artifact = { always = yes } }
+				NOT = { event_target:rh_title = { persistent_event_target:rh_artifact = { always = yes } } }
 				controls_religion = yes
 			}
 		}
