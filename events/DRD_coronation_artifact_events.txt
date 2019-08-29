@@ -135,6 +135,7 @@ character_event = {  # On starting a new campaign. ROOT = temporal head with cor
 	only_playable = yes
 
 	trigger = {
+		is_save_game = no
 		controls_religion = yes
 		is_theocracy = no
 		drd_religion_allows_coronation = yes  #SEE DRD_coronation_triggers.txt
