@@ -433,11 +433,28 @@ character_event = {
 			}
 		}
 		name = {
-			text = EVTOPTGDRDHF20200_clergyless
+			text = EVTOPTGDRDHF20200_clergyless_doctrine  # Flavor used by Christians and reformed/randomized religions.
 			trigger = {
 				controls_religion = no
 				NOT = { religion_head = { is_theocracy = no } }
 				drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
+				OR = {
+					has_religion_feature = religion_clergyless  #MOD church_and_state
+					religion_group = christian
+				}
+			}
+		}
+		name = {
+			text = EVTOPTGDRDHF20200_clergyless_jewish  # Slightly different text for Israelites and (randomized) Muslims.
+			trigger = {
+				controls_religion = no
+				NOT = { religion_head = { is_theocracy = no } }
+				drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
+				NOR = {
+					has_religion_feature = religion_clergyless  #MOD church_and_state
+					religion_group = christian
+				}
+				
 			}
 		}
 		trigger = { 
