@@ -1,5 +1,44 @@
 #DRD-FILE: add new conditions to triggers that are defined and used in OTHER mods.
 
-emf_uses_native_coronation = {  #SEE EMF/HIP emf_coronation_triggers.txt: disable EMF coronations for DRD-using religions.
+emf_uses_native_coronation = {  #MOD EMF/HIP emf_coronation_triggers.txt: disable EMF coronations for DRD-using religions.
 	drd_religion_allows_coronation = no
+}
+
+cns_religion_features_suitable_for_clergyless = {  #MOD church_and_state CNS_religion_feature_triggers.txt
+	OR = {  # Severely restricted coronation priest options for all but Temporal leadership.
+		has_selected_religion_feature = religion_temporal_head
+		random_character = {  # Already using a temporal RH, e.g randomized Muslim.
+			limit = { religion = ROOT }
+			religion_head = { is_theocracy = no }
+		}
+		NOR = {
+			has_selected_religion_feature = religion_divine_right
+			conditional_tooltip = {
+				trigger = {
+					has_game_started = yes
+					OR = {
+						has_game_rule = { name = drd_coronation value = both }
+						has_game_rule = { name = drd_coronation value = christian }
+					}
+				}
+				drd_religion_uses_christian_features = yes
+			}
+		}
+	}
+	OR = {  # Clergyless also effectively disables priest nomination.
+		drd_religion_has_a_clergy = no  #SEE DRD_common_triggers.txt
+		NOR = {
+			has_selected_religion_feature = religion_divine_right
+			conditional_tooltip = {
+				trigger = {
+					has_game_started = yes
+					OR = {
+						has_game_rule = { name = drd_priest_nomination value = both }
+						has_game_rule = { name = drd_priest_nomination value = christian }
+					}
+				}
+				drd_religion_uses_christian_features = yes
+			}
+		}
+	}
 }
