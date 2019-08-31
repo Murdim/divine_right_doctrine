@@ -52,17 +52,17 @@ RULE_OPTION_BOTH;Both;Les deux;;;;;;;;;;;;x
 RULE_OPTION_DOCTRINE;Doctrine;Doctrine;;;;;;;;;;;;x
 RULE_OPTION_CHRISTIAN;Christians;Chrétiens;;;;;;;;;;;;x
 RULE_OPTION_CATHOLIC;Catholics;Catholiques;;;;;;;;;;;;x
-RULE_DRD_CORONATION;§ZDivine Right:§! Coronation;§ZDroit Divin :§! Couronnement:;;;;;;;;;;;;x
+RULE_DRD_CORONATION;§ZDivine Right:§! Coronation;§ZDroit Divin :§! Couronnement:;;;;;;;;;;;;x
 RULE_DRD_CORONATION_BOTH;Coronation ceremonies are enabled for all Christians as well as reformed religions with the Divine Right doctrine.;Les cérémonies de couronnement sont actives pour tous les Chrétiens ainsi que les religions réformées avec la doctrine Droit Divin.;;;;;;;;;;;;x
 RULE_DRD_CORONATION_OFF;Coronation ceremonies remain exclusive to Catholic and Fraticelli Kings.;Les cérémonies de couronnement restent réservées aux rois catholiques et fraticelles.;;;;;;;;;;;;x
 RULE_DRD_CORONATION_DOCTRINE;Coronation ceremonies are enabled for reformed religions with the Divine Right doctrine.;Les cérémonies de couronnement sont actives pour les religions réformées avec la doctrine Droit Divin.;;;;;;;;;;;;x
 RULE_DRD_CORONATION_CHRISTIAN;Coronation ceremonies are enabled for all Christians.;Les cérémonies de couronnement sont actives pour tous les Chrétiens.;;;;;;;;;;;;x
-RULE_DRD_PRIEST_NOMINATION;§ZDivine Right:§! Priest Nomination;§ZDroit Divin :§! Nomination;;;;;;;;;;;;x
+RULE_DRD_PRIEST_NOMINATION;§ZDivine Right:§! Priest Nomination;§ZDroit Divin :§! Nomination;;;;;;;;;;;;x
 RULE_DRD_PRIEST_NOMINATION_DOCTRINE;The Divine Right doctrine allows crowned Kings to nominate courtiers to the succession of a priesthood.;La doctrine Droit Divine permet aux rois couronés de nommer leurs courtier à la succession d'un prêtre.;;;;;;;;;;;;x
 RULE_DRD_PRIEST_NOMINATION_CHRISTIAN;Non-Catholic Christian Kings can nominate courtiers to the succession of a priesthood.;Les rois chrétiens non-catholiques peuvent nommer leurs courtier à la succession d'un prêtre.;;;;;;;;;;;;x
 RULE_DRD_PRIEST_NOMINATION_BOTH;Priest nomination is enabled for Christians as well as reformed religions with the Divine Right doctrine.;La nomination de prêtre est active pour les Chrétiens ainsi que pour les religions réformées avec la doctrine Droit Divin.;;;;;;;;;;;;x
 RULE_DRD_PRIEST_NOMINATION_OFF;Priest nomination is disabled.;La nomination de prêtre est désactivée.;;;;;;;;;;;;x
-RULE_DRD_HOMAGE;§ZDivine Right:§! Homage;§ZDroit Divin :§! Homage;;;;;;;;;;;;x
+RULE_DRD_HOMAGE;§ZDivine Right:§! Homage;§ZDroit Divin :§! Homage;;;;;;;;;;;;x
 RULE_DRD_HOMAGE_OFF;The homage mechanic remains disabled.;La fonctionnalité d'hommage reste désactivée.;;;;;;;;;;;;x
 RULE_DRD_HOMAGE_CATHOLIC;The homage mechanic is enabled for Catholics and Fraticelli, as was intended in the base game. New Vassals must pay homage to a crowned King.;La fonctionnalité d'hommage est activée pour les catholiques et fraticelles, comme prévu dans le jeu de base. Un roi couronné reçoit l'hommage de ses vassaux.;;;;;;;;;;;;x
 RULE_DRD_HOMAGE_DOCTRINE;The homage mechanic is enabled for reformed religions with the Divine Right doctrine.;La fonctionnalité d'hommage est activée pour religions réformées avec la doctrine Droit Divin.;;;;;;;;;;;;x

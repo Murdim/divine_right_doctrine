@@ -105,14 +105,14 @@ province_event = {  # Monthly upkeep event, show or hide the special crown in th
 					event_target:rh_character = {
 						if = {
 							limit = { is_alive = yes }
-							event_target:rh_title = {
+							event_target:rh_artifact = {
 								drd_title_remove_dead_crown_trait_from_prev = yes  #SEE DRD_artifact_effects.txt
 							}
 						}
 					}
 					save_event_target_as = rh_character
 				}
-				PREV = {
+				event_target:rh_artifact = {
 					if = {
 						limit = { is_artifact_active = yes }
 						drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
