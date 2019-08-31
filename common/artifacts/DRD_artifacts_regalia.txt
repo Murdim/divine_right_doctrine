@@ -1,6 +1,159 @@
 #DRD-FILE
 # Slotless, coronation-locked versions of the temporal head artifacts.
 
+# Generic artifacts, by nature.
+crown_generic_peaceful_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	learning = 2
+	tribal_opinion = 5
+	church_opinion = 5
+	vassal_opinion = 5
+	quality = 4
+	active = { 
+		FROM = {
+			show_scope_change = no
+			persistent_event_target:rh_title = {
+				show_scope_change = no
+				ROOT = {
+					show_scope_change = no
+					has_landed_title = PREV
+				}
+			}
+		}
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_zun_fylkir"
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_generic_warlike_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	martial = 2
+	tribal_opinion = 5
+	church_opinion = 5
+	vassal_opinion = 5
+	quality = 4
+	active = { 
+		FROM = {
+			show_scope_change = no
+			persistent_event_target:rh_title = {
+				show_scope_change = no
+				ROOT = {
+					show_scope_change = no
+					has_landed_title = PREV
+				}
+			}
+		}
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_fylkir"
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_generic_proselytizing_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	diplomacy = 2
+	martial = 2
+	tribal_opinion = 5
+	church_opinion = 5
+	vassal_opinion = 5
+	quality = 4
+	active = { 
+		FROM = {
+			show_scope_change = no
+			persistent_event_target:rh_title = {
+				show_scope_change = no
+				ROOT = {
+					show_scope_change = no
+					has_landed_title = PREV
+				}
+			}
+		}
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_tengri_fylkir"
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_generic_cosmopolitan_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	diplomacy = 2
+	learning = 2
+	tribal_opinion = 5
+	church_opinion = 5
+	vassal_opinion = 5
+	quality = 4
+	active = { 
+		FROM = {
+			show_scope_change = no
+			persistent_event_target:rh_title = {
+				show_scope_change = no
+				ROOT = {
+					show_scope_change = no
+					has_landed_title = PREV
+				}
+			}
+		}
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_pahlavi"
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_generic_other_divine_right = { 
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	intrigue = 2
+	tribal_opinion = 5
+	church_opinion = 5
+	vassal_opinion = 5
+	quality = 4
+	active = { 
+		FROM = {
+			show_scope_change = no
+			persistent_event_target:rh_title = {
+				show_scope_change = no
+				ROOT = {
+					show_scope_change = no
+					has_landed_title = PREV
+				}
+			}
+		}
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_west_african_fylkir"
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+
+# Replacements for vanilla RH artifacts.
 crown_fylkir_divine_right = { 
 	monthly_character_prestige = 0.4
 	monthly_character_piety = 0.7
@@ -211,127 +364,9 @@ scepter_hellenic_fylkir_divine_right = {
 		always = no
 	}
 }
-crown_generic_peaceful_divine_right = { 
-	monthly_character_prestige = 0.4
-	monthly_character_piety = 0.7
-	stewardship = 2
-	learning = 2
-	tribal_opinion = 5
-	church_opinion = 5
-	vassal_opinion = 5
-	quality = 4
-	active = { 
-		FROM = {
-			show_scope_change = no
-			persistent_event_target:rh_title = {
-				show_scope_change = no
-				ROOT = {
-					show_scope_change = no
-					has_landed_title = PREV
-				}
-			}
-		}
-		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
-	}
-	flags = { religious crown jewelry crown_jewel divine_right_regalia }
-	stacking = no
-	picture = "GFX_crown_zun_fylkir"
-	indestructible = yes
-	allowed_gift = {
-		always = no
-	}
-}
-crown_generic_warlike_divine_right = { 
-	monthly_character_prestige = 0.4
-	monthly_character_piety = 0.7
-	stewardship = 2
-	martial = 2
-	tribal_opinion = 5
-	church_opinion = 5
-	vassal_opinion = 5
-	quality = 4
-	active = { 
-		FROM = {
-			show_scope_change = no
-			persistent_event_target:rh_title = {
-				show_scope_change = no
-				ROOT = {
-					show_scope_change = no
-					has_landed_title = PREV
-				}
-			}
-		}
-		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
-	}
-	flags = { religious crown jewelry crown_jewel divine_right_regalia }
-	stacking = no
-	picture = "GFX_crown_fylkir"
-	indestructible = yes
-	allowed_gift = {
-		always = no
-	}
-}
-crown_generic_proselytizing_divine_right = { 
-	monthly_character_prestige = 0.4
-	monthly_character_piety = 0.7
-	diplomacy = 2
-	martial = 2
-	tribal_opinion = 5
-	church_opinion = 5
-	vassal_opinion = 5
-	quality = 4
-	active = { 
-		FROM = {
-			show_scope_change = no
-			persistent_event_target:rh_title = {
-				show_scope_change = no
-				ROOT = {
-					show_scope_change = no
-					has_landed_title = PREV
-				}
-			}
-		}
-		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
-	}
-	flags = { religious crown jewelry crown_jewel divine_right_regalia }
-	stacking = no
-	picture = "GFX_crown_tengri_fylkir"
-	indestructible = yes
-	allowed_gift = {
-		always = no
-	}
-}
-crown_generic_cosmopolitan_divine_right = { 
-	monthly_character_prestige = 0.4
-	monthly_character_piety = 0.7
-	diplomacy = 2
-	learning = 2
-	tribal_opinion = 5
-	church_opinion = 5
-	vassal_opinion = 5
-	quality = 4
-	active = { 
-		FROM = {
-			show_scope_change = no
-			persistent_event_target:rh_title = {
-				show_scope_change = no
-				ROOT = {
-					show_scope_change = no
-					has_landed_title = PREV
-				}
-			}
-		}
-		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
-	}
-	flags = { religious crown jewelry crown_jewel divine_right_regalia }
-	stacking = no
-	picture = "GFX_crown_pahlavi"
-	indestructible = yes
-	allowed_gift = {
-		always = no
-	}
-}
-crown_generic_other_divine_right = { 
+
+# Replacements for ancientreligions RH artifacts.
+crown_egyptian_fylkir_divine_right = {
 	monthly_character_prestige = 0.4
 	monthly_character_piety = 0.7
 	stewardship = 2
@@ -341,21 +376,35 @@ crown_generic_other_divine_right = {
 	vassal_opinion = 5
 	quality = 4
 	active = { 
-		FROM = {
-			show_scope_change = no
-			persistent_event_target:rh_title = {
-				show_scope_change = no
-				ROOT = {
-					show_scope_change = no
-					has_landed_title = PREV
-				}
-			}
-		}
+		has_landed_title = d_egyptian_pagan_reformed
 		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
 	}
-	flags = { religious crown jewelry crown_jewel divine_right_regalia }
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
 	stacking = no
-	picture = "GFX_crown_west_african_fylkir"
+	picture = "GFX_crown_zun_fylkir"
+	slot = crown
+	indestructible = yes
+	allowed_gift = {
+		always = no
+	}
+}
+crown_celtic_fylkir_divine_right = {
+	monthly_character_prestige = 0.4
+	monthly_character_piety = 0.7
+	stewardship = 2
+	martial = 2
+	tribal_opinion = 5
+	church_opinion = 5
+	vassal_opinion = 5
+	quality = 4
+	active = { 
+		has_landed_title = d_celtic_pagan_reformed
+		drd_character_is_crowned = yes  #SEE DRD_coronation_triggers.txt
+	}
+	flags = { religious unique crown jewelry crown_jewel divine_right_regalia }
+	stacking = no
+	picture = "GFX_crown_fylkir"
+	slot = crown
 	indestructible = yes
 	allowed_gift = {
 		always = no

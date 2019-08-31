@@ -73,6 +73,20 @@ drd_title_replace_or_create_artifact_for_rh_character = {
 				new_artifact = { save_event_target_as = rh_artifact }
 			}
 		}
+		d_celtic_pagan_reformed = {  #MOD ancientreligions
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_celtic_fylkir
+				add_artifact = crown_celtic_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
+		d_egyptian_pagan_reformed = {  #MOD ancientreligions
+			event_target:rh_character = {
+				unsafe_destroy_artifact = crown_egyptian_fylkir
+				add_artifact = crown_egyptian_fylkir_divine_right
+				new_artifact = { save_event_target_as = rh_artifact }
+			}
+		}
 	}
 }
 
