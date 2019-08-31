@@ -189,3 +189,83 @@ character_event = {  # On uncrowned character becoming king, ROOT = holder, FROM
 		add_trait = uncrowned
 	}
 }
+
+character_event = {  # On death with a Divine Right special crown, ROOT = character.
+	id = DRD.120
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		controls_religion = yes
+		any_artifact = {
+			has_flag = divine_right_regalia
+			persistent_event_target:rh_title = { ROOT = { has_landed_title = PREV } }
+		}
+	}
+
+	immediate = {
+		player_heir = { save_event_target_as = treasury_heir }  #TODO: check if that is always actually the case.
+		any_artifact = {
+			limit = {
+				has_flag = divine_right_regalia
+				persistent_event_target:rh_title = {
+					ROOT = { has_landed_title = PREV }
+					NOT = { current_heir = { character = event_target:treasury_heir } }
+				}
+			}
+			persistent_event_target:rh_title = {
+				current_heir = { character_event = { id = DRD.121 days = 1 } }
+			}
+		}
+	}
+}
+
+character_event = {  # One day later to prevent artifact duplication.
+	id = DRD.121
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		event_target:treasury_heir = {
+			any_artifact = {
+				limit = {
+					has_flag = divine_right_regalia
+					persistent_event_target:rh_title = {
+						ROOT = { has_landed_title = PREV }
+					}
+				}
+				transfer_artifact = { from = PREV to = ROOT }
+			}
+		}
+	}
+}
+
+character_event = {  # On usurping a Divine Right Theocratic head title. ROOT = usurper, FROM = title, FROMFROM = old holder.
+	id = DRD.122
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		FROM = { controls_religion = yes }
+		FROMFROM = {  # WARNING: for some reason, FROMFROM shifts scopes (ROOT => FROM, FROM => FROMFROM, and so on)
+			any_artifact = {
+				has_flag = divine_right_regalia
+				persistent_event_target:rh_title = { title = FROMFROM }  # i.e FROM, i.e the title.
+			}
+		}
+	}
+
+	immediate = {
+		FROMFROM = {
+			any_artifact = {
+				limit = {
+					has_flag = divine_right_regalia
+					persistent_event_target:rh_title = { title = FROMFROM }
+				}
+				transfer_artifact = { from = PREV to = ROOT }
+			}
+		}
+	}
+}
