@@ -20,7 +20,7 @@ character_event = {  # On religious head title creation, ROOT = holder (usually 
 	}
 
 	immediate = {  # Wait for one day, another event (e.g reformation) may be creating an artifact at the same time.
-		set_flag = crowned_no_trait
+		set_flag = flag_preparing_coronation
 		FROM = {
 			set_flag = created_divine_right_artifact
 			save_event_target_as = rh_title
@@ -84,7 +84,10 @@ character_event = {  # ROOT = religious head (almost always the reformer).
 
 	option = {
 		name = EVTOPTAHF20366
-		set_flag = crowned_no_trait  # Just in case the reformer died after a single day...
+		clr_flag = flag_preparing_coronation
+		add_trait = crowned_by_priest
+		add_trait = crowned_by_religious_head_hidden
+		save_persistent_event_target = { name = coronation_priest_per scope = religion_head }
 		add_character_modifier = {
 			name = extravagant_coronation
 			days = 7300
@@ -142,7 +145,6 @@ character_event = {  # On starting a new campaign. ROOT = temporal head with cor
 	}
 
 	immediate = {
-		set_flag = crowned_no_trait
 		save_event_target_as = rh_character
 		any_demesne_title = {
 			limit = { controls_religion = yes }

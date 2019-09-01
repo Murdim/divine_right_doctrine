@@ -7459,20 +7459,30 @@ character_event = {
 			set_variable = { which = uncrowned_count value = 0 }
 			set_character_flag = flag_being_coronated #Safety check to avoid double event.
 		}
-		ROOT = { save_persistent_event_target = { name = coronation_priest_per scope = event_target:coronation_priest } } #Needed to localize the trait properly.
 		save_persistent_event_target = { name = coronation_religion scope = religion_scope }
 
-		if = {  #DRD-DIFF: assign hidden trait to keep track of the priest's religious head status (only important for crowned_by_bishop)
+		if = {  #DRD-DIFF: If crowned as / in the name of a temporal head, register it, not the chaplain, as "coronation priest".
 			limit = {
-				OR = {
-					has_character_flag = flag_crowned_by_pope 
-					AND = {
-						has_character_flag = flag_crowned_by_bishop
-						rightful_religious_head = event_target:coronation_priest
-					}
-				}
+				has_character_flag = flag_crowned_by_spiritual
+				religion_head = { is_theocracy = no }
 			}
 			add_trait = crowned_by_religious_head_hidden
+			save_persistent_event_target = { name = coronation_priest_per scope = religion_head }
+		}
+		else = {
+			save_persistent_event_target = { name = coronation_priest_per scope = event_target:coronation_priest }
+			if = {  # Assign hidden trait to keep track of the priest's religious head status (only important for crowned_by_bishop)
+				limit = {
+					OR = {
+						has_character_flag = flag_crowned_by_pope 
+						AND = {
+							has_character_flag = flag_crowned_by_bishop
+							rightful_religious_head = event_target:coronation_priest
+						}
+					}
+				}
+				add_trait = crowned_by_religious_head_hidden
+			}
 		}
 		if = {  #DRD-DIFF: assign hidden trait to keep track of the priest's religion group
 			limit = {
@@ -7580,7 +7590,7 @@ character_event = {
 		}
 		if = {  #DRD-DIFF: crowned by Lord Spiritual.
 			limit = { has_character_flag = flag_crowned_by_spiritual }
-			set_flag = crowned_no_trait
+			add_trait = crowned_by_priest
 		}
 		hidden_tooltip = { remove_trait = uncrowned }
 
@@ -8376,7 +8386,12 @@ character_event = {
 					factor = 0.5
 					religion_head = { is_vassal_or_below_of = ROOT }
 				}
-				set_flag = crowned_no_trait
+				add_trait = crowned_by_priest
+				if = {  # Register the temporal head, not the chaplain, as "coronation priest".
+					limit = { religion_head = { is_theocracy = no } }
+					add_trait = crowned_by_religious_head_hidden
+					save_persistent_event_target = { name = coronation_priest_per scope = religion_head }
+				}
 			}
 			fallback = {
 				add_trait = uncrowned
