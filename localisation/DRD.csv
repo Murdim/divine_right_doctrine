@@ -3,7 +3,7 @@
 #CODE;ENGLISH;FRENCH;GERMAN;;SPANISH;;;;;;;;;x
 # common/alternate_start/DRD_settings.txt
 setting_divine_right_doctrine_random;Divine Right Doctrine;Droit divin (doctrine);;;;;;;;;;;;x
-setting_divine_right_doctrine_random_tooltip;Determines how the Divine Right doctrine should be used when religions are randomized. Note that the doctrine is incompatible with religions based on Catholicism or Islam, and will never be picked for unreformed Pagans.;Détermine l'utilisation de la doctrine Droit Divin lorsque les caractéristiques des religions sont aléatoirisées. Remarque : la doctrine est incompatible avec les religions basées sur le catholicisme ou l'islam, et ne sera pas non plus choisie pour les païens non réformés.;;;;;;;;;;;;x
+setting_divine_right_doctrine_random_tooltip;Determines how the Divine Right doctrine should be used when religions are randomized. Note that the doctrine is incompatible with religions based on Catholicism, and will never be picked for unreformed Pagans.;Détermine l'utilisation de la doctrine Droit Divin lorsque les caractéristiques des religions sont aléatoirisées. Remarque : la doctrine est incompatible avec les religions basées sur le catholicisme, et ne sera pas non plus choisie pour les païens non réformés.;;;;;;;;;;;;x
 setting_divine_right_doctrine_random_included;Included;Incluse;;;;;;;;;;;;x
 setting_divine_right_doctrine_random_included_tooltip;The Divine Right doctrine can be selected as a random religion feature.;La doctrine Droit Divin peut être choisie lors de la génération des religions alétoires.;;;;;;;;;;;;x
 setting_divine_right_doctrine_random_exclude_christians;Non-Christians;Non-chrétiens;;;;;;;;;;;;x

@@ -16,7 +16,7 @@ This new doctrine allows Pagans and randomized religions to access the features 
 
 It is incompatible with Temporal leadership, for both thematic and gameplay reasons. Due to a missing check in the AI's code, only players are allowed to pick it during reformation.
 
-A Random World setting has been added to allow or forbid Divine Right to randomly-generated religions. It is is unavailable for Catholics, Fraticelli and Muslims, and will never be picked by unreformed Pagans.
+Random Worlds can be set up to use, or not use, Divine Right as random religion feature. It is is unavailable for Catholics and Fraticelli, and will never be picked by unreformed Pagans.
 
 ## Coronation
 
