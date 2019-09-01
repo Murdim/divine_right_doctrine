@@ -185,8 +185,46 @@ character_event = {  # On uncrowned character becoming king, ROOT = holder, FROM
 		}
 	}
 
-	immediate = {  # Portraits are intentionally not "un-crowned" at reformation.
+	immediate = {
 		add_trait = uncrowned
+	}
+}
+
+character_event = {  # On uncrowned king converting, ROOT = character.
+	id = DRD.111
+	is_triggered_only = yes
+	hide_window = yes
+
+	only_playable = yes
+
+	trigger = {
+		higher_tier_than = DUKE
+		OR = {
+			trait = uncrowned
+			AND = {
+				drd_ruler_is_uncrowned = yes
+				NOR = {  # Catholics have their own logic built into the interface files.
+					religion = catholic
+					religion = fraticelli
+				}
+			}
+		}
+		is_alive = yes
+	}
+
+	immediate = {
+		if = {  # Triggered for rulers who do not have the trait when they should...
+			limit = {
+				drd_ruler_is_uncrowned = yes
+				NOR = {
+					religion = catholic
+					religion = fraticelli
+				}
+			}
+			add_trait = uncrowned
+		} else = {  # ... and those who have it when they shouldn't.
+			remove_trait = uncrowned
+		}
 	}
 }
 

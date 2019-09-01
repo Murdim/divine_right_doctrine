@@ -64,6 +64,7 @@ on_character_convert_religion = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: for candidates
 		DRD.10  #SEE DRD_priest_nomination_events.txt: for rulers
+		DRD.111  #SEE DRD_coronation_artifact_events.txt: add/remove the Uncrowned hidden trait on conversion.
 		DRD_HF.20408  #SEE DRD_HF_coronation_events.txt: cancel coronation
 		DRD_HF.20416  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
 	}
