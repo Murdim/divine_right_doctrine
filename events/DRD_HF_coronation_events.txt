@@ -9733,9 +9733,9 @@ character_event = {
 								has_fair_trait_trigger = yes
 								NOR = {
 									has_ugly_trait_trigger = yes
-									has_trait = inbred
-									has_trait = disfigured
-									has_trait = leper
+									trait = inbred
+									trait = disfigured
+									trait = leper
 								}
 							}
 						}
@@ -10212,9 +10212,9 @@ character_event = {
 								has_fair_trait_trigger = yes
 								NOR = {
 									has_ugly_trait_trigger = yes
-									has_trait = inbred
-									has_trait = disfigured
-									has_trait = leper
+									trait = inbred
+									trait = disfigured
+									trait = leper
 								}
 							}
 						}
@@ -11210,18 +11210,20 @@ character_event = {
 		}
 	}
 }
-#DRD-DIFF: On_new_holder, clean up drd_uncrowned_modifier. FROMFROM = Title's old holder.
+#DRD-DIFF: On_new_holder, clean up uncrowned modifier and trait. FROM = title, FROMFROM = old holder.
 character_event = {
 	id = DRD_HF.20417
 	hide_window = yes
 
 	is_triggered_only = yes
 
-	trigger = {
+	trigger = {  # If no longer King-tier.
+		FROM = { higher_tier_than = DUKE }
 		FROMFROM = {
-			has_character_modifier = drd_uncrowned_modifier
-			NOT = { #If no longer King-tier.
-				higher_real_tier_than = DUKE
+			NOT = { higher_real_tier_than = DUKE }
+			OR = {
+				has_character_modifier = drd_uncrowned_modifier
+				trait = uncrowned
 			}
 		}
 	}
@@ -11230,6 +11232,7 @@ character_event = {
 		FROMFROM = { 
 			remove_character_modifiers = { modifier = drd_uncrowned_modifier amount = 30 } 
 			set_variable = { which = uncrowned_count value = 0 }
+			remove_trait = uncrowned  #SEE DRD_coronation_artifact_events.txt: also remove the hidden trait.
 		} 	
 	}
 }
