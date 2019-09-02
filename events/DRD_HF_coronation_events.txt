@@ -7467,7 +7467,7 @@ character_event = {
 				religion_head = { is_theocracy = no }
 			}
 			add_trait = crowned_by_religious_head_hidden
-			save_persistent_event_target = { name = coronation_priest_per scope = religion_head }
+			religion_head = { ROOT = { save_persistent_event_target = { name = coronation_priest_per scope = PREV } } }
 		}
 		else = {
 			save_persistent_event_target = { name = coronation_priest_per scope = event_target:coronation_priest }

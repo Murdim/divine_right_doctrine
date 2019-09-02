@@ -57,16 +57,30 @@ defined_text = {
 
 defined_text = {
 	name = GetCrownedByPriestName
-	text = {  # Vanilla never actually uses this function for crowned_by_priest; keep it static by always referring to the "dead" variant
+	use_first_valid = yes
+	text = {  # T1 trait + crowned by RH + coronation priest is ROOT = crowned themselves as RH.
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			persistent_event_target:coronation_priest_per = { character = ROOT }
+		}
+		localisation_key = string_drd_crowned_self_as_head
+	}
+	text = {  # T1 trait + crowned by RH + coronation priest is NOT ROOT = crowned in the name of RH.
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			NOT = { persistent_event_target:coronation_priest_per = { character = ROOT } }
+		}
+		localisation_key = string_drd_crowned_in_name_of_head
+	}
+	text = {
 		trigger = {
 			NOT = { trait = crowned_nonchristian_hidden }
 		}
-		localisation_key = string_crowned_by_priest_dead
+		localisation_key = string_drd_crowned_by_priest
 	}
-	text = {  # Different name for non-Christian priests
-		trigger = {
-			trait = crowned_nonchristian_hidden
-		}
+	fallback_text = {  # Different name for non-Christian priests
 		localisation_key = string_drd_crowned_by_nonchristian_priest
 	}
 }
@@ -166,17 +180,32 @@ defined_text = {
 
 defined_text = {
 	name = GetCrownedByPriestDesc
-	
-	text = {
+	use_first_valid = yes
+	text = {  # T1 trait + crowned by RH + coronation priest is ROOT = crowned themselves as RH.
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			persistent_event_target:coronation_religion = { religion = ROOT }
+			persistent_event_target:coronation_priest_per = { character = ROOT }
+		}
+		localisation_key = string_drd_crowned_self_as_head_desc
+	}
+	text = {  # T1 trait + crowned by RH + coronation priest is NOT ROOT = crowned in the name of RH.
+		trigger = {
+			trait = crowned_by_religious_head_hidden
+			is_alive = yes
+			persistent_event_target:coronation_religion = { religion = ROOT }
+			NOT = { persistent_event_target:coronation_priest_per = { character = ROOT } }
+		}
+		localisation_key = string_drd_crowned_in_name_of_head_desc
+	}
+	text = {  # Vanilla never actually uses this function for crowned_by_priest; keep it static by always referring to the "dead" variant
 		trigger = {
 			NOT = { trait = crowned_nonchristian_hidden }
 		}
 		localisation_key = string_drd_crowned_by_priest_desc
 	}
-	text = {
-		trigger = {
-			trait = crowned_nonchristian_hidden
-		}
+	fallback_text = {  # Different name for non-Christian priests
 		localisation_key = string_drd_crowned_by_nonchristian_priest_desc
 	}
 }
@@ -197,7 +226,7 @@ defined_text = {  # Gives the second line of description for the crowned_by_bish
 	}
 }
 
-defined_text = {  # Gives the second line of description for the crowned_by_bishop and crowned_by_priests traits
+defined_text = {
 	name = GetCoronationRequirement
 	text = {
 		trigger = {
@@ -213,7 +242,7 @@ defined_text = {  # Gives the second line of description for the crowned_by_bish
 	}
 }
 
-defined_text = {  # Gives the second line of description for the crowned_by_bishop and crowned_by_priests traits
+defined_text = {
 	name = GetPriestNominationMaybe
 	text = {
 		trigger = {
