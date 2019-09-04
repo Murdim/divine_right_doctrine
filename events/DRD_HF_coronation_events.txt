@@ -405,6 +405,102 @@ character_event = {
 			}
 		}
 	}
+	option = {  #DRD-DIFF: crowned by temporal RH.
+		name = {
+			text = EVTOPTEDRDHF20200_independent_head
+			trigger = {
+				religion_head = {
+					independent = yes
+					is_tributary = no
+				}
+			}
+		}
+		name = {
+			text = EVTOPTEDRDHF20200_head_is_my_vassal
+			trigger = {
+				religion_head = { is_vassal_or_below_of = ROOT }
+			}
+		}
+		name = {
+			text = EVTOPTEDRDHF20200_head_is_my_tributary
+			trigger = {
+				religion_head = { is_tributary = { suzerain = ROOT } }
+			}
+		}
+		name = {
+			text = EVTOPTEDRDHF20200_someone_else_controls_head
+			trigger = {
+				religion_head = {
+					OR = {
+						AND = {
+							independent = no
+							NOT = { is_vassal_or_below_of = ROOT }
+						}
+						AND = {
+							is_tributary = yes
+							NOT = { is_tributary = { suzerain = ROOT } }
+						}
+					}
+				}
+			}
+		}
+		trigger = {
+			independent = yes
+			is_tributary = no
+			religion_head = {
+				is_theocracy = no
+				NOT = { character = ROOT }
+				NOR = {  # Neither the RH nor their controller must be of higher tier.
+					top_liege = { higher_real_tier_than = ROOT }
+					suzerain = { higher_real_tier_than = ROOT }
+				}
+			}
+		}
+		custom_tooltip = { text = EVTTOOLTIPEDRDHF20200 }
+		religion_head = { show_portrait = THIS }
+		hidden_tooltip = {
+			religion_head = {
+				if = {
+					limit = { ai = yes }
+					letter_event = { id = DRD.200 days = 30 random = 5 }
+				} else = {  # Human players get 4 weeks to respond.
+					letter_event = { id = DRD.200 days = 2 random = 5 }
+				}
+			}
+		}
+		ai_chance = { 
+			factor = 10
+			modifier = {
+				factor = 0
+				religion_head = {
+					independent = yes
+					is_tributary = no
+					higher_real_tier_than = ROOT
+				}
+			}
+			modifier = {
+				factor = 10
+				religion_head = { is_vassal_or_below_of = ROOT }
+			}
+			modifier = {
+				factor = 3
+				religion_head = { top_liege = { is_tributary = { suzerain = ROOT } } }
+			}
+			modifier = {
+				factor = 1.5
+				tier = EMPEROR
+			}
+			modifier = {
+				factor = 1.5
+				trait = proud
+			}
+			modifier = {
+				factor = 0.5
+				trait = content
+				NOT = { religion_head = { is_vassal_or_below_of = ROOT } }
+			}
+		}
+	}
 	option = {  #DRD-DIFF: Do not seek sanction from the church.
 		name = {  # Bonuses are covered by the artifact, NOT the self-crowned trait.
 			text = EVTOPTGDRDHF20200_as_head_crown_artifact
@@ -463,7 +559,6 @@ character_event = {
 					has_religion_feature = religion_clergyless  #MOD church_and_state
 					religion_group = christian
 				}
-				
 			}
 		}
 		trigger = { 
@@ -554,7 +649,14 @@ character_event = {
 			modifier = {  # If the RH is a vassal, always try asking them first.
 				factor = 0
 				religion_head = {
-					any_liege = { character = ROOT }
+					OR = {  # If RH is theocratic, must also be independent.
+						is_theocracy = yes
+						ROOT = {
+							independent = yes
+							is_tributary = no
+						}
+					}
+					is_vassal_or_below_of = ROOT
 					NOT = {
 						has_opinion_modifier = {
 							who = ROOT

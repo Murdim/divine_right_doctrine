@@ -1,0 +1,541 @@
+#DRD-FILE
+#SEE DRD_HF_coronation_events.txt: additional events for the coronation chain.
+
+namespace=DRD  # 200-499
+# 200-299: pre-coronation: officer makes a request, RH reacts.
+# 300-399: ruler accepts/fulfills or rejects the request.
+# 400-499: other, e.g events during the coronation ceremony.
+
+letter_event = {  # ROOT = temporal RH, FROM = ruler asking for their full sanction.
+	id = DRD.200
+	desc = {
+		text = EVTDESCDRD200A
+		trigger = {
+			NOR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD200B
+		trigger = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {  # Political requests: independence, protection, overthrowing self-crowned ruelrs.
+		name = {
+			text = EVTOPTADRD200_independent
+			trigger = {
+				independent = yes
+				is_tributary = no
+			}
+		}
+		name = {
+			text = EVTOPTADRD200_FROM_is_protector
+			trigger = {
+				independent = yes
+				is_tributary = {
+					type = rh_protection
+					suzerain = FROM
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD200_FROM_is_liege_or_suzerain
+			trigger = {
+				OR = {
+					is_vassal_or_below_of = FROM
+					AND = {
+						is_tributary = { suzerain = FROM }
+						NOT = { is_tributary = { type = rh_protection } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD200_foreign_protector
+			trigger = {
+				independent = yes
+				is_tributary = { type = rh_protection }
+				NOT = { is_tributary = { suzerain = FROM } }
+			}
+		}
+		name = {
+			text = EVTOPTADRD200_foreign_liege_or_suzerain
+			trigger = {
+				OR = {
+					AND = {
+						independent = no
+						NOT = { is_vassal_or_below_of = FROM }
+					}
+					AND = {
+						is_tributary = yes
+						NOT = { is_tributary = { suzerain = FROM } }
+						NOT = { is_tributary = { type = rh_protection } }
+					}
+				}
+			}
+		}
+		hidden_tooltip = { repeat_event = { id = DRD.201 } }
+	}
+
+	option = {  # Land requests: either from their own realm, or a war of conquest in your name.
+		name = EVTOPTBDRD200
+		trigger = {  # Available if tributary, but not vassal, of a foreign ruler.
+			OR = {
+				independent = yes
+				is_vassal_or_below_of = FROM
+			}
+		}
+		hidden_tooltip = { repeat_event = { id = DRD.202 } }
+	}
+
+	option = {  # Other requests: money, artifact...
+		name = EVTOPTCDRD200
+		hidden_tooltip = { repeat_event = { id = DRD.203 } }
+	}
+
+	option = {  # Refuse. Default response unless FROM is your liege or protector.
+		name = EVTOPTDDRD200
+	}
+}
+
+letter_event = {
+	id = DRD.201
+	desc = {
+		text = EVTDESCDRD200A
+		trigger = {
+			NOR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD200B
+		trigger = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {  # Ask for autonomy under FROM's protection.
+		name = {
+			text = EVTOPTADRD201_independent
+			trigger = {
+				independent = yes
+				is_tributary = no
+			}
+		}
+		name = {
+			text = EVTOPTADRD201_FROM_is_protector
+			trigger = {
+				independent = yes
+				is_tributary = {
+					type = rh_protection
+					suzerain = FROM
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD201_FROM_is_liege_or_suzerain
+			trigger = {
+				OR = {
+					is_vassal_or_below_of = FROM
+					AND = {
+						is_tributary = { suzerain = FROM }
+						NOT = { is_tributary = { type = rh_protection } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD201_foreign_protector
+			trigger = {
+				independent = yes
+				is_tributary = { type = rh_protection }
+				NOT = { is_tributary = { suzerain = FROM } }
+			}
+		}
+		name = {
+			text = EVTOPTADRD201_foreign_liege_or_suzerain
+			trigger = {
+				OR = {
+					AND = {
+						independent = no
+						NOT = { is_vassal_or_below_of = FROM }
+					}
+					AND = {
+						is_tributary = yes
+						NOT = { is_tributary = { suzerain = FROM } }
+						NOT = { is_tributary = { type = rh_protection } }
+					}
+				}
+			}
+		}
+		trigger = {
+			is_landed = yes
+		}
+		if = {
+			limit = {
+				OR = {
+					is_independent = yes
+					is_vassal_or_below_of = FROM
+					is_tributary = { suzerain = FROM }
+					is_tributary = { type = rh_protection }
+				}
+			}
+			hidden_tooltip = {
+				FROM = { letter_event = { id = DRD.300 } }
+			}
+		}
+		else = {  #TODO: would require a war.
+			hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		}
+	}
+
+	option = {  # Ask for full independence.
+		name = {
+			text = EVTOPTADRD201_FROM_is_liege_or_suzerain
+			trigger = {
+				OR = {
+					is_vassal_or_below_of = FROM
+					is_tributary = { suzerain = FROM }
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD201_foreign_liege_or_suzerain
+			trigger = {
+				OR = {
+					AND = {
+						independent = no
+						NOT = { is_vassal_or_below_of = FROM }
+					}
+					AND = {
+						is_tributary = yes
+						NOT = { is_tributary = { suzerain = FROM } }
+					}
+				}
+			}
+		}
+		trigger = {  # Cannot request to be freed from a protector you can leave anytime you want.
+			is_landed = yes
+			OR = {
+				independent = no
+				AND = {
+					is_tributary = yes
+					NOT = { is_tributary = { type = rh_protection } }
+				}
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					is_vassal_or_below_of = FROM
+					is_tributary = { suzerain = FROM }
+				}
+			}
+			hidden_tooltip = {
+				FROM = { letter_event = { id = DRD.301 } }
+			}
+		}
+		else = {  #TODO: would require a war.
+			hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		}
+	}
+
+	option = {  # Overthrow a self-crowned ruler.
+		name = EVTOPTCDRD201
+		trigger = {  #TODO
+			always = no
+		}
+	}
+
+	option = {  # Go back.
+		name = EVTOPTZDRD200
+		hidden_tooltip = { repeat_event = { id = DRD.200 } }
+	}
+}
+
+letter_event = {
+	id = DRD.202
+	desc = {
+		text = EVTDESCDRD200A
+		trigger = {
+			NOR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD200B
+		trigger = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		FROM = {
+			random_demesne_title = {
+				limit = {
+					can_be_given_away = yes
+					tier = COUNT
+					is_feudal = yes
+					location = {
+						is_capital = no
+					}
+				}
+				preferred_limit = {
+					ROOT = { is_landed = yes }
+					location = {
+						any_neighbor_province = {
+							owner = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+					}
+				}
+				preferred_limit = {
+					any_province_holding = { is_holy_site = ROOT }
+				}
+				preferred_limit = {
+					ROOT = { independent = yes }
+					location = {
+						any_neighbor_province = {
+							owner = {
+								NOR = {
+									character = FROM
+									is_vassal_or_below_of = FROM
+									is_tributary = { suzerain = FROM }
+								}
+							}
+						}
+					}
+				}
+				save_event_target_as = request_county
+			}
+			if = {
+				limit = { is_landed = yes }
+				random_realm_province = {
+					limit = {
+						duchy = {
+							NOT = {
+								any_direct_de_jure_vassal_title = {
+									location = { is_capital = yes }
+									owner = {
+										tier = KING
+										OR = {
+											character = FROM
+											is_vassal_or_below_of = FROM
+										}
+									}
+								}
+							}
+							OR = {
+								has_holder = no
+								owner = { character = ROOT }
+								AND = {
+									owner = { character = FROM }
+									can_be_given_away = yes
+								}
+							}
+						}
+					}
+					preferred_limit = {
+						duchy = {
+							owner = { character = ROOT }
+						}
+					}
+					preferred_limit = {
+						any_neighbor_province = {
+							owner = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+					}
+					preferred_limit = {
+						duchy = { any_de_jure_vassal_title = { is_holy_site = ROOT } }
+					}
+					preferred_limit = {
+						ROOT = {
+							capital_scope = {
+								can_naval_path_to = PREVPREV
+							}
+						}
+					}
+					duchy = { save_event_target_as = request_duchy }
+				}
+			}
+		}
+	}
+
+	option = {  # Ask for a county directly controlled by FROM.
+		name = EVTOPTADRD202
+		trigger = {
+			event_target:request_county = { can_be_given_away = yes }
+		}
+		hidden_tooltip = {
+			event_target:request_county = { save_event_target_as = request_title }
+			FROM = { letter_event = { id = DRD.302 } }
+		}
+	}
+
+	option = {  # Ask for a duchy within FROM's realm.
+		name = EVTOPTBDRD202
+		trigger = {
+			is_landed = yes
+			event_target:request_duchy = {
+				OR = {
+					has_holder = no
+					can_be_given_away = yes
+				}
+			}
+		}
+		hidden_tooltip = {
+			event_target:request_duchy = { save_event_target_as = request_title }
+			FROM = { letter_event = { id = DRD.302 } }
+		}
+	}
+
+	option = {  # Ask for a duchy controlled by an infidel.
+		name = EVTOPTCDRD202
+		trigger = {  #TODO: would require a war.
+			is_pacifist = no
+			always = no
+		}
+	}
+
+	option = {  # Go back.
+		name = EVTOPTZDRD200
+		hidden_tooltip = { repeat_event = { id = DRD.200 } }
+	}
+
+	after = {
+		clear_event_target = request_county
+		clear_event_target = request_duchy
+	}
+}
+
+letter_event = {
+	id = DRD.203
+	desc = {
+		text = EVTDESCDRD200A
+		trigger = {
+			NOR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD200B
+		trigger = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		any_demesne_title = {
+			limit = { controls_religion = yes }
+			persistent_event_target:rh_artifact = {
+				if = {
+					limit = { NOT = { owner = { character = ROOT } } }
+					save_event_target_as = request_lost_rh_artifact
+				}
+			}
+		}
+		FROM = {
+			random_artifact = {
+				limit = { artifact_can_be_gifted_to = ROOT }  # Artifact crowns are never allowed as gifts.
+				preferred_limit = { has_flag = religious }
+				preferred_limit = { quality = 3 }
+				preferred_limit = { quality = 2 }
+				save_event_target_as = request_random_artifact
+			}
+		}
+	}
+
+	option = {  # Ask for money.
+		name = EVTOPTADRD203
+		hidden_tooltip = {
+			FROM = { letter_event = { id = DRD.303 } }
+		}
+	}
+
+	option = {  # FROM has our crown, ask them to return it.
+		name = EVTOPTBDRD203
+		limit = {
+			event_target:request_lost_rh_artifact = { owner = { character = FROM } }
+		}
+		hidden_tooltip = {
+			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
+			FROM = { letter_event = { id = DRD.304 } }
+		}
+	}
+
+	option = {  #TODO Ask FROM to retrieve our lost crown.
+		name = EVTOPTBDRD203
+		limit = {
+			always = no
+			event_target:request_lost_rh_artifact = { owner = { NOT = { character = FROM } } }
+		}
+		hidden_tooltip = {
+			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
+			hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		}
+	}
+
+	option = {  # Ask for an artifact.
+		name = EVTOPTCDRD203
+		limit = {
+			event_target:request_random_artifact = { artifact_can_be_gifted_to = ROOT }
+		}
+		hidden_tooltip = {
+			event_target:request_random_artifact = { save_event_target_as = request_artifact }
+			FROM = { letter_event = { id = DRD.305 } }
+		}
+	}
+
+	option = {  # Go back.
+		name = EVTOPTZDRD200
+		hidden_tooltip = { repeat_event = { id = DRD.200 } }
+	}
+
+	after = {
+		clear_event_target = request_lost_rh_artifact
+		clear_event_target = request_random_artifact
+	}
+}

@@ -1,0 +1,34 @@
+#DRD-FILE
+
+rh_protection = {
+	tributary_name = TRIBUTARY_RH_PROTECTION_NAME
+	tributary_plural = TRIBUTARY_RH_PROTECTION_PLURAL
+	suzerain_name = SUZERAIN_RH_PROTECTION_NAME
+	tribute_name = TRIBUTARY_DEFAULT_TRIBUTE
+	breaks_at_suzerain_death = no
+	suzerain_must_defend = yes
+	tributary_can_be_summoned = no
+	tributary_must_defend = no
+	tributaries_can_unite = no
+	icon = 10
+	cbs_against_suzerain = {
+	}
+	income_tribute_percentage = {
+		value = 0
+	}
+	reinforce_tribute_percentage = {
+		value = 0
+	}
+	prestige_to_suzerain = {
+		value = 0
+	}
+	prestige_to_tributary = {
+		value = 0
+	}
+	piety_to_suzerain = {
+		value = 1
+	}
+	piety_to_tributary = {
+		value = 0
+	}
+}
