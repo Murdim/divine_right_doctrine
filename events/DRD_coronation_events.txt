@@ -39,17 +39,14 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler asking for their full sanct
 			}
 		}
 		name = {
-			text = EVTOPTADRD200_FROM_is_protector
+			text = EVTOPTADRD200_ruler_is_protector
 			trigger = {
 				independent = yes
-				is_tributary = {
-					type = rh_protection
-					suzerain = FROM
-				}
+				is_tributary = { suzerain = FROM type = rh_protection }
 			}
 		}
 		name = {
-			text = EVTOPTADRD200_FROM_is_liege_or_suzerain
+			text = EVTOPTADRD200_ruler_is_liege_or_suzerain
 			trigger = {
 				OR = {
 					is_vassal_or_below_of = FROM
@@ -141,23 +138,20 @@ letter_event = {
 			}
 		}
 		name = {
-			text = EVTOPTADRD201_FROM_is_protector
+			text = EVTOPTADRD201_ruler_is_protector
 			trigger = {
 				independent = yes
-				is_tributary = {
-					type = rh_protection
-					suzerain = FROM
-				}
+				is_tributary = { suzerain = FROM type = rh_protection }
 			}
 		}
 		name = {
-			text = EVTOPTADRD201_FROM_is_liege_or_suzerain
+			text = EVTOPTADRD201_ruler_is_liege_or_suzerain
 			trigger = {
 				OR = {
 					is_vassal_or_below_of = FROM
 					AND = {
 						is_tributary = { suzerain = FROM }
-						NOT = { is_tributary = { type = rh_protection } }
+						NOT = { is_tributary = { suzerain = FROM type = rh_protection } }
 					}
 				}
 			}
@@ -209,7 +203,7 @@ letter_event = {
 
 	option = {  # Ask for full independence.
 		name = {
-			text = EVTOPTADRD201_FROM_is_liege_or_suzerain
+			text = EVTOPTBDRD201_ruler_is_liege_or_suzerain
 			trigger = {
 				OR = {
 					is_vassal_or_below_of = FROM
@@ -218,7 +212,7 @@ letter_event = {
 			}
 		}
 		name = {
-			text = EVTOPTADRD201_foreign_liege_or_suzerain
+			text = EVTOPTBDRD201_foreign_liege_or_suzerain
 			trigger = {
 				OR = {
 					AND = {
@@ -497,7 +491,7 @@ letter_event = {
 
 	option = {  # FROM has our crown, ask them to return it.
 		name = EVTOPTBDRD203
-		limit = {
+		trigger = {
 			event_target:request_lost_rh_artifact = { owner = { character = FROM } }
 		}
 		hidden_tooltip = {
@@ -508,7 +502,7 @@ letter_event = {
 
 	option = {  #TODO Ask FROM to retrieve our lost crown.
 		name = EVTOPTBDRD203
-		limit = {
+		trigger = {
 			always = no
 			event_target:request_lost_rh_artifact = { owner = { NOT = { character = FROM } } }
 		}
@@ -520,7 +514,7 @@ letter_event = {
 
 	option = {  # Ask for an artifact.
 		name = EVTOPTCDRD203
-		limit = {
+		trigger = {
 			event_target:request_random_artifact = { artifact_can_be_gifted_to = ROOT }
 		}
 		hidden_tooltip = {
@@ -537,5 +531,112 @@ letter_event = {
 	after = {
 		clear_event_target = request_lost_rh_artifact
 		clear_event_target = request_random_artifact
+	}
+}
+
+letter_event = {  # ROOT = ruler, FROM = temporal RH.
+	id = DRD.300
+	desc = {
+		text = EVTDESCDRD300_independent
+		trigger = {
+			FROM = {
+				independent = yes
+				is_tributary = no
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD300_ruler_is_protector
+		trigger = {
+			FROM = {
+				independent = yes
+				is_tributary = { type = rh_protection suzerain = ROOT }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD300_ruler_is_liege_or_suzerain
+		trigger = {
+			FROM = {
+				OR = {
+					is_vassal_or_below_of = ROOT
+					AND = {
+						is_tributary = { suzerain = ROOT }
+						NOT = { is_tributary = { suzerain = ROOT type = rh_protection } }
+					}
+				}
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD300_foreign_protector
+		trigger = {
+			FROM = {
+				independent = yes
+				is_tributary = { type = rh_protection }
+				NOT = { is_tributary = { suzerain = ROOT } }
+			}
+		}
+	}
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = {
+			text = EVTOPTADRD300_independent_or_foreign_protector
+			trigger = {
+				FROM = {
+					independent = yes
+					OR = {
+						is_tributary = no
+						NOT = { is_tributary = { suzerain = ROOT } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD300_ruler_is_liege_or_suzerain
+			trigger = {
+				FROM = {
+					OR = {
+						is_vassal_or_below_of = ROOT
+						AND = {
+							is_tributary = { suzerain = ROOT }
+							NOT = { is_tributary = { suzerain = ROOT type = rh_protection } }
+						}
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTADRD300_ruler_is_protector
+			trigger = {
+				FROM = {
+					is_tributary = { suzerain = ROOT type = rh_protection }
+				}
+			}
+		}
+		if = {
+			limit = { FROM = { is_tributary = { suzerain = ROOT type = rh_protection } } }
+			piety = 50
+		}
+		else = {
+			if = {
+				limit = { FROM = { is_independent = no } }
+				FROM = { set_defacto_liege = THIS }
+			}
+			else_if = {
+				limit = { FROM = { is_tributary = { suzerain = ROOT } } }
+				remove_tributary = FROM
+			}
+			make_tributary = { who = FROM tributary_type = rh_protection }
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300
+		custom_tooltip = { text = coronation_canceled }
+		ai_chance = { factor = 0 }
 	}
 }

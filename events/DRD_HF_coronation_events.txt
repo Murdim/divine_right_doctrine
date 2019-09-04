@@ -407,7 +407,7 @@ character_event = {
 	}
 	option = {  #DRD-DIFF: crowned by temporal RH.
 		name = {
-			text = EVTOPTEDRDHF20200_independent_head
+			text = EVTOPTEDRDHF20200_independent
 			trigger = {
 				religion_head = {
 					independent = yes
@@ -416,19 +416,19 @@ character_event = {
 			}
 		}
 		name = {
-			text = EVTOPTEDRDHF20200_head_is_my_vassal
+			text = EVTOPTEDRDHF20200_ruler_is_liege
 			trigger = {
 				religion_head = { is_vassal_or_below_of = ROOT }
 			}
 		}
 		name = {
-			text = EVTOPTEDRDHF20200_head_is_my_tributary
+			text = EVTOPTEDRDHF20200_ruler_is_suzerain
 			trigger = {
 				religion_head = { is_tributary = { suzerain = ROOT } }
 			}
 		}
 		name = {
-			text = EVTOPTEDRDHF20200_someone_else_controls_head
+			text = EVTOPTEDRDHF20200_foreign_liege_or_suzerain
 			trigger = {
 				religion_head = {
 					OR = {
