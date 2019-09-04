@@ -20,7 +20,11 @@ character_event = {  # On religious head title creation, ROOT = holder (usually 
 	}
 
 	immediate = {  # Wait for one day, another event (e.g reformation) may be creating an artifact at the same time.
-		set_flag = flag_preparing_coronation
+		add_character_modifier = {
+			name = coronation_request_cooldown
+			years = 1000
+			hidden = yes
+		}
 		FROM = {
 			set_flag = created_divine_right_artifact
 			save_event_target_as = rh_title
@@ -84,7 +88,7 @@ character_event = {  # ROOT = religious head (almost always the reformer).
 
 	option = {
 		name = EVTOPTAHF20366
-		clr_flag = flag_preparing_coronation
+		remove_character_modifier = coronation_request_cooldown
 		add_trait = crowned_by_priest
 		add_trait = crowned_by_religious_head_hidden
 		save_persistent_event_target = { name = coronation_priest_per scope = religion_head }
