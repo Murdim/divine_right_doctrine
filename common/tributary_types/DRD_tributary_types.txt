@@ -10,7 +10,9 @@ rh_protection = {
 	tributary_can_be_summoned = no
 	tributary_must_defend = no
 	tributaries_can_unite = no
-	icon = 10
+	tributaries_can_infight = no
+	suzerain_can_join_infighting = no
+	icon = 9
 	cbs_against_suzerain = {
 	}
 	income_tribute_percentage = {

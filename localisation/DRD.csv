@@ -167,6 +167,10 @@ drd_priest_nomination_candidate_opinion_score;[Root.RelHead.GetTitledFirstName]'
 drd_priest_nomination_sponsor_opinion_score;[Root.RelHead.GetTitledFirstName]'s §YOpinion§! of [From.GetTitledFirstName];L'§Yopinion§! [Root.RelHead.Get_du_TitledFirstName] envers [From.Get_le_TitledFirstName];§YMeinung§! von [Root.RelHead.Get_Le_TitledFirstName] über [From.GetTitledFirstName];;Opinión de [Root.RelHead.Get_du_TitledFirstName] sobre [From.Get_le_TitledFirstName];;;;;;;;;x
 # common/scripted_triggers/DRD_coronation_triggers.txt
 drd_character_is_crowned_tt;Has been Crowned;A été couronné;;;;;;;;;;;;x
+# common/tributary_types/DRD_tributary_types.txt
+TRIBUTARY_RH_PROTECTION_NAME;Under protection;Sous la protection;;;;;;;;;;;;x
+TRIBUTARY_RH_PROTECTION_PLURAL;Under protection;Sous la protection;;;;;;;;;;;;x
+SUZERAIN_RH_PROTECTION_NAME;Protector;Protecteur;;;;;;;;;;;;x
 # decisions/DRD_HF_coronation_decisions.txt
 drd_prepare_coronation_ceremony;Organize a Coronation Ceremony;Organiser une cérémonie de couronnement;Krönungszeremonie organisieren;;Organizar una ceremonia de coronación;;;;;;;;x
 drd_prepare_coronation_ceremony_desc;Begin preparation for my Coronation Ceremony. As a [Root.Religion.GetName] [Root.GetTitle] it is imperative for me to be crowned by a distinguished member of the Church's clergy in order to legitimize my divine right to rule.;Commencer les préparatifs de votre cérémonie de couronnement. Puisque je suis un[Root.Get_E] [Root.GetTitle] [Root.GetReligionMascFem], il est impératif que je sois couronné[Root.Get_E] par un éminent membre du clergé afin de légitimer mon droit divin à régner.;Fangt mit den Vorbereitungen für eine Krönungszeremonie an. Als [Root.Religion.GetName]e[Root.GetrMale] [Root.GetTitle] ist es unbedingt erforderlich, dass ich von einem angesehenen Mitglied des Klerus gekrönt werde, um mein gottgegebenes Recht auf Herrschaft zu legitimieren.;;Comienzo a preparar mi ceremonia de coronación. Como [Root.GetTitle] [Root.Religion.GetName] es fundamental que un miembro distinguido de la Iglesia me corone para legitimar mi derecho divino a reinar.;;;;;;;;x
