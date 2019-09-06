@@ -214,15 +214,9 @@ letter_event = {
 		name = {
 			text = EVTOPTBDRD201_foreign_liege_or_suzerain
 			trigger = {
-				OR = {
-					AND = {
-						independent = no
-						NOT = { is_vassal_or_below_of = FROM }
-					}
-					AND = {
-						is_tributary = yes
-						NOT = { is_tributary = { suzerain = FROM } }
-					}
+				NOR = {
+					is_vassal_or_below_of = FROM
+					is_tributary = { suzerain = FROM }
 				}
 			}
 		}
@@ -573,8 +567,8 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH.
 		trigger = {
 			FROM = {
 				independent = yes
-				is_tributary = { type = rh_protection }
 				NOT = { is_tributary = { suzerain = ROOT } }
+				is_tributary = { type = rh_protection }
 			}
 		}
 	}
@@ -631,6 +625,67 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH.
 				remove_tributary = FROM
 			}
 			make_tributary = { who = FROM tributary_type = rh_protection }
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300
+		custom_tooltip = { text = coronation_canceled }
+		ai_chance = { factor = 0 }
+	}
+}
+
+letter_event = {  # ROOT = ruler, FROM = temporal RH.
+	id = DRD.301
+	desc = EVTDESCDRD301
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD301
+		if = {
+			limit = { FROM = { is_independent = no } }
+			FROM = { set_defacto_liege = THIS }
+		}
+		else_if = {
+			limit = { FROM = { is_tributary = { suzerain = ROOT } } }
+			remove_tributary = FROM
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300
+		custom_tooltip = { text = coronation_canceled }
+		ai_chance = { factor = 0 }
+	}
+}
+
+letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_title = title.
+	id = DRD.302
+	desc = EVTDESCDRD302
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD302
+		FROM = {
+			liege = { save_event_target_as = previous_liege }
+			grant_title = event_target:request_title
+			set_defacto_liege = event_target:previous_liege
+			event_target:request_title = {
+				if = {
+					limit = { tier = DUKE }
+					any_direct_de_jure_vassal_title = {
+						limit = {
+							holder_scope = { tier = COUNT }
+							location = { is_capital = yes }
+						}
+						set_defacto_liege = event_target:previous_liege
+					}
+				}
+			}
 		}
 	}
 
