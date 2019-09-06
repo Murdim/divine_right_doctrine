@@ -456,6 +456,23 @@ letter_event = {
 	is_triggered_only = yes
 
 	immediate = {
+		# Money request: highest between 3x the lowest yearly income between ruler and head, ruler's yearly income, and 300.
+		export_to_variable = { which = local_max_request_money value = yearly_income }
+		FROM = { export_to_variable = { which = local_min_request_money value = yearly_income } }
+		if = {
+			limit = { compare_variable = { which = local_max_request_money which = local_min_request_money } }
+			set_variable = { which = local_max_request_money which = local_min_request_money }
+		}
+		if = {
+			limit = { NOT = { compare_variable = { which = local_min_request_money value = 300 } } }
+			set_variable = { which = local_min_request_money value = 300 }
+		}
+		multiply_variable = { which = local_max_request_money value = 3 }
+		if = {
+			limit = { compare_variable = { which = local_min_request_money which = local_max_request_money }
+			set_variable = { which = local_max_request_money which = local_min_request_money }
+		}
+		
 		any_demesne_title = {
 			limit = { controls_religion = yes }
 			persistent_event_target:rh_artifact = {
@@ -478,7 +495,9 @@ letter_event = {
 
 	option = {  # Ask for money.
 		name = EVTOPTADRD203
+		trigger = { compare_variable = { which = local_max_request_money value = 0 } }
 		hidden_tooltip = {
+			set_variable = { which = local_request_money which = local_max_request_money }
 			FROM = { letter_event = { id = DRD.303 } }
 		}
 	}
@@ -523,6 +542,8 @@ letter_event = {
 	}
 
 	after = {
+		set_variable = { which = local_min_request_money value = 0 }
+		set_variable = { which = local_max_request_money value = 0 }
 		clear_event_target = request_lost_rh_artifact
 		clear_event_target = request_random_artifact
 	}
@@ -686,6 +707,88 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_title
 					}
 				}
 			}
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300
+		custom_tooltip = { text = coronation_canceled }
+		ai_chance = { factor = 0 }
+	}
+}
+
+letter_event = {  # ROOT = ruler, FROM = temporal RH, local_request_money (variable) = amount to transfer to FROM.
+	id = DRD.303
+	desc = EVTDESCDRD303
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { which = local_request_money which = local_request_money_neg }
+		multiply_variable = { which = local_request_money_neg value = -1 }
+	}
+
+	option = {
+		name = EVTOPTADRD303
+		wealth = local_request_money_neg
+		hidden_tooltip = {
+			FROM = { wealth = local_request_money }
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300
+		custom_tooltip = { text = coronation_canceled }
+		ai_chance = { factor = 0 }
+	}
+
+	after = {  #TODO clear local_request_money in response instead.
+		set_variable = { which = local_request_money value = 0 }
+		set_variable = { which = local_request_money_neg value = 0 }
+	}
+}
+
+letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_artifact = RH artifact
+	id = DRD.304
+	desc = EVTDESCDRD304
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD303
+		FROM = { 
+			event_target:request_artifact = {
+				transfer_artifact = { from = ROOT to = FROM }
+			}
+			hidden_tooltip = {
+				if = {
+					limit = { is_artifact_active = yes }
+					drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+				}
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300
+		custom_tooltip = { text = coronation_canceled }
+		ai_chance = { factor = 0 }
+	}
+}
+
+letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_artifact = random artifact
+	id = DRD.305
+	desc = EVTDESCDRD305
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD303
+		event_target:request_artifact = {
+			transfer_artifact = { from = ROOT to = FROM }
 		}
 	}
 
