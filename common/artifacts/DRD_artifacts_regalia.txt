@@ -4,7 +4,7 @@
 # Generic artifacts, by nature.
 crown_generic_peaceful_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	learning = 2
 	tribal_opinion = 5
@@ -34,7 +34,7 @@ crown_generic_peaceful_divine_right = {
 }
 crown_generic_warlike_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	martial = 2
 	tribal_opinion = 5
@@ -64,7 +64,7 @@ crown_generic_warlike_divine_right = {
 }
 crown_generic_proselytizing_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	diplomacy = 2
 	martial = 2
 	tribal_opinion = 5
@@ -94,7 +94,7 @@ crown_generic_proselytizing_divine_right = {
 }
 crown_generic_cosmopolitan_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	diplomacy = 2
 	learning = 2
 	tribal_opinion = 5
@@ -124,7 +124,7 @@ crown_generic_cosmopolitan_divine_right = {
 }
 crown_generic_other_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -156,7 +156,7 @@ crown_generic_other_divine_right = {
 # Replacements for vanilla RH artifacts.
 crown_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	martial = 2
 	tribal_opinion = 5
@@ -177,7 +177,7 @@ crown_fylkir_divine_right = {
 }
 crown_tengri_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	diplomacy = 2
 	martial = 2
 	tribal_opinion = 5
@@ -198,7 +198,7 @@ crown_tengri_fylkir_divine_right = {
 }
 crown_finnish_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -219,7 +219,7 @@ crown_finnish_fylkir_divine_right = {
 }
 crown_west_african_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -240,7 +240,7 @@ crown_west_african_fylkir_divine_right = {
 }
 crown_zun_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -261,7 +261,7 @@ crown_zun_fylkir_divine_right = {
 }
 crown_slavic_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	learning = 2
 	tribal_opinion = 5
@@ -282,7 +282,7 @@ crown_slavic_fylkir_divine_right = {
 }
 crown_romuva_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -303,7 +303,7 @@ crown_romuva_fylkir_divine_right = {
 }
 crown_aztec_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	martial = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -324,7 +324,7 @@ crown_aztec_fylkir_divine_right = {
 }
 scepter_bon_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	learning = 2
 	tribal_opinion = 5
@@ -345,7 +345,7 @@ scepter_bon_fylkir_divine_right = {
 }
 scepter_hellenic_fylkir_divine_right = { 
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	diplomacy = 2
 	learning = 2
 	tribal_opinion = 5
@@ -368,7 +368,7 @@ scepter_hellenic_fylkir_divine_right = {
 # Replacements for ancientreligions RH artifacts.
 crown_egyptian_fylkir_divine_right = {
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	intrigue = 2
 	tribal_opinion = 5
@@ -390,7 +390,7 @@ crown_egyptian_fylkir_divine_right = {
 }
 crown_celtic_fylkir_divine_right = {
 	monthly_character_prestige = 0.35
-	monthly_character_prestige = 0.6
+	monthly_character_piety = 0.6
 	stewardship = 2
 	martial = 2
 	tribal_opinion = 5
