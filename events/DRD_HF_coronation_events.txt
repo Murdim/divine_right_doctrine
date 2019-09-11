@@ -2993,6 +2993,13 @@ character_event = {
 		}
 		text = EVTDESCHFB20300
 	}
+	desc = {
+		trigger = {
+			war = yes
+		}
+		text = EVTDESCDRDHFC20300
+		picture = GFX_evt_mounted_combat_day_hf
+	}
 	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
 		trigger = {
 			has_character_flag = flag_crowned_by_spiritual
@@ -3000,12 +3007,12 @@ character_event = {
 		}
 		text = EVTDESCDRDHFD20300
 	}
-	desc = {
+	desc = {  #DRD-DIFF: crowned by temporal head
 		trigger = {
-			war = yes
+			has_character_flag = flag_crowned_by_fylkir
+			war = no
 		}
-		text = EVTDESCDRDHFC20300
-		picture = GFX_evt_mounted_combat_day_hf
+		text = EVTDESCDRDHFE20300
 	}
 
 	picture = GFX_evt_diplomatic_greeting
@@ -3184,7 +3191,7 @@ character_event = {
 			factor = 30 
 			modifier = { 
 				factor = 0.25
-				NOT = { wealth = 0 } 
+				wealth = 0  #DRD-DIFF: lower chance if NOT bankrupt.
 			} 
 			modifier = { 
 				factor = 3
@@ -3211,11 +3218,12 @@ letter_event = {
 	is_triggered_only = yes
 	trigger = {
 		FROM = {
-			OR = {
-				has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
+			OR = {  #DRD-DIFF: new coronation options.
+				has_character_flag = flag_crowned_by_spiritual
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_fylkir
 			}
 		}
 	}
@@ -3313,11 +3321,12 @@ letter_event = {
 	is_triggered_only = yes
 	trigger = {
 		FROM = {
-			OR = {
-				has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
+			OR = {  #DRD-DIFF: new coronation options.
+				has_character_flag = flag_crowned_by_spiritual
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_fylkir
 			}
 		}
 	}
@@ -3418,11 +3427,12 @@ letter_event = {
 
 	trigger = {
 		#DRD-DIFF: avoid checking for distinct religions
-		OR = {
-			has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
+		OR = {  #DRD-DIFF: new coronation options.
+			has_character_flag = flag_crowned_by_spiritual
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_fylkir
 		}
 	}
 	notification = yes
@@ -3440,11 +3450,12 @@ letter_event = {
 
 	trigger = {
 		#DRD-DIFF: avoid checking for distinct religions
-		OR = {
-			has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
+		OR = {  #DRD-DIFF: new coronation options.
+			has_character_flag = flag_crowned_by_spiritual
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_fylkir
 		}
 	}
 	notification = yes
@@ -3494,11 +3505,12 @@ character_event = {
 
 	trigger = { 
 		#DRD-DIFF: avoid checking for distinct religions
-		OR = {
-			has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
+		OR = {  #DRD-DIFF: new coronation options.
+			has_character_flag = flag_crowned_by_spiritual
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_fylkir
 		}
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
 	}
@@ -7271,11 +7283,12 @@ character_event = {
 
 	trigger = { 
 		event_target:coronation_ruler = {  #DRD-DIFF: coronation and religion checks.
-			OR = {
-				has_character_flag = flag_crowned_by_spiritual  #DRD-DIFF: crowned by Lord Spiritual.
+			OR = {  #DRD-DIFF: new coronation options.
+				has_character_flag = flag_crowned_by_spiritual
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_fylkir
 			}
 			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		} 
@@ -7315,7 +7328,10 @@ character_event = {
 				war = no
 				tier = EMPEROR
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				age = 16
 			}
 		}
@@ -7328,7 +7344,10 @@ character_event = {
 				war = no
 				tier = EMPEROR
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				NOT = { age = 16 }
 			}
 		}
@@ -7341,7 +7360,10 @@ character_event = {
 				war = no
 				tier = KING
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				age = 16
 			}
 		}
@@ -7354,7 +7376,10 @@ character_event = {
 				war = no
 				tier = KING
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				NOT = { age = 16 }
 			}
 		}
@@ -7366,7 +7391,7 @@ character_event = {
 			ROOT = { 
 				war = no
 				NOT = { has_character_flag = flag_secluded_coronation }
-				OR = {   #DRD-DIFF: not by the Lord Spiritual.
+				OR = {  #DRD-DIFF: new coronation options have been added, only list the applicable ones.
 					has_character_flag = flag_crowned_by_bishop
 					has_character_flag = flag_crowned_by_priest
 				}
@@ -7381,7 +7406,11 @@ character_event = {
 			ROOT = { 
 				war = no
 				NOT = { has_character_flag = flag_secluded_coronation }
-				NOT = { has_character_flag = flag_crowned_by_pope }
+				OR = {  #DRD-DIFF: new coronation options have been added, only list the applicable ones.
+					has_character_flag = flag_crowned_by_spiritual
+					has_character_flag = flag_crowned_by_bishop
+					has_character_flag = flag_crowned_by_priest
+				}
 				NOT = { age = 16 }
 			}
 		}
@@ -7393,7 +7422,10 @@ character_event = {
 			ROOT = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				age = 16
 			}
 		}
@@ -7405,7 +7437,10 @@ character_event = {
 			ROOT = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				NOT = { age = 16 }
 			}
 		}
@@ -7443,7 +7478,7 @@ character_event = {
 			ROOT = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				OR = {   #DRD-DIFF: not by the Lord Spiritual.
+				OR = {  #DRD-DIFF: new coronation options have been added, only list the applicable ones.
 					has_character_flag = flag_crowned_by_bishop
 					has_character_flag = flag_crowned_by_priest
 				}
@@ -7523,11 +7558,12 @@ character_event = {
 	trigger = { 
 		NOT = { has_character_flag = flag_being_coronated }
 		event_target:coronation_ruler = {  #DRD-DIFF: coronation and religion checks.
-			OR = {
+			OR = {  #DRD-DIFF: new coronation options.
 				has_character_flag = flag_crowned_by_spiritual
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_fylkir
 			}
 			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		}
@@ -7595,7 +7631,10 @@ character_event = {
 			add_trait = crowned_nonchristian_hidden
 		}
 		event_target:coronation_artifact = {  #DRD-DIFF: if using a special crown, add trait to display it.
-			drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+			if = {
+				limit = { owner = { character = ROOT } }
+				drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+			}
 		}
 
 	} 
@@ -7671,27 +7710,26 @@ character_event = {
 	
 	option = {
 		name = EVTOPTAHF20366
-		#Assign proper trait.
-		if = {  #DRD-DIFF: other religious heads give a less powerful trait than the Pope, since they are not as hard to please
+		#DRD-DIFF: Assign proper trait for new coronaiton options + no need for tooltips anymore.
+		if = {  # Temporal RHs give the best coronation trait.
+			limit = { 
+				has_character_flag = flag_crowned_by_fylkir
+			} 
+			add_trait = crowned_by_pope
+		}
+		else_if = {  # Other religious heads give a less powerful trait than the Pope, since they are not as hard to please.
 			limit = { 
 				has_character_flag = flag_crowned_by_pope 
 			} 
 			add_trait = crowned_by_bishop
 		}
-		if = { 
+		else_if = { 
 			limit = { 
 				has_character_flag = flag_crowned_by_bishop 
 			} 
-			add_trait = crowned_by_bishop  #DRD-DIFF: localization fix, no need for a tooltip anymore
+			add_trait = crowned_by_bishop
 		}
-		if = { 
-			limit = { 
-				has_character_flag = flag_crowned_by_priest
-			} 
-			add_trait = crowned_by_priest  #DRD-DIFF: localization fix, no need for a tooltip anymore
-		}
-		if = {  #DRD-DIFF: crowned by Lord Spiritual.
-			limit = { has_character_flag = flag_crowned_by_spiritual }
+		else = { 
 			add_trait = crowned_by_priest
 		}
 		hidden_tooltip = { remove_trait = uncrowned }
@@ -7777,28 +7815,53 @@ character_event = {
 character_event = {
 	id = DRD_HF.20367
 	title = EVTTITLE20366
-	desc = {  # DRD-DIFF: no special case for HRE/Francia
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT, but not for HRE/Francia.
 		trigger = {
 			FROM = { 
 				war = no
 				tier = EMPEROR
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				age = 16
 			}
+			NOT = { character = event_target:coronation_priest }
 		}
 		text = EVTDESCDRDHFB20367		# Localization for any adult Emperor crowned by the Pope (not in a barn).
 		picture = GFX_evt_found_hre
 	}
-	desc = {  # DRD-DIFF: no special case for HRE/Francia
+	desc = {
 		trigger = {
 			FROM = { 
 				war = no
 				tier = EMPEROR
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
+				age = 16
+			}
+			character = event_target:coronation_priest
+		}
+		text = EVTDESCDRDHFB20367_priest
+		picture = GFX_evt_found_hre
+	}
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT, but not for HRE/Francia.
+		trigger = {
+			FROM = { 
+				war = no
+				tier = EMPEROR
+				NOT = { has_character_flag = flag_secluded_coronation }
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				NOT = { age = 16 }
 			}
+			NOT = { character = event_target:coronation_priest }
 		}
 		text = EVTDESCDRDHFC20367		# Localization for any child Emperor crowned by the Pope (not in a barn).
 		picture = GFX_evt_found_hre
@@ -7807,11 +7870,32 @@ character_event = {
 		trigger = {
 			FROM = { 
 				war = no
+				tier = EMPEROR
+				NOT = { has_character_flag = flag_secluded_coronation }
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
+				NOT = { age = 16 }
+			}
+			character = event_target:coronation_priest
+		}
+		text = EVTDESCDRDHFC20367_priest
+		picture = GFX_evt_found_hre
+	}
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT.
+		trigger = {
+			FROM = { 
+				war = no
 				tier = KING
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				age = 16
 			}
+			NOT = { character = event_target:coronation_priest }
 		}
 		text = EVTDESCDRDHFD20367		# Localization for any adult King crowned by the Pope (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
@@ -7822,9 +7906,30 @@ character_event = {
 				war = no
 				tier = KING
 				NOT = { has_character_flag = flag_secluded_coronation }
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
+				age = 16
+			}
+			character = event_target:coronation_priest
+		}
+		text = EVTDESCDRDHFD20367_priest
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT.
+		trigger = {
+			FROM = { 
+				war = no
+				tier = KING
+				NOT = { has_character_flag = flag_secluded_coronation }
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				NOT = { age = 16 }
 			}
+			NOT = { character = event_target:coronation_priest }
 		}
 		text = EVTDESCDRDHFE20367		# Localization for any child King crowned by the Pope (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
@@ -7833,8 +7938,28 @@ character_event = {
 		trigger = {
 			FROM = { 
 				war = no
+				tier = KING
 				NOT = { has_character_flag = flag_secluded_coronation }
-				NOT = { has_character_flag = flag_crowned_by_pope }
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
+				NOT = { age = 16 }
+			}
+			character = event_target:coronation_priest
+		}
+		text = EVTDESCDRDHFE20367_priest
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {
+		trigger = {
+			FROM = { 
+				war = no
+				NOT = { has_character_flag = flag_secluded_coronation }
+				OR = {  #DRD-DIFF: new coronation options have been added, only list the applicable ones.
+					has_character_flag = flag_crowned_by_bishop
+					has_character_flag = flag_crowned_by_priest
+				}
 				age = 16
 			}
 		}
@@ -7846,21 +7971,29 @@ character_event = {
 			FROM = { 
 				war = no
 				NOT = { has_character_flag = flag_secluded_coronation }
-				NOT = { has_character_flag = flag_crowned_by_pope }
+				OR = {  #DRD-DIFF: new coronation options have been added, only list the applicable ones.
+					has_character_flag = flag_crowned_by_spiritual
+					has_character_flag = flag_crowned_by_bishop
+					has_character_flag = flag_crowned_by_priest
+				}
 				NOT = { age = 16 }
 			}
 		}
 		text = EVTDESCHFG20367		# Localization for any child ruler crowned by a Bishop or Priest (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
 	}
-	desc = {
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT.
 		trigger = {
 			FROM = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				age = 16
 			}
+			NOT = { character = event_target:coronation_priest }
 		}
 		text = EVTDESCDRDHFH20367		# Localization for any adult ruler crowned by the Pope in a barn.
 		picture = GFX_evt_a_crowning_ceremony
@@ -7870,11 +8003,47 @@ character_event = {
 			FROM = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				has_character_flag = flag_crowned_by_pope
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
+				age = 16
+			}
+			character = event_target:coronation_priest
+		}
+		text = EVTDESCDRDHFH20367_priest
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT.
+		trigger = {
+			FROM = { 
+				war = no
+				has_character_flag = flag_secluded_coronation
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
 				NOT = { age = 16 }
 			}
+			NOT = { character = event_target:coronation_priest }
 		}
 		text = EVTDESCDRDHFI20367		# Localization for any child ruler crowned by the Pope in a barn.
+		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {
+		trigger = {
+			FROM = { 
+				war = no
+				has_character_flag = flag_secluded_coronation
+				OR = {  # DRD-DIFF: crowned by temporal RH.
+					has_character_flag = flag_crowned_by_pope
+					has_character_flag = flag_crowned_by_fylkir
+				}
+				NOT = { age = 16 }
+			}
+			character = event_target:coronation_priest
+		}
+		text = EVTDESCDRDHFI20367_priest
 		picture = GFX_evt_a_crowning_ceremony
 	}
 	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
@@ -7908,11 +8077,25 @@ character_event = {
 			FROM = { 
 				war = no
 				has_character_flag = flag_secluded_coronation
-				NOT = { has_character_flag = flag_crowned_by_pope }
+				OR = {  #DRD-DIFF: new coronation options have been added, only list the applicable ones.
+					has_character_flag = flag_crowned_by_bishop
+					has_character_flag = flag_crowned_by_priest
+				}
 			}
 		}
 		text = EVTDESCHFL20367		# Localization for any ruler crowned by a Bishop or Priest in a barn.
 		picture = GFX_evt_a_crowning_ceremony
+	}
+	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT.
+		trigger = {
+			FROM = { 
+				war = yes
+				NOT = { has_character_flag = flag_crowned_by_pope }
+			}
+			NOT = { character = event_target:coronation_priest }
+		}
+		text = EVTDESCDRDHFM20367		# War Coronation description.
+		picture = GFX_evt_mounted_combat_day_hf
 	}
 	desc = {
 		trigger = {
@@ -7920,8 +8103,9 @@ character_event = {
 				war = yes
 				NOT = { has_character_flag = flag_crowned_by_pope }
 			}
+			character = event_target:coronation_priest
 		}
-		text = EVTDESCDRDHFM20367		# War Coronation description.
+		text = EVTDESCDRDHFM20367_priest
 		picture = GFX_evt_mounted_combat_day_hf
 	}
 	desc = {
@@ -8008,62 +8192,93 @@ character_event = {
 		}
 	}
 
-	option = {
-		name = EVTOPTAHF20367
-
-		#Assign scaled piety.
-		if = { 
-			limit = { 
-				FROM = { has_character_flag = flag_crowned_by_pope } 
-			} 
-			piety = 10
+	option = {  #DRD-DIFF: assign scaled piety and prestige for the new coronation options.
+		name = {
+			text = EVTOPTAHF20367
+			trigger = {
+				NAND = {
+					FROM = { has_character_flag = flag_crowned_by_fylkir }
+					character = event_target:coronation_priest
+				}
+			}
 		}
-		if = { 
+		name = {
+			text = EVTOPTADRDHF20367_fylkir
+			trigger = {
+				FROM = { has_character_flag = flag_crowned_by_fylkir }
+				character = event_target:coronation_priest
+			}
+		}
+
+		if = {  # If coronation_priest also joins the ceremony (temporal RHs always do), they receive an opinion bonus instead.
+			limit = { character = event_target:coronation_priest }
+			reverse_opinion = { who = FROM modifier = drd_opinion_crowned_me }
+		}
+		else_if = { 
+			limit = { 
+				FROM = {
+					OR = {
+						has_character_flag = flag_crowned_by_pope
+						has_character_flag = flag_crowned_by_fylkir
+					}
+				} 
+			}
+			piety = 30
+		}
+		else_if = { 
 			limit = { 
 				FROM = { has_character_flag = flag_crowned_by_bishop } 
 			} 
 			piety = 20
 		}
-		if = { 
-			limit = { 
-				FROM = { has_character_flag = flag_crowned_by_priest } 
-			} 
-			piety = 30
+		else = { 
+			piety = 10
 		}
 
-		#Assign scaled prestige.
-		if = { 
-			limit = { 
-				FROM = { 
-					has_character_flag = flag_secluded_coronation 
-					NOT = { has_character_flag = flag_crowned_by_pope } 
+		if = {
+			limit = {
+				FROM = { has_character_flag = flag_crowned_by_fylkir }
+				character = event_target:coronation_priest
+			}
+			prestige = local_fylkir_prestige_cost
+			if = {
+				limit = { NOT = { has_character_modifier = drd_puppet_fylkir } }
+				add_character_modifier = { name = drd_puppet_fylkir duration = -1 }
+			}
+		}
+		else_if = { 
+			limit = { FROM = { has_character_flag = flag_secluded_coronation } }
+			if = {
+				limit = {
+					FROM = {
+						NOR = {
+							has_character_flag = flag_crowned_by_pope
+							has_character_flag = flag_crowned_by_fylkir
+						}
+					}
 				}  
 			} 
 			prestige = -25
 		}
-		if = { 
-			limit = { 
-				FROM = { has_character_flag = flag_regular_coronation }  
-			} 
-			prestige = 50
-		}
-		if = { 
-			limit = { 
-				FROM = { 
-					has_character_flag = flag_extravagant_coronation 
-					NOT = { has_character_flag = flag_crowned_by_pope } 
+		else_if = { 
+			limit = { FROM = { has_character_flag = flag_extravagant_coronation } }
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							has_character_flag = flag_crowned_by_pope
+							has_character_flag = flag_crowned_by_fylkir
+						}
+					}
 				} 
-			} 
-			prestige = 75
+				prestige = 100
+			}
+			else = {
+				prestige = 75
+			}
 		}
-		if = { 
-			limit = { 
-				FROM = { 
-					has_character_flag = flag_extravagant_coronation 
-					has_character_flag = flag_crowned_by_pope 
-				}
-			} 
-			prestige = 100
+		else = { 
+			prestige = 50
 		}
 		ai_chance = { 	
 			factor = 100		
@@ -8189,10 +8404,12 @@ character_event = {
 		clr_character_flag = flag_regular_coronation
 		clr_character_flag = flag_secluded_coronation
 
+		#DRD-DIFF: new coronation options.
 		clr_character_flag = flag_crowned_by_spiritual
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
+		clr_character_flag = flag_crowned_by_fylkir
 
 		clr_character_flag = flag_coronation_foreign_friendship
 		clr_character_flag = flag_coronation_vassal_friendship
@@ -8607,6 +8824,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_fylkir
 		}
 	}
 
@@ -10043,6 +10261,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_fylkir
 		}
 	}
 
@@ -10078,6 +10297,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_fylkir
 			has_character_flag = flag_antipope_for_coronation 
 			has_character_flag = flag_excommunicated_for_coronation  
 			has_character_flag = flag_pepin_for_coronation  
@@ -10097,6 +10317,7 @@ character_event = {
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
+		clr_character_flag = flag_crowned_by_fylkir
 		clr_character_flag = flag_antipope_for_coronation
 		clr_character_flag = flag_excommunicated_for_coronation
 		clr_character_flag = flag_pepin_for_coronation
@@ -10113,7 +10334,6 @@ character_event = {
 		clr_character_flag = flag_extravagant_coronation
 		clr_character_flag = flag_regular_coronation
 		clr_character_flag = flag_secluded_coronation
-		clr_character_flag = flag_crowned_by_spiritual
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope

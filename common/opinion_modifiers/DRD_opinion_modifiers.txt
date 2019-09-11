@@ -19,3 +19,18 @@ drd_opinion_sponsored_nomination_patriarch = {
 	opinion = 10
 	years = 20
 }
+
+drd_opinion_refused_reasonable_request = {  # Temporal RH can and (if AI) will always refuse coronation requests from target.
+	opinion = -10
+	years = 5
+}
+
+drd_opinion_refused_unreasonable_request = {  # Target is more likely to crown themselves (if AI) and incurs less penalties from doing so.
+	opinion = 0
+	years = 1000
+}
+
+drd_opinion_crowned_me = {
+	opinion = 20
+	years = 20
+}

@@ -5,6 +5,13 @@ drd_uncrowned_modifier = { #On five years pulse
 	icon = 25
 }
 
+drd_puppet_fylkir = {  # Cancels some bonuses from the RH's own coronation, with an additional -1 prestige/month.
+	vassal_opinion = -5
+	monthly_character_prestige = -1.4
+	monthly_character_piety = -0.7
+	icon = 25
+}
+
 drd_angered_church = {
 	church_opinion = -10
 	temple_tax_modifier = -0.25

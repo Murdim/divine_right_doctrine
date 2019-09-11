@@ -2,11 +2,11 @@
 #SEE DRD_HF_coronation_events.txt: additional events for the coronation chain.
 
 namespace=DRD  # 200-499
-# 200-299: pre-coronation: officer makes a request, RH reacts.
-# 300-399: ruler accepts/fulfills or rejects the request.
+# 200-299: pre-coronation requests, RH reactions.
+# 300-399: pre-coronation request acceptance, rejection & fulfillment.
 # 400-499: other, e.g events during the coronation ceremony.
 
-letter_event = {  # ROOT = temporal RH, FROM = ruler asking for their full sanction.
+letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanction.
 	id = DRD.200
 	desc = {
 		text = EVTDESCDRD200A
@@ -29,6 +29,61 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler asking for their full sanct
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
+
+	immediate = {
+		if = {  # Compute the prestige hit that will be applied at the end of the coronation chain.
+			limit = { NOT = { is_variable_equal = { which = local_fylkir_prestige_cost value = 0 } } }
+			if = {
+				limit = { relative_power = { who = FROM power = 1.5 } }
+				set_variable = { which = local_fylkir_prestige_cost value = 5000 }
+			}
+			else_if = {
+				limit = { relative_power = { who = FROM power = 1 } }
+				set_variable = { which = local_fylkir_prestige_cost value = 3000 }
+			}
+			else_if = {
+				limit = { relative_power = { who = FROM power = 0.75 } }
+				set_variable = { which = local_fylkir_prestige_cost value = 2000 }
+			}
+			else_if = {
+				limit = { relative_power = { who = FROM power = 0.5 } }
+				set_variable = { which = local_fylkir_prestige_cost value = 1200 }
+			}
+			else_if = {
+				limit = { relative_power = { who = FROM power = 0.25 } }
+				set_variable = { which = local_fylkir_prestige_cost value = 600 }
+			}
+			else = {
+				set_variable = { which = local_fylkir_prestige_cost value = 300 }
+			}
+			if = {
+				limit = { independent = yes }
+				if = {
+					limit = { is_tributary = no }
+					change_variable = { which = local_fylkir_prestige_cost value = 400 }
+				}
+				else_if = {
+					limit = { NOT = { is_tributary = { suzerain = FROM type = rh_protection } } }
+					change_variable = { which = local_fylkir_prestige_cost value = 200 }
+				}
+			}
+			if = {  # Base value is capped at 100 + 40% of current prestige (if positive).
+				limit = { prestige = 0 }
+				export_to_variable = { which = local_fylkir_prestige_max value = prestige }
+				multiply_variable = { which = local_fylkir_prestige_max value = 0.4 }
+			}
+			change_variable = { which = local_fylkir_prestige_max value = 100 }
+			if = {
+				check_variable = { which = local_fylkir_prestige_max which = local_fylkir_prestige_cost }
+				set_variable = { which = local_fylkir_prestige_cost which = local_fylkir_prestige_max }
+			}
+			if = {  # Then x2 if same tier.
+				limit = { NOT = { is_lower_tier_than = FROM } }
+				multiply_variable = { which = local_fylkir_prestige_cost value = 2 }
+			}
+		}
+		#TODO AI weights: chance to only consider "reasonable" requests to a liege or suzerain.
+	}
 
 	option = {  # Political requests: independence, protection, overthrowing self-crowned ruelrs.
 		name = {
@@ -129,7 +184,7 @@ letter_event = {
 
 	is_triggered_only = yes
 
-	option = {  # Ask for autonomy under FROM's protection.
+	option = {  # Ask for autonomy under FROM's protection. Reasonable unless it requires a war or FROM is liege.
 		name = {
 			text = EVTOPTADRD201_independent
 			trigger = {
@@ -186,13 +241,20 @@ letter_event = {
 		if = {
 			limit = {
 				OR = {
-					is_independent = yes
+					AND = {
+						independent = yes
+						is_tributary = no
+					}
 					is_vassal_or_below_of = FROM
 					is_tributary = { suzerain = FROM }
 					is_tributary = { type = rh_protection }
 				}
 			}
 			hidden_tooltip = {
+				if = {
+					limit = { independent = yes }
+					set_variable = { which = local_request_reasonable value = 1 }
+				}
 				FROM = { letter_event = { id = DRD.300 } }
 			}
 		}
@@ -246,16 +308,20 @@ letter_event = {
 		}
 	}
 
-	option = {  # Overthrow a self-crowned ruler.
+	option = {  # Overthrow a self-crowned ruler. Reasonable.
 		name = EVTOPTCDRD201
 		trigger = {  #TODO
 			always = no
+		}
+		hidden_tooltip = {
+			set_variable = { which = local_request_reasonable value = 1 }
 		}
 	}
 
 	option = {  # Go back.
 		name = EVTOPTZDRD200
 		hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		ai_chance = { factor = 0 }
 	}
 }
 
@@ -384,12 +450,16 @@ letter_event = {
 		}
 	}
 
-	option = {  # Ask for a county directly controlled by FROM.
+	option = {  # Ask for a county directly controlled by FROM. Reasonable if unlanded.
 		name = EVTOPTADRD202
 		trigger = {
 			event_target:request_county = { can_be_given_away = yes }
 		}
 		hidden_tooltip = {
+			if = {
+				limit = { is_landed = no }
+				set_variable = { which = local_request_reasonable value = 1 }
+			}
 			event_target:request_county = { save_event_target_as = request_title }
 			FROM = { letter_event = { id = DRD.302 } }
 		}
@@ -423,6 +493,7 @@ letter_event = {
 	option = {  # Go back.
 		name = EVTOPTZDRD200
 		hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		ai_chance = { factor = 0 }
 	}
 
 	after = {
@@ -456,21 +527,19 @@ letter_event = {
 	is_triggered_only = yes
 
 	immediate = {
-		# Money request: highest between 3x the lowest yearly income between ruler and head, ruler's yearly income, and 300.
+		# Small money request: highest between 0.5x the ruler's yearly income and 300.
+		# Large money request: 3x the lowest yearly income between ruler and head, unused if lower than the above.
 		export_to_variable = { which = local_max_request_money value = yearly_income }
 		FROM = { export_to_variable = { which = local_min_request_money value = yearly_income } }
 		if = {
-			limit = { compare_variable = { which = local_max_request_money which = local_min_request_money } }
+			limit = { check_variable = { which = local_max_request_money which = local_min_request_money } }
 			set_variable = { which = local_max_request_money which = local_min_request_money }
-		}
-		if = {
-			limit = { NOT = { compare_variable = { which = local_min_request_money value = 300 } } }
-			set_variable = { which = local_min_request_money value = 300 }
 		}
 		multiply_variable = { which = local_max_request_money value = 3 }
+		multiply_variable = { which = local_min_request_money value = 0.5 }
 		if = {
-			limit = { compare_variable = { which = local_min_request_money which = local_max_request_money }
-			set_variable = { which = local_max_request_money which = local_min_request_money }
+			limit = { NOT = { check_variable = { which = local_min_request_money value = 300 } } }
+			set_variable = { which = local_min_request_money value = 300 }
 		}
 		
 		any_demesne_title = {
@@ -485,60 +554,85 @@ letter_event = {
 		FROM = {
 			random_artifact = {
 				limit = { artifact_can_be_gifted_to = ROOT }  # Artifact crowns are never allowed as gifts.
-				preferred_limit = { has_flag = religious }
+				preferred_limit = {
+					has_flag = religious
+					original_owner = { religion = ROOT }
+				}
 				preferred_limit = { quality = 3 }
 				preferred_limit = { quality = 2 }
+				preferred_limit = {
+					has_flag = about_religion
+					original_owner = { religion = ROOT }
+				}
 				save_event_target_as = request_random_artifact
 			}
 		}
 	}
 
-	option = {  # Ask for money.
-		name = EVTOPTADRD203
-		trigger = { compare_variable = { which = local_max_request_money value = 0 } }
+	option = {  # FROM has our crown, ask them to return it. Reasonable.
+		name = EVTOPTADRD203_give_artifact
+		trigger = {
+			event_target:request_lost_rh_artifact = { owner = { character = FROM } }
+		}
+		hidden_tooltip = {
+			set_variable = { which = local_request_reasonable value = 1 }
+			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
+			FROM = { letter_event = { id = DRD.304 } }
+		}
+	}
+
+	option = {  #TODO Ask FROM to retrieve our lost crown. Reasonable.
+		name = EVTOPTADRD203_retrieve_artifact
+		trigger = {
+			always = no
+			event_target:request_lost_rh_artifact = { owner = { NOT = { character = FROM } } }
+		}
+		hidden_tooltip = {
+			set_variable = { which = local_request_reasonable value = 1 }
+			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
+			hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		}
+	}
+
+	option = {  # Ask for a reasonable amount of money.
+		name = EVTOPTBDRD203
+		hidden_tooltip = {
+			set_variable = { which = local_request_reasonable value = 1 }
+			set_variable = { which = local_request_money which = local_min_request_money }
+			FROM = { letter_event = { id = DRD.303 } }
+		}
+	}
+
+	option = {  # Ask for a large amount of money, if strictly larger than the above.
+		name = EVTOPTCDRD203
+		trigger = {
+			NOT = { check_variable = { which = local_min_request_money which = local_max_request_money } }
+		}
 		hidden_tooltip = {
 			set_variable = { which = local_request_money which = local_max_request_money }
 			FROM = { letter_event = { id = DRD.303 } }
 		}
 	}
 
-	option = {  # FROM has our crown, ask them to return it.
-		name = EVTOPTBDRD203
-		trigger = {
-			event_target:request_lost_rh_artifact = { owner = { character = FROM } }
-		}
-		hidden_tooltip = {
-			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
-			FROM = { letter_event = { id = DRD.304 } }
-		}
-	}
-
-	option = {  #TODO Ask FROM to retrieve our lost crown.
-		name = EVTOPTBDRD203
-		trigger = {
-			always = no
-			event_target:request_lost_rh_artifact = { owner = { NOT = { character = FROM } } }
-		}
-		hidden_tooltip = {
-			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
-			hidden_tooltip = { repeat_event = { id = DRD.200 } }
-		}
-	}
-
 	option = {  # Ask for an artifact.
-		name = EVTOPTCDRD203
+		name = EVTOPTDDRD203
 		trigger = {
 			event_target:request_random_artifact = { artifact_can_be_gifted_to = ROOT }
+			NAND = {  # Disabled if 3 choices are already available.
+				event_target:request_lost_rh_artifact = { always = yes }
+				NOT = { check_variable = { which = local_min_request_money which = local_max_request_money } }
+			}
 		}
 		hidden_tooltip = {
 			event_target:request_random_artifact = { save_event_target_as = request_artifact }
-			FROM = { letter_event = { id = DRD.305 } }
+			FROM = { letter_event = { id = DRD.304 } }
 		}
 	}
 
 	option = {  # Go back.
 		name = EVTOPTZDRD200
 		hidden_tooltip = { repeat_event = { id = DRD.200 } }
+		ai_chance = { factor = 0 }
 	}
 
 	after = {
@@ -549,7 +643,67 @@ letter_event = {
 	}
 }
 
-letter_event = {  # ROOT = ruler, FROM = temporal RH.
+character_event = {  # Request was rejected (notification). ROOT = temporal RH, FROM = ruler.
+	id = DRD.210
+	desc = EVTDESCDRD210
+
+	is_triggered_only = yes
+	notification = yes
+
+	option = {
+		name = OK
+	}
+}
+
+letter_event = {  # Request was rejected and the ruler withdraws protection. ROOT = temporal RH, FROM = ruler.
+	id = DRD.211
+	desc = EVTDESCDRD211
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+	is_hostile = yes
+
+	option = {
+		name = OK
+	}
+}
+
+character_event = {  # Request was accepted (notification). ROOT = temporal RH, FROM = ruler.
+	id = DRD.212
+	desc = EVTDESCDRD212
+
+	is_triggered_only = yes
+	notification = yes
+
+	option = {
+		name = OK
+	}
+}
+
+letter_event = {  # Request for protection or independence was accepted. ROOT = temporal RH, FROM = ruler.
+	id = DRD.213
+	desc = {
+		text = EVTDESCDRD213_protection
+		trigger = {
+			is_tributary = { type = rh_protection suzerain = FROM }
+		}
+	}
+	desc = {
+		text = EVTDESCDRD213_independence
+		trigger = {
+			NOT = { is_tributary = { type = rh_protection suzerain = FROM } }
+		}
+	}
+
+	is_triggered_only = yes
+	is_friendly = yes
+
+	option = {
+		name = OK
+	}
+}
+
+letter_event = {  # Request for protection. ROOT = ruler, FROM = temporal RH.
 	id = DRD.300
 	desc = {
 		text = EVTDESCDRD300_independent
@@ -638,25 +792,80 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH.
 		}
 		else = {
 			if = {
-				limit = { FROM = { is_independent = no } }
+				limit = { FROM = { independent = no } }
 				FROM = { set_defacto_liege = THIS }
 			}
 			else_if = {
 				limit = { FROM = { is_tributary = { suzerain = ROOT } } }
 				remove_tributary = FROM
 			}
+			any_suzerain = {  # Foreign suzerains are removed only if they were protectors.
+				limit = {
+					NOT = { character = ROOT }
+					FROM = { is_tributary = { suzerain = PREV type = rh_protection } }
+				}
+				remove_tributary = FROM
+			}
 			make_tributary = { who = FROM tributary_type = rh_protection }
+			hidden_tooltip = { FROM = { letter_event = { id = DRD.213 } } }
 		}
+		hidden_tooltip = { repeat_event = { id = DRD.399 } }
 	}
 
 	option = {
-		name = EVTOPTZDRD300
+		name = {
+			text = EVTOPTZDRD300_not_under_ruler
+			trigger = {
+				FROM = {
+					independent = yes
+					OR = {
+						is_tributary = no
+						NOT = { is_tributary = { suzerain = ROOT } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_liege_or_suzerain
+			trigger = {
+				FROM = {
+					OR = {
+						is_vassal_or_below_of = ROOT
+						AND = {
+							is_tributary = { suzerain = ROOT }
+							NOT = { is_tributary = { suzerain = ROOT type = rh_protection } }
+						}
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_protector
+			trigger = {
+				FROM = {
+					is_tributary = { suzerain = ROOT type = rh_protection }
+				}
+			}
+		}
+		if = {
+			limit = { FROM = { is_tributary = { suzerain = ROOT type = rh_protection } } }
+			prestige = -200  # Same cost as the decision to release a tributary.
+			remove_tributary = FROM
+			hidden_tooltip = { FROM = { letter_event = { id = DRD.211 } } }
+		}
+		else = {
+			hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
+		}
+		if = {
+			limit = { check_variable = { which = local_request_reasonable value = 1 } }
+			reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		}
 		custom_tooltip = { text = coronation_canceled }
 		ai_chance = { factor = 0 }
 	}
 }
 
-letter_event = {  # ROOT = ruler, FROM = temporal RH.
+letter_event = {  # Request for independence. ROOT = ruler, FROM = temporal RH.
 	id = DRD.301
 	desc = EVTDESCDRD301
 	border = GFX_event_letter_frame_religion
@@ -666,23 +875,28 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH.
 	option = {
 		name = EVTOPTADRD301
 		if = {
-			limit = { FROM = { is_independent = no } }
+			limit = { FROM = { independent = no } }
 			FROM = { set_defacto_liege = THIS }
 		}
-		else_if = {
+		if = {
 			limit = { FROM = { is_tributary = { suzerain = ROOT } } }
 			remove_tributary = FROM
+		}
+		hidden_tooltip = {
+			FROM = { letter_event = { id = DRD.213 } }
+			repeat_event = { id = DRD.399 }
 		}
 	}
 
 	option = {
-		name = EVTOPTZDRD300
+		name = EVTOPTZDRD300_ruler_is_liege_or_suzerain
+		hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
 		custom_tooltip = { text = coronation_canceled }
-		ai_chance = { factor = 0 }
+		ai_chance = { factor = 0 }  #TODO
 	}
 }
 
-letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_title = title.
+letter_event = {  # Request for event_target:request_title. ROOT = ruler, FROM = temporal RH
 	id = DRD.302
 	desc = EVTDESCDRD302
 	border = GFX_event_letter_frame_religion
@@ -707,19 +921,79 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_title
 					}
 				}
 			}
+			hidden_tooltip = { character_event = { id = DRD.212 } }
 		}
+		hidden_tooltip = { repeat_event = { id = DRD.399 } }
 	}
 
 	option = {
-		name = EVTOPTZDRD300
+		name = {
+			text = EVTOPTZDRD300_not_under_ruler
+			trigger = {
+				FROM = {
+					independent = yes
+					OR = {
+						is_tributary = no
+						NOT = { is_tributary = { suzerain = ROOT } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_liege_or_suzerain
+			trigger = {
+				FROM = {
+					OR = {
+						is_vassal_or_below_of = ROOT
+						AND = {
+							is_tributary = { suzerain = ROOT }
+							NOT = { is_tributary = { suzerain = ROOT type = rh_protection } }
+						}
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_protector
+			trigger = {
+				FROM = {
+					is_tributary = { suzerain = ROOT type = rh_protection }
+				}
+			}
+		}
+		if = {
+			limit = { FROM = { is_tributary = { suzerain = ROOT type = rh_protection } } }
+			remove_tributary = FROM
+			hidden_tooltip = { FROM = { letter_event = { id = DRD.211 } } }
+		}
+		else = {
+			hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
+		}
+		if = {
+			limit = { check_variable = { which = local_request_reasonable value = 1 } }
+			reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		}
 		custom_tooltip = { text = coronation_canceled }
-		ai_chance = { factor = 0 }
+		ai_chance = {
+			factor = 0  #TODO
+			modifier = {
+				factor = 0
+				check_variable = { which = local_request_reasonable value = 1 }
+			}
+		}
 	}
 }
 
-letter_event = {  # ROOT = ruler, FROM = temporal RH, local_request_money (variable) = amount to transfer to FROM.
+letter_event = {  # Request for local_request_money ducats. ROOT = ruler, FROM = temporal RH.
 	id = DRD.303
-	desc = EVTDESCDRD303
+	desc = {
+		text = EVTDESCDRD303_reasonable
+		trigger = { check_variable = { which = local_request_reasonable value = 1 } }
+	}
+	desc = {
+		text = EVTDESCDRD303_unreasonable
+		trigger = { NOT = { check_variable = { which = local_request_reasonable value = 1 } } }
+	}
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
@@ -733,68 +1007,234 @@ letter_event = {  # ROOT = ruler, FROM = temporal RH, local_request_money (varia
 		name = EVTOPTADRD303
 		wealth = local_request_money_neg
 		hidden_tooltip = {
-			FROM = { wealth = local_request_money }
+			FROM = {
+				wealth = local_request_money
+				character_event = { id = DRD.212 }
+			}
+			repeat_event = { id = DRD.399 }
 		}
 	}
 
 	option = {
-		name = EVTOPTZDRD300
+		name = {
+			text = EVTOPTZDRD300_not_under_ruler
+			trigger = {
+				FROM = {
+					independent = yes
+					OR = {
+						is_tributary = no
+						NOT = { is_tributary = { suzerain = ROOT } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_liege_or_suzerain
+			trigger = {
+				FROM = {
+					OR = {
+						is_vassal_or_below_of = ROOT
+						AND = {
+							is_tributary = { suzerain = ROOT }
+							NOT = { is_tributary = { suzerain = ROOT type = rh_protection } }
+						}
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_protector
+			trigger = {
+				FROM = {
+					is_tributary = { suzerain = ROOT type = rh_protection }
+				}
+			}
+		}
+		if = {
+			limit = { FROM = { is_tributary = { suzerain = ROOT type = rh_protection } } }
+			remove_tributary = FROM
+			hidden_tooltip = { FROM = { letter_event = { id = DRD.211 } } }
+		}
+		else = {
+			hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
+		}
+		if = {
+			limit = { check_variable = { which = local_request_reasonable value = 1 } }
+			reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		}
 		custom_tooltip = { text = coronation_canceled }
-		ai_chance = { factor = 0 }
+		ai_chance = {
+			factor = 0  #TODO
+			modifier = {
+				factor = 0
+				check_variable = { which = local_request_reasonable value = 1 }
+				wealth = 0
+			}
+			modifier = {
+				factor = 0.3
+				check_variable = { which = local_request_reasonable value = 1 }
+			}
+			modifier = {
+				factor = 0.2
+				wealth = local_request_money
+			}
+		}
 	}
 
-	after = {  #TODO clear local_request_money in response instead.
-		set_variable = { which = local_request_money value = 0 }
+	after = {
 		set_variable = { which = local_request_money_neg value = 0 }
 	}
 }
 
-letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_artifact = RH artifact
+letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FROM = temporal RH.
 	id = DRD.304
-	desc = EVTDESCDRD304
-	border = GFX_event_letter_frame_religion
-
-	is_triggered_only = yes
-
-	option = {
-		name = EVTOPTADRD303
-		FROM = { 
+	desc = {
+		text = EVTDESCDRD304_rh_crown
+		trigger = {
 			event_target:request_artifact = {
-				transfer_artifact = { from = ROOT to = FROM }
-			}
-			hidden_tooltip = {
-				if = {
-					limit = { is_artifact_active = yes }
-					drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+				has_flag = divine_right_regalia
+				persistent_event_target:rh_title = {
+					holder_scope = { character = FROM }
 				}
 			}
 		}
 	}
-
-	option = {
-		name = EVTOPTZDRD300
-		custom_tooltip = { text = coronation_canceled }
-		ai_chance = { factor = 0 }
+	desc = {
+		text = EVTDESCDRD304_other
+		trigger = {
+			NOT = {
+				event_target:request_artifact = {
+					has_flag = divine_right_regalia
+					persistent_event_target:rh_title = {
+						holder_scope = { character = FROM }
+					}
+				}
+			}
+		}
 	}
-}
-
-letter_event = {  # ROOT = ruler, FROM = temporal RH, event_target:request_artifact = random artifact
-	id = DRD.305
-	desc = EVTDESCDRD305
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
 
 	option = {
-		name = EVTOPTADRD303
-		event_target:request_artifact = {
-			transfer_artifact = { from = ROOT to = FROM }
+		name = EVTOPTADRD304
+		FROM = { 
+			event_target:request_artifact = {
+				transfer_artifact = { from = ROOT to = FROM }
+				if = {
+					limit = {
+						has_flag = divine_right_regalia
+						is_artifact_active = yes
+					}
+					hidden_tooltip = {
+						drd_artifact_add_dead_crown_trait_to_prev = yes  #SEE DRD_artifact_effects.txt
+					}
+				}
+			}
+			hidden_tooltip = { character_event = { id = DRD.212 } }
 		}
+		hidden_tooltip = { repeat_event = { id = DRD.399 } }
 	}
 
 	option = {
-		name = EVTOPTZDRD300
+		name = {
+			text = EVTOPTZDRD300_not_under_ruler
+			trigger = {
+				FROM = {
+					independent = yes
+					OR = {
+						is_tributary = no
+						NOT = { is_tributary = { suzerain = ROOT } }
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_liege_or_suzerain
+			trigger = {
+				FROM = {
+					OR = {
+						is_vassal_or_below_of = ROOT
+						AND = {
+							is_tributary = { suzerain = ROOT }
+							NOT = { is_tributary = { suzerain = ROOT type = rh_protection } }
+						}
+					}
+				}
+			}
+		}
+		name = {
+			text = EVTOPTZDRD300_ruler_is_protector
+			trigger = {
+				FROM = {
+					is_tributary = { suzerain = ROOT type = rh_protection }
+				}
+			}
+		}
+		if = {
+			limit = { FROM = { is_tributary = { suzerain = ROOT type = rh_protection } } }
+			remove_tributary = FROM
+			hidden_tooltip = { FROM = { letter_event = { id = DRD.211 } } }
+		}
+		else = {
+			hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
+		}
+		if = {
+			limit = { check_variable = { which = local_request_reasonable value = 1 } }
+			reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		}
 		custom_tooltip = { text = coronation_canceled }
-		ai_chance = { factor = 0 }
+		ai_chance = {
+			factor = 0  #TODO
+			modifier = {
+				factor = 0
+				check_variable = { which = local_request_reasonable value = 1 }
+			}
+		}
+	}
+}
+
+letter_event = {  # Request was fulfilled, link back the vanilla-like event chain. ROOT = ruler, FROM = coronation priest.
+	id = DRD.399
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		set_character_flag = flag_crowned_by_fylkir
+		mulitiply_variable = { which = local_fylkir_prestige_cost value = -1 }
+		FROM = {
+			save_event_target_as = coronation_priest 
+			opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+			reverse_opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+			opinion = {
+				modifier = opinion_coronation_guest
+				months = 4
+				who = FROM
+			}
+			if = {
+				limit = {
+					OR = {
+						is_vassal_or_below_of = ROOT
+						is_tributary = { suzerain = ROOT }
+					}
+				}
+				add_character_modifier = {
+					name = out_traveling
+					duration = 45
+				}
+			}
+			else = {
+				add_trait = travelling
+			}
+		}
+		character_event = { id = DRD_HF.20300 }  #SEE DRD_HF_coronation_events.txt
 	}
 }
