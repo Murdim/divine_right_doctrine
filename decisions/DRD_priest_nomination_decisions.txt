@@ -122,11 +122,13 @@ targetted_decisions = {
 			drd_religion_allows_priest_nomination = yes  #SEE DRD_priest_nomination_triggers.txt
 			drd_religion_has_a_clergy = yes  #SEE DRD_common_triggers.txt
 			drd_ruler_is_a_crowned_king = yes  #SEE DRD_coronation_triggers.txt
-			OR = {  # Either no religious head or FROM is temporal head.
+			NOT = { religion_head = { is_theocracy = yes } }
+			OR = {  # No religious head, FROM is temporal head, or FROM was crowned by a temporal head.
 				NOT = { religion_head = { always = yes } }
+				controls_religion = yes
 				AND = {
-					controls_religion = yes
-					is_theocracy = no
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
 				}
 			}
 			prisoner = no
@@ -166,6 +168,19 @@ targetted_decisions = {
 			factor = 150
 			yes_threshold = 200  # "Maybe" means the lower clergy might object to the nomination.
 			show_maybe_for_human = yes 
+			additive_modifier = {
+				value = -30
+				localisation_key = drd_priest_nomination_not_recognized_by_current_head
+				religion_head = {
+					NOR = {
+						character = FROM
+						is_tributary = FROM
+						is_vassal_or_below_of = FROM
+						obedient = FROM
+						FROM = { persistent_event_target:coronation_priest = { character = PREVPREV } }
+					}
+				}
+			}
 			drd_candidate_nomination_score = yes  #SEE DRD_priest_nomination_score_values.txt
 			drd_sponsor_nomination_score = yes
 			drd_cooldown_nomination_score = yes
