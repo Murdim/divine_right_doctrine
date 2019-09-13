@@ -37,10 +37,15 @@ drd_opinion_refused_to_crown_me = {  # Vassal/tributary RH outright refused to c
 
 drd_opinion_crowned_me = {
 	opinion = 20
-	years = 20
+	years = 30
 }
 
-drd_opinion_making_request = {
+drd_opinion_making_request = {  # Request timer for player RH, removed after 2 months at the latest.
 	opinion = 0
-	months = 4
+	months = 3
+}
+
+drd_opinion_fulfilled_request = {  # Do not make another request if the coronation was cancelled.
+	opinion = 0
+	years = 1000
 }

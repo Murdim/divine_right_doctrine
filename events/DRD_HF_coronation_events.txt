@@ -461,10 +461,13 @@ character_event = {
 		hidden_tooltip = {
 			religion_head = {
 				opinion = { who = FROM modifier = drd_opinion_making_request }
-				if = {
-					limit = { ai = yes }
+				if = {  # AI heads reply after a month, unless their request was already fulfilled in a previous coronation attempt.
+					limit = {
+						ai = yes
+						NOT = { has_opinion_modifier = { who = ROOT modifier = drd_opinion_fulfilled_request } }
+					}
 					letter_event = { id = DRD.200 days = 30 random = 5 }
-				} else = {  # Human players get two full months to respond.
+				} else = {  # Human players usually get two full months to respond.
 					letter_event = { id = DRD.200 }
 				}
 				character_event = { id = DRD.299 days = 60 }
@@ -3031,6 +3034,9 @@ character_event = {
 			name = out_traveling
 			duration = 66
 			hidden = yes #Make the character inaccessible, the ruler himself is not actually out, he's still at court.
+		}
+		event_target:coronation_priest = {  #DRD-DIFF: do not make another request if the coronation was cancelled.
+			opinion = { who = ROOT modifier = drd_opinion_fulfilled_request }  #TODO: only used for temporal RH for now.
 		}
 	}
 

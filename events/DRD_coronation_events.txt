@@ -4,7 +4,7 @@
 namespace=DRD  # 200-499
 # 200-299: pre-coronation requests, RH reactions.
 # 300-399: pre-coronation request acceptance, rejection & fulfillment.
-# 400-499: other, e.g events during the coronation ceremony.
+# 400-499: other, e.g coronation ceremony, rh_protection related events.
 
 letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanction.
 	id = DRD.200
@@ -83,6 +83,10 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 				multiply_variable = { which = local_fylkir_prestige_cost value = 2 }
 			}
 		}
+		if = {  # If FROM has already fulfilled a request, proceed with the coronation.
+			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } }
+			hidden_tooltip = { FROM = { letter_event = { id = DRD.399 } } }
+		}
 		#TODO AI weights: chance to only consider "reasonable" requests to a liege or suzerain.
 	}
 
@@ -137,12 +141,14 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 				}
 			}
 		}
+		trigger = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } } }
 		hidden_tooltip = { repeat_event = { id = DRD.201 } }
 	}
 
 	option = {  # Land requests: either from their own realm, or a war of conquest in your name.
 		name = EVTOPTBDRD200
 		trigger = {  # Available if tributary, but not vassal, of a foreign ruler.
+			NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } }
 			OR = {
 				independent = yes
 				is_vassal_or_below_of = FROM
@@ -153,11 +159,13 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 
 	option = {  # Other requests: money, artifact...
 		name = EVTOPTCDRD200
+		trigger = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } } }
 		hidden_tooltip = { repeat_event = { id = DRD.203 } }
 	}
 
 	option = {  # Refuse. Default response unless FROM is your liege or suzerain.
 		name = EVTOPTDDRD200
+		trigger = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } } }
 		if = {
 			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request } }
 			hidden_tooltip = { remove_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request } }
@@ -182,6 +190,10 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 			hidden_tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_made_unreasonable_request } }
 		}
 		hidden_tooltip = { FROM = { letter_event = { id = DRD.398 } } }
+	}
+	option = {  # No choice, FROM already fulfilled your request.
+		name = EVTOPTEDRD200
+		trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } }
 	}
 }
 
@@ -1310,7 +1322,7 @@ letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FRO
 	}
 }
 
-letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FROM = temporal RH.
+letter_event = {  # RH refused to crown ROOT. ROOT = ruler, FROM = temporal RH.
 	id = DRD.398
 	text = EVTDESCDRD398
 	border = GFX_event_letter_frame_religion
