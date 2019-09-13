@@ -39,3 +39,8 @@ drd_opinion_crowned_me = {
 	opinion = 20
 	years = 20
 }
+
+drd_opinion_making_request = {
+	opinion = 0
+	months = 4
+}

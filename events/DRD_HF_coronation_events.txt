@@ -460,12 +460,14 @@ character_event = {
 		religion_head = { show_portrait = THIS }
 		hidden_tooltip = {
 			religion_head = {
+				opinion = { who = FROM modifier = drd_opinion_making_request }
 				if = {
 					limit = { ai = yes }
 					letter_event = { id = DRD.200 days = 30 random = 5 }
-				} else = {  # Human players get 4 weeks to respond.
-					letter_event = { id = DRD.200 days = 2 random = 5 }
+				} else = {  # Human players get two full months to respond.
+					letter_event = { id = DRD.200 }
 				}
+				character_event = { id = DRD.299 days = 60 }
 			}
 		}
 		ai_chance = { 

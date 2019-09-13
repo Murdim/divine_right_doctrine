@@ -9,7 +9,7 @@ namespace=DRD  # 200-499
 letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanction.
 	id = DRD.200
 	desc = {
-		text = EVTDESCDRD200A
+		text = EVTDESCDRD200_not_under_ruler
 		trigger = {
 			NOR = {
 				is_vassal_or_below_of = FROM
@@ -18,7 +18,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 		}
 	}
 	desc = {
-		text = EVTDESCDRD200B
+		text = EVTDESCDRD200_ruler_is_liege_or_suzerain
 		trigger = {
 			OR = {
 				is_vassal_or_below_of = FROM
@@ -29,6 +29,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
 
 	immediate = {
 		if = {  # Compute the prestige hit that will be applied at the end of the coronation chain.
@@ -155,7 +156,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 		hidden_tooltip = { repeat_event = { id = DRD.203 } }
 	}
 
-	option = {  # Refuse. Default response unless FROM is your liege or protector.
+	option = {  # Refuse. Default response unless FROM is your liege or suzerain.
 		name = EVTOPTDDRD200
 		if = {
 			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request } }
@@ -180,14 +181,14 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 		else = {
 			hidden_tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_made_unreasonable_request } }
 		}
-		hidden_tooltip = { repeat_event = { id = DRD.398 } }
+		hidden_tooltip = { FROM = { letter_event = { id = DRD.398 } } }
 	}
 }
 
 letter_event = {
 	id = DRD.201
 	desc = {
-		text = EVTDESCDRD200A
+		text = EVTDESCDRD200_not_under_ruler
 		trigger = {
 			NOR = {
 				is_vassal_or_below_of = FROM
@@ -196,7 +197,7 @@ letter_event = {
 		}
 	}
 	desc = {
-		text = EVTDESCDRD200B
+		text = EVTDESCDRD200_ruler_is_liege_or_suzerain
 		trigger = {
 			OR = {
 				is_vassal_or_below_of = FROM
@@ -207,6 +208,7 @@ letter_event = {
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
 
 	option = {  # Ask for autonomy under FROM's protection. Reasonable unless it requires a war or FROM is liege.
 		name = {
@@ -260,6 +262,7 @@ letter_event = {
 			}
 		}
 		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			is_landed = yes
 		}
 		if = {
@@ -275,6 +278,7 @@ letter_event = {
 				}
 			}
 			hidden_tooltip = {
+				remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 				if = {
 					limit = { independent = yes }
 					set_variable = { which = local_request_reasonable value = 1 }
@@ -307,6 +311,7 @@ letter_event = {
 			}
 		}
 		trigger = {  # Cannot request to be freed from a protector you can leave anytime you want.
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			is_landed = yes
 			OR = {
 				independent = no
@@ -324,6 +329,7 @@ letter_event = {
 				}
 			}
 			hidden_tooltip = {
+				remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 				FROM = { letter_event = { id = DRD.301 } }
 			}
 		}
@@ -335,9 +341,11 @@ letter_event = {
 	option = {  # Overthrow a self-crowned ruler. Reasonable.
 		name = EVTOPTCDRD201
 		trigger = {  #TODO
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			always = no
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			set_variable = { which = local_request_reasonable value = 1 }
 		}
 	}
@@ -352,7 +360,7 @@ letter_event = {
 letter_event = {
 	id = DRD.202
 	desc = {
-		text = EVTDESCDRD200A
+		text = EVTDESCDRD200_not_under_ruler
 		trigger = {
 			NOR = {
 				is_vassal_or_below_of = FROM
@@ -361,7 +369,7 @@ letter_event = {
 		}
 	}
 	desc = {
-		text = EVTDESCDRD200B
+		text = EVTDESCDRD200_ruler_is_liege_or_suzerain
 		trigger = {
 			OR = {
 				is_vassal_or_below_of = FROM
@@ -372,6 +380,7 @@ letter_event = {
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
 
 	immediate = {
 		FROM = {
@@ -477,9 +486,11 @@ letter_event = {
 	option = {  # Ask for a county directly controlled by FROM. Reasonable if unlanded.
 		name = EVTOPTADRD202
 		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_county = { can_be_given_away = yes }
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			if = {
 				limit = { is_landed = no }
 				set_variable = { which = local_request_reasonable value = 1 }
@@ -492,6 +503,7 @@ letter_event = {
 	option = {  # Ask for a duchy within FROM's realm.
 		name = EVTOPTBDRD202
 		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			is_landed = yes
 			event_target:request_duchy = {
 				OR = {
@@ -501,6 +513,7 @@ letter_event = {
 			}
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_duchy = { save_event_target_as = request_title }
 			FROM = { letter_event = { id = DRD.302 } }
 		}
@@ -509,6 +522,7 @@ letter_event = {
 	option = {  # Ask for a duchy controlled by an infidel.
 		name = EVTOPTCDRD202
 		trigger = {  #TODO: would require a war.
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			is_pacifist = no
 			always = no
 		}
@@ -529,7 +543,7 @@ letter_event = {
 letter_event = {
 	id = DRD.203
 	desc = {
-		text = EVTDESCDRD200A
+		text = EVTDESCDRD200_not_under_ruler
 		trigger = {
 			NOR = {
 				is_vassal_or_below_of = FROM
@@ -538,7 +552,7 @@ letter_event = {
 		}
 	}
 	desc = {
-		text = EVTDESCDRD200B
+		text = EVTDESCDRD200_ruler_is_liege_or_suzerain
 		trigger = {
 			OR = {
 				is_vassal_or_below_of = FROM
@@ -549,6 +563,7 @@ letter_event = {
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
 
 	immediate = {
 		# Small money request: highest between 0.5x the ruler's yearly income and 300.
@@ -596,9 +611,11 @@ letter_event = {
 	option = {  # FROM has our crown, ask them to return it. Reasonable.
 		name = EVTOPTADRD203_give_artifact
 		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_lost_rh_artifact = { owner = { character = FROM } }
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			set_variable = { which = local_request_reasonable value = 1 }
 			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
 			FROM = { letter_event = { id = DRD.304 } }
@@ -609,9 +626,11 @@ letter_event = {
 		name = EVTOPTADRD203_retrieve_artifact
 		trigger = {
 			always = no
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_lost_rh_artifact = { owner = { NOT = { character = FROM } } }
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			set_variable = { which = local_request_reasonable value = 1 }
 			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
 			hidden_tooltip = { repeat_event = { id = DRD.200 } }
@@ -620,7 +639,11 @@ letter_event = {
 
 	option = {  # Ask for a reasonable amount of money.
 		name = EVTOPTBDRD203
+		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
+		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			set_variable = { which = local_request_reasonable value = 1 }
 			set_variable = { which = local_request_money which = local_min_request_money }
 			FROM = { letter_event = { id = DRD.303 } }
@@ -630,9 +653,11 @@ letter_event = {
 	option = {  # Ask for a large amount of money, if strictly larger than the above.
 		name = EVTOPTCDRD203
 		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			NOT = { check_variable = { which = local_min_request_money which = local_max_request_money } }
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			set_variable = { which = local_request_money which = local_max_request_money }
 			FROM = { letter_event = { id = DRD.303 } }
 		}
@@ -641,6 +666,7 @@ letter_event = {
 	option = {  # Ask for an artifact.
 		name = EVTOPTDDRD203
 		trigger = {
+			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_random_artifact = { artifact_can_be_gifted_to = ROOT }
 			NAND = {  # Disabled if 3 choices are already available.
 				event_target:request_lost_rh_artifact = { always = yes }
@@ -648,6 +674,7 @@ letter_event = {
 			}
 		}
 		hidden_tooltip = {
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_random_artifact = { save_event_target_as = request_artifact }
 			FROM = { letter_event = { id = DRD.304 } }
 		}
@@ -721,6 +748,59 @@ letter_event = {  # Request for protection or independence was accepted. ROOT = 
 
 	is_triggered_only = yes
 	is_friendly = yes
+
+	option = {
+		name = OK
+	}
+}
+
+character_event = {  # Automatic answer after two months.
+	id = DRD.299
+	desc = {
+		text = EVTDESCDRD299_not_under_ruler
+		trigger = {
+			NOR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	desc = {
+		text = EVTDESCDRD299_ruler_is_liege_or_suzerain
+		trigger = {
+			OR = {
+				is_vassal_or_below_of = FROM
+				is_tributary = { suzerain = FROM }
+			}
+		}
+	}
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
+
+	immediate = {
+		remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+		set_variable = { which = local_request_reasonable value = 1 }
+		if = {  # Vassals request money.
+			limit = { is_vassal_or_below_of = FROM }
+			FROM = { export_to_variable = { which = local_request_money value = yearly_income } }
+			multiply_variable = { which = local_request_money value = 0.5 }
+			if = {
+				limit = { NOT = { check_variable = { which = local_request_money value = 300 } } }
+				set_variable = { which = local_request_money value = 300 }
+			}
+			FROM = { letter_event = { id = DRD.303 } }
+		}
+		else_if = {  # Tributaries request protection.
+			limit = { is_tributary = { suzerain = FROM } }
+			FROM = { letter_event = { id = DRD.300 } }
+		}
+		else = {  # Otherwise, refuse to crown.
+			FROM = { letter_event = { id = DRD.398 } }
+		}
+	}
 
 	option = {
 		name = OK
