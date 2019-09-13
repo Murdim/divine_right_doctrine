@@ -25,8 +25,13 @@ drd_opinion_refused_reasonable_request = {  # Temporal RH can and (if AI) will a
 	years = 5
 }
 
-drd_opinion_refused_unreasonable_request = {  # Target is more likely to crown themselves (if AI) and incurs less penalties from doing so.
+drd_opinion_made_unreasonable_request = {  # More likely to crown themselves (if AI) and incurs less penalties from doing so.
 	opinion = 0
+	years = 1000
+}
+
+drd_opinion_refused_to_crown_me = {  # Vassal/tributary RH outright refused to crown, same as above + CB against target.
+	opinion = -30
 	years = 1000
 }
 

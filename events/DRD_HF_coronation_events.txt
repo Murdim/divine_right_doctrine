@@ -473,9 +473,11 @@ character_event = {
 			modifier = {
 				factor = 0
 				religion_head = {
-					independent = yes
-					is_tributary = no
-					higher_real_tier_than = ROOT
+					OR = {
+						has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me }
+					}
 				}
 			}
 			modifier = {
