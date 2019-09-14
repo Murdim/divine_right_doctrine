@@ -158,9 +158,18 @@ targetted_decisions = {
 			is_incapable = no
 			NOT = { trait = excommunicated }
 			NOT = { is_primary_heir = FROM }
-			OR = {
+			conditional_tooltip = {
+				trigger = { drd_religion_values_celibate = yes }
 				is_married = no
-				drd_religion_values_celibate = no
+			}
+			FROM = {
+				conditional_tooltip = {
+					trigger = {
+						controls_religion = no
+						religion_head = { is_theocracy = no }
+					}
+					NOT = { has_character_modifier = drd_failed_to_protect_head }
+				}
 			}
 		}
 

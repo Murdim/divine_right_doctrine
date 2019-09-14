@@ -83,9 +83,14 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 				multiply_variable = { which = local_fylkir_prestige_cost value = 2 }
 			}
 		}
-		if = {  # If FROM has already fulfilled a request, proceed with the coronation.
-			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } }
-			hidden_tooltip = { FROM = { letter_event = { id = DRD.399 } } }
+		if = {  # Proceed with FROM's coronation if you already owe it to them.
+			limit = {
+				OR = {
+					has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request }
+					has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+				}
+			}
+			hidden_tooltip = { FROM = { character_event = { id = DRD.399 } } }
 		}
 		#TODO AI weights: chance to only consider "reasonable" requests to a liege or suzerain.
 	}
@@ -141,14 +146,22 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 				}
 			}
 		}
-		trigger = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } } }
+		trigger = {
+			NOR = {
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request }
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+			}
+		}
 		hidden_tooltip = { repeat_event = { id = DRD.201 } }
 	}
 
 	option = {  # Land requests: either from their own realm, or a war of conquest in your name.
 		name = EVTOPTBDRD200
 		trigger = {  # Available if tributary, but not vassal, of a foreign ruler.
-			NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } }
+			NOR = {
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request }
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+			}
 			OR = {
 				independent = yes
 				is_vassal_or_below_of = FROM
@@ -159,13 +172,23 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 
 	option = {  # Other requests: money, artifact...
 		name = EVTOPTCDRD200
-		trigger = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } } }
+		trigger = {
+			NOR = {
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request }
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+			}
+		}
 		hidden_tooltip = { repeat_event = { id = DRD.203 } }
 	}
 
 	option = {  # Refuse. Default response unless FROM is your liege or suzerain.
 		name = EVTOPTDDRD200
-		trigger = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } } }
+		trigger = {
+			NOR = {
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request }
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+			}
+		}
 		if = {
 			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request } }
 			hidden_tooltip = { remove_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request } }
@@ -191,9 +214,14 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 		}
 		hidden_tooltip = { FROM = { letter_event = { id = DRD.398 } } }
 	}
-	option = {  # No choice, FROM already fulfilled your request.
+	option = {  # No choice, FROM either installed you as RH under their protection or already fulfilled your request.
 		name = EVTOPTEDRD200
-		trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request } }
+		trigger = {
+			OR = {
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_fulfilled_request }
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+			}
+		}
 	}
 }
 
@@ -925,7 +953,11 @@ letter_event = {  # Request for protection. ROOT = ruler, FROM = temporal RH.
 			make_tributary = { who = FROM tributary_type = rh_protection }
 			hidden_tooltip = { FROM = { letter_event = { id = DRD.213 } } }
 		}
-		hidden_tooltip = { repeat_event = { id = DRD.399 } }
+		reverse_opinion = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+		hidden_tooltip = {
+			repeat_event = { id = DRD.399 }
+			repeat_event = { id = DRD.400 days = 30 }
+		}
 	}
 
 	option = {
@@ -1375,49 +1407,122 @@ letter_event = {  # RH refused to crown ROOT. ROOT = ruler, FROM = temporal RH.
 	}
 }
 
-letter_event = {  # Request was fulfilled, link back the vanilla-like event chain. ROOT = ruler, FROM = coronation priest.
-	id = DRD.399
+character_event = {  # Check from FROM's status monthly as long as the the oath to protect them is still ongoing.
+	id = DRD.400
 	is_triggered_only = yes
 	hide_window = yes
 
+	trigger = {
+		reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+	}
+
 	immediate = {
-		set_character_flag = flag_crowned_by_fylkir
-		mulitiply_variable = { which = local_fylkir_prestige_cost value = -1 }
-		remove_opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me }
-		remove_opinion = { who = FROM modifier = drd_opinion_made_unreasonable_request }
-		FROM = {
-			save_event_target_as = coronation_priest 
-			opinion = {
-				modifier = opinion_supposed_to_crown
-				months = 1
-				who = ROOT
-			}
-			reverse_opinion = {
-				modifier = opinion_supposed_to_crown
-				months = 1
-				who = ROOT
-			}
-			opinion = {
-				modifier = opinion_coronation_guest
-				months = 4
-				who = FROM
-			}
-			if = {
-				limit = {
+		if = {
+			limit = {
+				FROM = {
+					is_landed = yes
 					OR = {
-						is_vassal_or_below_of = ROOT
-						is_tributary = { suzerain = ROOT }
+						is_vassal_or_below_of = FROM
+						AND = {
+							independent = yes
+							is_tributary = { suzerain = ROOT type = rh_protection }
+						}
 					}
 				}
-				add_character_modifier = {
-					name = out_traveling
-					duration = 45
+			}
+			repeat_event = { id = DRD.400 days = 30 }
+		}
+		else = {
+			repeat_event = { id = DRD.401 }
+		}
+	}
+}
+
+character_event = {  # ROOT suffers the consequences of failing to protect FROM.
+	id = DRD.401
+	desc = {
+		text = EVTDESCDRD401_unlanded
+		trigger = {
+			is_landed = no
+		}
+	}
+	desc = {
+		text = EVTDESCDRD401_independent
+		trigger = {
+			is_landed = yes
+			independent = yes
+		}
+	}
+	desc = {
+		text = EVTDESCDRD401_foreign_liege
+		trigger = {
+			is_landed = yes
+			independent = no
+		}
+	}
+	picture = GFX_evt_throne_room
+
+	immediate = {
+		reverse_remove_opinion = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+		add_character_modifier = { modifier = drd_failed_to_protect_head years = 50 }
+		any_opinion_modifier_target = {
+			limit = {
+				OR = {
+					reverse_has_opinion_modifier = {
+						who = ROOT
+						modifier = drd_opinion_sponsoring_nomination
+					}
+					has_opinion_modifier = {
+						who = ROOT
+						modifier = drd_opinion_nominated
+					}
 				}
 			}
-			else = {
-				add_trait = travelling
-			}
+			remove_opinion = { who = ROOT modifier = drd_opinion_nominated }
+			reverse_remove_opinion = { who = ROOT modifier = drd_opinion_sponsoring_nomination }
 		}
-		character_event = { id = DRD_HF.20300 }  #SEE DRD_HF_coronation_events.txt
+	}
+
+	option = {
+		name = EVTOPTADRD401
+		tooltip = {
+			add_character_modifier = { modifier = drd_failed_to_protect_head years = 50 }
+		}
+	}
+}
+
+character_event = {  # Become protector of the current RH after overthrowing the previous one, their liege, or their suzerain.
+	id = DRD.402
+	desc = {
+		text = EVTDESCDRD402_new_head  # Previous RH either was the target or abdicated alongside them.
+		trigger = {
+			NOT = { check_variable = { which = local_rh_outcome value = 1 } }
+		}
+	}
+	desc = {
+		text = EVTDESCDRD402_former_vassal
+		trigger = {
+			is_variable_equal = { which = local_rh_outcome value = 1 }
+		}
+	}
+	desc = {
+		text = EVTDESCDRD402_former_tributary
+		trigger = {
+			is_variable_equal = { which = local_rh_outcome value = 2 }
+		}
+	}
+	picture = GFX_evt_throne_room
+
+	option = {
+		name = EVTOPTADRD402
+		religion_head = {
+			make_tributary = { who = FROM tributary_type = rh_protection }
+			reverse_opinion = { who = FROM modifier = drd_opinion_swore_to_protect_me }
+		}
+	}
+
+	option = {
+		name = EVTOPTBDRD402
+		ai_chance = { factor = 0 }
 	}
 }

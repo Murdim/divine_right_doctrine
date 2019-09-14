@@ -30,9 +30,10 @@ drd_opinion_made_unreasonable_request = {  # More likely to crown themselves (if
 	years = 1000
 }
 
-drd_opinion_refused_to_crown_me = {  # Vassal/tributary RH outright refused to crown, same as above + CB against target.
+drd_opinion_refused_to_crown_me = {  # Vassal/tributary RH outright refused to crown, same as above + revoke + CB against target.
 	opinion = -30
 	years = 1000
+	revoke_reason = yes
 }
 
 drd_opinion_crowned_me = {
@@ -48,4 +49,9 @@ drd_opinion_making_request = {  # Request timer for player RH, removed after 2 m
 drd_opinion_fulfilled_request = {  # Do not make another request if the coronation was cancelled.
 	opinion = 0
 	years = 1000
+}
+
+drd_opinion_swore_to_protect_me = {  # Enforced rh_protection relationship between the two characters.
+	opinion = 30
+	years = 30
 }

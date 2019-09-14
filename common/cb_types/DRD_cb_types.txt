@@ -1,0 +1,177 @@
+#DRD-FILE
+
+drd_overthrow = {
+	name = CB_NAME_DRD_OVERTHROW
+	war_name = WAR_NAME_DRD_OVERTHROW
+	sprite = 29
+	truce_days = 3650
+	is_permanent = yes
+	
+	defender_unoccupied_warscore = yes
+	
+	allowed_to_target_tributaries = yes
+	allowed_to_target_vassals = yes
+	
+	sort_priority = 990
+	
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+	}
+
+	can_use = {
+		FROM = {
+			religion = ROOT
+			drd_religion_allows_coronation = yes
+			OR = {
+				independent = yes
+				is_vassal_or_below = ROOT
+			}
+		}
+		OR = {
+			FROM = {  # Overthrow a temporal head who refused to crown you, and install a new one under your protection.
+				reverse_has_opinion_modifier = { who = ROOT drd_opinion_refused_to_crown_me }
+				controls_religion = yes
+			}
+			AND = {  # 
+				ROOT = {
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+				}
+				FROM = {
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+				}
+			}
+		}
+	}
+	
+	is_valid = {
+		FROM = {
+			reverse_has_opinion_modifier = { who = ROOT drd_opinion_refused_to_crown_me }
+			religion = ROOT
+			drd_religion_allows_coronation = yes
+			controls_religion = yes
+			OR = {
+				independent = yes
+				is_vassal_or_below = ROOT
+			}
+		}
+	}
+
+	on_add = {
+		hidden_tooltip = { fire_haruspicy_event_effect = yes }
+		if = {
+			limit = { defender = { is_offmap_governor = offmap_china } }
+			attacker = { 
+				sound_effect = china_angered_emperor
+				detract_grace_super_huge_effect = yes
+			}
+		}
+	}
+	
+	on_success = {
+		any_attacker = {
+			limit = { NOT = { character = ROOT } }
+			hidden_tooltip = {
+				participation_scaled_prestige = 250
+			}
+		}
+		
+		ROOT = {
+			participation_scaled_prestige = 250
+		}
+		
+		FROM = {
+			prestige = -500
+			if = {
+				limit = { controls_religion = yes }
+				abdicate_to_most_liked_by = ROOT
+				character_event = { id = DRD.402 days = 1 }  #SEE DRD_coronation_events.txt: become protector of the new RH.
+			}
+			else = {
+				religion_head = {
+					if = {
+						limit = {
+							OR = {
+								is_vassal_or_below_of = FROM
+								is_tributary = { suzerain = FROM }
+							}
+						}
+						if = {
+							limit = { is_vassal_or_below_of = FROM }
+							set_defacto_liege = THIS
+							set_variable = { which = local_rh_outcome value = 1 }
+						}
+						else_if = {
+							limit = { is_tributary = { suzerain = FROM } }
+							FROM = { release_tributary = PREV }
+							set_variable = { which = local_rh_outcome value = 2 }
+						}
+						if = {  
+							limit = {
+								OR = {
+									is_foe = ROOT
+									reverse_has_opinion_modifier = { who = ROOT drd_opinion_refused_to_crown_me }
+									AND = {
+										ROOT = { trait = crowned_by_pope }
+										FROM = {
+											trait = crowned_by_pope
+											persistent_event_target:coronation_priest = { character = PREVPREV }
+										}
+									}
+								}
+							}
+							set_variable = { which = local_rh_outcome value = 0 }
+							abdicate_to_most_liked_by = ROOT
+							character_event = { id = DRD.402 days = 1 }  # RH is overthrown, become protector of the new one.
+						}
+						else = {
+							character_event = { id = DRD.402 }
+						}
+					}
+				}
+				abdicate = yes
+			}
+		}
+	}
+
+	on_fail = {
+		ROOT = {
+			prestige = -100
+		}
+		FROM = {
+			prestige = 50
+		}
+	}
+
+	on_reverse_demand = {
+		ROOT = {
+			transfer_scaled_wealth = {
+				to = FROM
+				value = 4.0
+			}
+			piety = -500
+			prestige = -250
+		}
+		
+		FROM = {
+			prestige = 500
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}
