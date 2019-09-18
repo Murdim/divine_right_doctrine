@@ -88,13 +88,15 @@ character_event = {  # ROOT = religious head (almost always the reformer).
 
 	option = {
 		name = EVTOPTAHF20366
-		remove_character_modifier = coronation_request_cooldown
 		add_trait = crowned_by_priest
-		add_trait = crowned_by_religious_head_hidden
-		save_persistent_event_target = { name = coronation_priest_per scope = religion_head }
 		add_character_modifier = {
 			name = extravagant_coronation
 			days = 7300
+		}
+		hidden_tooltip = {
+			remove_character_modifier = coronation_request_cooldown
+			add_trait = crowned_by_religious_head_hidden
+			save_persistent_event_target = { name = coronation_priest_per scope = ROOT }
 		}
 	}
 }
@@ -184,7 +186,7 @@ character_event = {  # On uncrowned character becoming king, ROOT = holder, FROM
 	trigger = {  # Only applied if the new title is already primary, which usually means ROOT has gone up in rank.
 		FROM = { higher_tier_than = DUKE }
 		primary_title = { title = FROM }
-		drd_ruler_is_uncrowned = yes
+		drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
 		NOR = {  # Catholics have their own logic built into the interface files.
 			religion = catholic
 			religion = fraticelli
@@ -208,7 +210,7 @@ character_event = {  # On uncrowned king converting, ROOT = character.
 		OR = {
 			trait = uncrowned
 			AND = {
-				drd_ruler_is_uncrowned = yes
+				drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
 				NOR = {  # Catholics have their own logic built into the interface files.
 					religion = catholic
 					religion = fraticelli
