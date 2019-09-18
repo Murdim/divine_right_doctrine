@@ -12,12 +12,6 @@ drd_puppet_fylkir = {  # Cancels some bonuses from the RH's own coronation, with
 	icon = 25
 }
 
-drd_failed_to_protect_head = {  # Inverts church and piety bonuses from crowned trait, also disables priest nomination.
-	church_opinion = -20
-	monthly_character_piety = -1
-	icon = 35
-}
-
 drd_angered_church = {
 	church_opinion = -10
 	temple_tax_modifier = -0.25

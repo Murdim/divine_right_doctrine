@@ -36,7 +36,7 @@ drd_opinion_refused_to_crown_me = {  # Vassal/tributary RH outright refused to c
 	revoke_reason = yes
 }
 
-drd_opinion_crowned_me = {
+drd_opinion_crowned_me = {  # Only for coronation priests that are also guests, e.g vassal temporal heads.
 	opinion = 20
 	years = 30
 }
@@ -49,9 +49,4 @@ drd_opinion_making_request = {  # Request timer for player RH, removed after 2 m
 drd_opinion_fulfilled_request = {  # Do not make another request if the coronation was cancelled.
 	opinion = 0
 	years = 1000
-}
-
-drd_opinion_swore_to_protect_me = {  # Enforced rh_protection relationship between the two characters.
-	opinion = 30
-	years = 30
 }

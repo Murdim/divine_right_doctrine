@@ -406,106 +406,33 @@ character_event = {
 		}
 	}
 	option = {  #DRD-DIFF: crowned by temporal RH.
-		name = {
-			text = EVTOPTEDRDHF20200_independent
-			trigger = {
-				religion_head = {
-					independent = yes
-					is_tributary = no
-				}
-			}
-		}
-		name = {
-			text = EVTOPTEDRDHF20200_ruler_is_liege
-			trigger = {
-				religion_head = { is_vassal_or_below_of = ROOT }
-			}
-		}
-		name = {
-			text = EVTOPTEDRDHF20200_ruler_is_suzerain
-			trigger = {
-				religion_head = { is_tributary = { suzerain = ROOT } }
-			}
-		}
-		name = {
-			text = EVTOPTEDRDHF20200_foreign_liege_or_suzerain
-			trigger = {
-				religion_head = {
-					OR = {
-						AND = {
-							independent = no
-							NOT = { is_vassal_or_below_of = ROOT }
-						}
-						AND = {
-							is_tributary = yes
-							NOT = { is_tributary = { suzerain = ROOT } }
-						}
-					}
-				}
-			}
-		}
+		name = EVTOPTEDRDHF20200
 		trigger = {
 			independent = yes
 			is_tributary = no
-			religion_head = {
-				is_theocracy = no
-				NOT = { character = ROOT }
-				NOR = {  # Neither the RH nor their controller must be of higher tier.
-					top_liege = { higher_real_tier_than = ROOT }
-					suzerain = { higher_real_tier_than = ROOT }
-				}
-			}
+			religion_head = { is_vassal_or_below_of = ROOT }
 		}
 		custom_tooltip = { text = EVTTOOLTIPEDRDHF20200 }
 		religion_head = { show_portrait = THIS }
 		hidden_tooltip = {
 			religion_head = {
 				opinion = { who = FROM modifier = drd_opinion_making_request }
-				if = {  # AI heads reply after a month, unless their request was already fulfilled in a previous coronation attempt.
+				if = {  # Reply after a month, unless the request was already fulfilled in a previous coronation attempt.
 					limit = {
-						ai = yes
+						OR = {
+							ai = yes
+							multiplayer = no
+						}
 						NOT = { has_opinion_modifier = { who = ROOT modifier = drd_opinion_fulfilled_request } }
 					}
-					letter_event = { id = DRD.200 days = 30 random = 5 }
-				} else = {  # Human players usually get two full months to respond.
+					letter_event = { id = DRD.200 days = 30 random = 5 }  #SEE DRD_coronation_events.txt
+				} else = {  # Fire immediately for human players in MP games, since they get two full months to respond.
 					letter_event = { id = DRD.200 }
 				}
-				character_event = { id = DRD.299 days = 60 }
 			}
 		}
 		ai_chance = { 
 			factor = 10
-			modifier = {
-				factor = 0
-				religion_head = {
-					OR = {
-						has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
-						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
-						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me }
-					}
-				}
-			}
-			modifier = {
-				factor = 10
-				religion_head = { is_vassal_or_below_of = ROOT }
-			}
-			modifier = {
-				factor = 3
-				religion_head = { top_liege = { is_tributary = { suzerain = ROOT } } }
-			}
-			modifier = {
-				factor = 1.5
-				tier = EMPEROR
-			}
-			modifier = {
-				factor = 1.5
-				trait = proud
-			}
-			modifier = {
-				factor = 0.5
-				trait = content
-				NOT = { religion_head = { is_vassal_or_below_of = ROOT } }
-			}
 		}
 	}
 	option = {  #DRD-DIFF: Do not seek sanction from the church.
