@@ -39,8 +39,14 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 				hidden_tooltip = { FROM = { character_event = { id = DRD.399 } } }
 			}
 			else = {
-				if = {  # Rule 3: If FROM recently rejected a reasonable request, you are free to do whatever you want.
-					limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request } }
+				if = {  # Rule 3: If FROM cannot require you to crown them, you are free to do whatever you want.
+					limit = {  # Either recently rejected a reasonable request, or an open enemy (military or otherwise).
+						OR = {
+							has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+							is_foe = FROM  # Rival OR committed a crime against you.
+							war_with = FROM  # Should never happen since FROM is always (for now) our de facto liege.
+						}
+					}
 					set_variable = { which = local_request_rule value = 3 }
 				}  # Otherwise, you are expected to make a reasonable request.
 				if = {  # Human players in MP games must answer within two months, or they will give an automatic response.
