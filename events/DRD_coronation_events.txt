@@ -43,7 +43,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 					limit = {  # Either recently rejected a reasonable request, or an open enemy (military or otherwise).
 						OR = {
 							has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request }
-							is_foe = FROM  # Rival OR committed a crime against you.
+							FROM = { is_foe = ROOT }  # Rival OR committed a crime against you.
 							war_with = FROM  # Should never happen since FROM is always (for now) our de facto liege.
 						}
 					}
@@ -198,8 +198,8 @@ letter_event = {
 						}
 					}
 					preferred_limit = { claimed_by = ROOT }  # Claims: direct > ducal > kingdom.
-					preferred_limit = { dejure_liege_title = { holder_scope = { character = ROOT } }
-					preferred_limit = { kingdom = { holder_scope = { character = ROOT } }
+					preferred_limit = { dejure_liege_title = { holder_scope = { character = ROOT } } }
+					preferred_limit = { kingdom = { holder_scope = { character = ROOT } } }
 					preferred_limit = {  # Already holds a barony in the province.
 						any_direct_de_jure_vassal_title = { holder_scope = { character = ROOT } }
 					}
@@ -392,8 +392,8 @@ letter_event = {
 						location = { is_capital = no }
 					}
 					preferred_limit = { claimed_by = ROOT }  # Claims: direct > ducal > kingdom.
-					preferred_limit = { dejure_liege_title = { holder_scope = { character = ROOT } }
-					preferred_limit = { kingdom = { holder_scope = { character = ROOT } }
+					preferred_limit = { dejure_liege_title = { holder_scope = { character = ROOT } } }
+					preferred_limit = { kingdom = { holder_scope = { character = ROOT } } }
 					preferred_limit = {  # Already holds a barony in the province.
 						any_direct_de_jure_vassal_title = { holder_scope = { character = ROOT } }
 					}
