@@ -437,6 +437,58 @@ character_event = {
 			factor = 10
 		}
 	}
+	option = {  #DRD-DIFF: crowned in defiance of RH.
+		name = EVTOPTFDRDHF20200
+		trigger = {
+			independent = yes
+			is_tributary = no
+			war = no
+			age = 16
+			religion_head = {
+				is_theocracy = no
+				NOT = { character = ROOT }
+			}
+			job_spiritual = { religion = ROOT }
+		}
+		if = {  # Rulers face additional penalties unless they have a good reason to defy their RH.
+			limit = {  # Vassal RH who already refused to crown or made an unreasonable coronation request, or an open enemy.
+				OR = {
+					religion_head = {
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me }
+						ROOT = { is_foe = PREV }  # Rival OR committed a crime against you.
+					}
+				}
+			}
+			piety = -50
+			custom_tooltip = { text = EVTTOOLTIPFDRDHF20200_justified }
+			clr_character_flag = flag_crowned_by_myself_unjustified
+		}
+		else = {
+			piety = -300
+			custom_tooltip = { text = EVTTOOLTIPFDRDHF20200_unjustified }
+			set_character_flag = flag_crowned_by_myself_unjustified
+		}
+		set_character_flag = flag_crowned_by_myself
+		job_spiritual = {
+			save_event_target_as = coronation_priest 
+			show_scope_change = no	
+			opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+			reverse_opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+		}
+		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
+		ai_chance = {
+			factor = 10
+		}
+	}
 	option = {  #DRD-DIFF: Do not seek sanction from the church.
 		name = {  # Bonuses are covered by the artifact, NOT the self-crowned trait.
 			text = EVTOPTGDRDHF20200_as_head_crown_artifact
@@ -2934,9 +2986,12 @@ character_event = {
 		text = EVTDESCDRDHFC20300
 		picture = GFX_evt_mounted_combat_day_hf
 	}
-	desc = {  #DRD-DIFF: crowned by Lord Spiritual.
+	desc = {  #DRD-DIFF: self-crowned or crowned by Lord Spiritual.
 		trigger = {
-			has_character_flag = flag_crowned_by_spiritual
+			OR = {
+				has_character_flag = flag_crowned_by_myself
+				has_character_flag = flag_crowned_by_spiritual
+			}
 			war = no
 		}
 		text = EVTDESCDRDHFD20300
@@ -2951,9 +3006,24 @@ character_event = {
 
 	picture = GFX_evt_diplomatic_greeting
 	border = GFX_event_normal_frame_religion
-
-	#DRD-DIFF: avoid checking for distinct religions
+	
 	is_triggered_only = yes
+	trigger = {  #DRD-DIFF: check if everything is in order, instead of just religion...
+		drd_religion_allows_coronation = yes
+		event_target:coronation_priest = { religion = ROOT }
+		NAND = {
+			has_flag = flag_crowned_by_myself
+			war = yes
+		}
+	}
+	fail_trigger_effect = {  #DRD-DIFF: ... and if it's not, actually cancel the coronation.
+		clr_character_flag = flag_crowned_by_spiritual
+		clr_character_flag = flag_crowned_by_priest
+		clr_character_flag = flag_crowned_by_bishop
+		clr_character_flag = flag_crowned_by_pope
+		clr_character_flag = flag_crowned_by_fylkir
+		clr_character_flag = flag_crowned_by_myself
+	}
 	
 	immediate = {
 		save_event_target_as = coronation_ruler
@@ -2987,6 +3057,10 @@ character_event = {
 					NOT = { trait = incapable }
 					NOT = { is_inaccessible_trigger = yes }
 					NOT = { has_any_opinion_modifier = opinion_coronation_guest }
+					NAND = {  #DRD-DIFF: do not invite the RH to a schismatic coronation.
+						controls_religion = yes
+						ROOT = { has_flag = flag_crowned_by_myself }
+					}
 				}
 				character_event = { id = DRD_HF.20301 } #Send Invitations
 			}
@@ -3005,6 +3079,10 @@ character_event = {
 					is_within_diplo_range = ROOT
 					higher_real_tier_than = DUKE
 					NOT = { distance_from_realm = { who = ROOT value = 120 } }
+					NAND = {  #DRD-DIFF: do not invite the RH to a schismatic coronation.
+						controls_religion = yes
+						ROOT = { has_flag = flag_crowned_by_myself }
+					}
 				}
 				character_event = { id = DRD_HF.20302 } #Send Invitations to other same-religion neighbors
 			}
@@ -3053,6 +3131,10 @@ character_event = {
 					NOT = { trait = incapable }
 					NOT = { is_inaccessible_trigger = yes }
 					NOT = { has_any_opinion_modifier = opinion_coronation_guest }
+					NAND = {  #DRD-DIFF: do not invite the RH to a schismatic coronation.
+						controls_religion = yes
+						ROOT = { has_flag = flag_crowned_by_myself }
+					}
 				}
 				character_event = { id = DRD_HF.20301 } #Send Invitations
 			}
@@ -3101,6 +3183,9 @@ character_event = {
 			trigger = {
 				war = yes
 			}
+		}
+		trigger = {  #DRD-DIFF: MUST pick a more prestigious choice for non-RH self-coronation.
+			NOT = { has_flag = flag_crowned_by_myself }
 		}
 		set_character_flag = flag_secluded_coronation
 		custom_tooltip = { text = send_seclcoronation_invitations }
@@ -3161,6 +3246,7 @@ letter_event = {
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
 				has_character_flag = flag_crowned_by_fylkir
+				has_character_flag = flag_crowned_by_myself
 			}
 		}
 	}
@@ -3264,6 +3350,7 @@ letter_event = {
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
 				has_character_flag = flag_crowned_by_fylkir
+				has_character_flag = flag_crowned_by_myself
 			}
 		}
 	}
@@ -3370,6 +3457,7 @@ letter_event = {
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
 			has_character_flag = flag_crowned_by_fylkir
+			has_character_flag = flag_crowned_by_myself
 		}
 	}
 	notification = yes
@@ -3393,6 +3481,7 @@ letter_event = {
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
 			has_character_flag = flag_crowned_by_fylkir
+			has_character_flag = flag_crowned_by_myself
 		}
 	}
 	notification = yes
@@ -3448,6 +3537,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
 			has_character_flag = flag_crowned_by_fylkir
+			has_character_flag = flag_crowned_by_myself
 		}
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
 	}
@@ -7226,6 +7316,7 @@ character_event = {
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
 				has_character_flag = flag_crowned_by_fylkir
+				has_character_flag = flag_crowned_by_myself
 			}
 			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		} 
@@ -7259,6 +7350,15 @@ character_event = {
 character_event = {
 	id = DRD_HF.20366
 	title = EVTTITLE20366
+	desc = {  #DRD-DIFF: self-crowned in defiance of RH.
+		trigger = {
+			ROOT = { 
+				has_character_flag = flag_crowned_by_myself
+			}
+		}
+		text = EVTDESCDRDHFA20366
+		picture = GFX_evt_a_crowning_ceremony
+	}
 	desc = {  # DRD-DIFF: no special case for HRE/Francia
 		trigger = {
 			ROOT = { 
@@ -7487,7 +7587,6 @@ character_event = {
 		picture = GFX_evt_a_crowning_ceremony
 	}
 
-
 	picture = GFX_evt_found_hre
 	border = GFX_event_normal_frame_religion
 	hide_new = yes
@@ -7501,6 +7600,7 @@ character_event = {
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
 				has_character_flag = flag_crowned_by_fylkir
+				has_character_flag = flag_crowned_by_myself
 			}
 			NOT = { drd_character_is_crowned = yes }  #SEE DRD_coronation_triggers.txt
 		}
@@ -7536,7 +7636,7 @@ character_event = {
 		}
 		save_persistent_event_target = { name = coronation_religion scope = religion_scope }
 
-		if = {  #DRD-DIFF: If crowned as / in the name of a temporal head, register it, not the chaplain, as "coronation priest".
+		if = {  #DRD-DIFF: If crowned as / in the name of a temporal head, register them, not the chaplain, as "coronation priest".
 			limit = {
 				has_character_flag = flag_crowned_by_spiritual
 				religion_head = { is_theocracy = no }
@@ -7666,7 +7766,31 @@ character_event = {
 			} 
 			add_trait = crowned_by_bishop
 		}
-		else = { 
+		else_if = {  # Self-coronations in defiance of the RH (i.e not their own) give the corresponding vanilla trait.
+			limit = {
+				has_flag = flag_crowned_by_myself
+			}
+			add_trait = crowned_by_myself
+			if = {  # Also add the Schismatic Ruler modifier if uncrowned.
+				limit = { has_flag = flag_crowned_by_myself_unjustified }
+				if = {
+					limit = {
+						drd_religion_has_a_clergy = yes  #SEE DRD_common_triggers.txt
+					}
+					add_character_modifier = {
+						name = drd_schismatic_ruler
+						days = -1
+					}
+				}
+				else = {
+					add_character_modifier = {
+						name = drd_schismatic_ruler_clergyless
+						days = -1
+					}
+				}
+			}
+		}
+		else = {  # Other situations (including RH self-coronation) give the weakest version of the trait.
 			add_trait = crowned_by_priest
 		}
 		hidden_tooltip = { remove_trait = uncrowned }
@@ -7738,6 +7862,44 @@ character_event = {
 				character_event = { id = DRD_HF.20370 days = 3 random = 3 } #wrap up, clear all flags.
 			} 
 		} 
+		if = {  #DRD-DIFF: consequences of self-coronation in defiance of the RH.
+			limit = { has_flag = flag_crowned_by_myself }
+			religion_authority = { modifier = self_crowned_schismatic_tmp }
+			repeat_event = { id = DRD.402 days = 1 }  # Upkeep event loop.
+			any_player = {  # Warn uninvited players of the same religion...
+				limit = { 
+					religion = ROOT
+					NOT = { character = ROOT }
+					NOT = {
+						has_opinion_modifier = { 
+							who = ROOT 
+							modifier = opinion_coronation_guest 
+						}
+					}
+				}
+				hidden_tooltip = { character_event = { id = DRD.400 } }
+			}
+			religion_head = {  # ... plus the religious head, since they have a choice to make...
+				tooltip = { opinion = { who = FROM modifier = drd_opinion_schismatic } }
+				if = {
+					limit = { ai = yes }
+					hidden_tooltip = { character_event = { id = DRD.400 } }
+				}
+			}
+			any_independent_ruler = {  # ... as well as any RH-crowned ruler.
+				limit = {
+					religion = ROOT
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+					controls_religion = no
+				}
+				tooltip = { opinion = { who = FROM modifier = drd_opinion_schismatic } }
+				if = {
+					limit = { ai = yes }
+					hidden_tooltip = { character_event = { id = DRD.400 } }
+				}
+			}
+		}
 		ai_chance = { 	
 			factor = 95		
 		}
@@ -7752,6 +7914,15 @@ character_event = {
 character_event = {
 	id = DRD_HF.20367
 	title = EVTTITLE20366
+	desc = {  #DRD-DIFF: self-crowned in defiance of RH.
+		trigger = {
+			FROM = { 
+				has_character_flag = flag_crowned_by_myself
+			}
+		}
+		text = EVTDESCDRDHFA20367
+		picture = GFX_evt_a_crowning_ceremony
+	}
 	desc = {  # DRD-DIFF: special case if coronation_priest is ROOT, but not for HRE/Francia.
 		trigger = {
 			FROM = { 
@@ -8150,6 +8321,13 @@ character_event = {
 		if = {  # If coronation_priest also joins the ceremony (temporal RHs always do), they receive an opinion bonus instead.
 			limit = { character = event_target:coronation_priest }
 			reverse_opinion = { who = FROM modifier = drd_opinion_crowned_me }
+			if = {
+				limit = {
+					FROM = { has_character_flag = flag_crowned_by_myself } 
+				} 
+				piety = -100
+				tooltip = { religion_head = { opinion = { modifier = drd_opinion_schismatic who = ROOT } } }
+			}
 		}
 		else_if = { 
 			limit = { 
@@ -8167,6 +8345,12 @@ character_event = {
 				FROM = { has_character_flag = flag_crowned_by_bishop } 
 			} 
 			piety = 20
+		}
+		else_if = { 
+			limit = { 
+				FROM = { has_character_flag = flag_crowned_by_myself } 
+			} 
+			piety = -20
 		}
 		else = { 
 			piety = 10
@@ -8205,6 +8389,7 @@ character_event = {
 						OR = {
 							has_character_flag = flag_crowned_by_pope
 							has_character_flag = flag_crowned_by_fylkir
+							has_character_flag = flag_crowned_by_myself
 						}
 					}
 				} 
@@ -8347,6 +8532,7 @@ character_event = {
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
 		clr_character_flag = flag_crowned_by_fylkir
+		has_character_flag = flag_crowned_by_myself
 
 		clr_character_flag = flag_coronation_foreign_friendship
 		clr_character_flag = flag_coronation_vassal_friendship
@@ -8762,6 +8948,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
 			has_character_flag = flag_crowned_by_fylkir
+			has_character_flag = flag_crowned_by_myself
 		}
 	}
 
@@ -10199,6 +10386,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
 			has_character_flag = flag_crowned_by_fylkir
+			has_character_flag = flag_crowned_by_myself
 		}
 	}
 
@@ -10235,6 +10423,7 @@ character_event = {
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
 			has_character_flag = flag_crowned_by_fylkir
+			has_character_flag = flag_crowned_by_myself
 			has_character_flag = flag_antipope_for_coronation 
 			has_character_flag = flag_excommunicated_for_coronation  
 			has_character_flag = flag_pepin_for_coronation  
@@ -10255,6 +10444,7 @@ character_event = {
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
 		clr_character_flag = flag_crowned_by_fylkir
+		has_character_flag = flag_crowned_by_myself
 		clr_character_flag = flag_antipope_for_coronation
 		clr_character_flag = flag_excommunicated_for_coronation
 		clr_character_flag = flag_pepin_for_coronation
@@ -10604,11 +10794,11 @@ character_event = {
 				50 = {
 					modifier = {  #DRD-DIFF: already stated to be repulsed by the liege.
 						factor = 0
-						FROMFROM = { has_character_flag = flag_homage_deformed }
+						FROMFROM = { has_character_flag = flag_homage_deformed }
 					}
 					modifier = {  #DRD-DIFF: already stated to be attracted to the liege.
 						factor = 2
-						FROMFROM = { has_character_flag = flag_homage_attractive }
+						FROMFROM = { has_character_flag = flag_homage_attractive }
 					}
 					modifier = {
 						factor = 0
@@ -10805,11 +10995,11 @@ character_event = {
 				65 = {
 					modifier = {  #DRD-DIFF: familiarity seems threatening.
 						factor = 0.5
-						FROMFROM = { has_character_flag = flag_homage_evil }
+						FROMFROM = { has_character_flag = flag_homage_evil }
 					}
 					modifier = {  #DRD-DIFF: familiarity seems authentic.
 						factor = 2
-						FROMFROM = { has_character_flag = flag_homage_good }
+						FROMFROM = { has_character_flag = flag_homage_good }
 					}
 					modifier = {
 						factor = 0.5

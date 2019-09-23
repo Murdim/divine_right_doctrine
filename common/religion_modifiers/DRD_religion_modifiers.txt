@@ -1,0 +1,11 @@
+#DRD-FILE
+
+self_crowned_schismatic = {  # Refreshed every month.
+	authority = -10
+	months = 1
+}
+
+self_crowned_schismatic_tmp = {  # Copy used for the first month.
+	authority = -10
+	days = 1
+}

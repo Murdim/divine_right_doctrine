@@ -890,3 +890,179 @@ letter_event = {  # Request was fulfilled, link back the vanilla-like event chai
 		character_event = { id = DRD_HF.20300 }  #SEE DRD_HF_coronation_events.txt
 	}
 }
+
+character_event = {
+	id = DRD.400
+	title = EVTTITLEDRD400
+	desc = EVTDESCDRD400
+	picture = GFX_evt_a_crowning_ceremony
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	trigger = { 
+		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
+		event_target:coronation_ruler = { is_alive = yes } #Check if the ruler supposed to be crowned is still alive. (check for guests)
+	}
+
+	option = {  # Religious heads can declare a rivalry with the self-crowned ruler.
+		name = EVTOPTADRD400
+		trigger = { controls_religion = yes }
+		add_rival = FROM
+		opinion = { who = FROM modifier = drd_opinion_schismatic }
+		opinion = { who = event_target:coronation_priest modifier = drd_opinion_schismatic }
+		tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp } }
+		hidden_tooltip = { FROM = { character_event = { id = DRD.401 } } }
+		ai_chance = {
+			factor = 50
+		}
+	}
+
+	option = {  # Otherwise, they'll still be denounced as schismatic by the RH and any RH-crowned ruler.
+		name = EVTOPTBDRD400
+		trigger = {
+			OR = {
+				controls_religion = yes
+				AND = {
+					independent = yes
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+				}
+			}
+			NAND = {  # RHs can only pick the first option if the ruler was already an enemy.
+				controls_religion = yes
+				FROM = { is_foe = ROOT }
+			}
+		}
+		opinion = { who = FROM modifier = drd_opinion_schismatic }
+		opinion = { who = event_target:coronation_priest modifier = drd_opinion_schismatic }
+		tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp } }
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				controls_religion = yes
+				OR = {
+					trait = ambitious
+					trait = proud
+					trait = zealous
+					NOT = { lower_tier_than = FROM }
+				}
+			}
+			modifier = {
+				factor = 10
+				is_vassal_or_below_of = FROM
+			}
+			modifier = {
+				factor = 2
+				trait = content
+			}
+		}
+	}
+
+	option = {  # Other rulers can only observe.
+		name = EVTOPTCDRD400
+		trigger = {
+			NOR = {
+				controls_religion = yes
+				AND = {
+					independent = yes
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+				}
+			}
+		}
+		tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp } }
+	}
+}
+
+character_event = {
+	id = DRD.401
+	desc = EVTDESCDRD401
+	picture = GFX_evt_catching_heretic
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD401
+		tooltip = { add_rival = FROM }
+	}
+}
+
+character_event = {  # Wait for the first day of the next month.
+	id = DRD.402
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		export_to_variable = { which = local_current_day value = day }
+		if = {
+			limit = { is_variable_equal = { which = local_current_day value = 0 } }
+			repeat_event = { id = DRD.403 }
+		}
+		else = {
+			repeat_event = { id = DRD.402 days = 1 }
+		}
+	}
+}
+
+character_event = {  # Monthly self-coronation upkeep event.
+	id = DRD.403
+	is_triggered_only = yes
+	hide_window = yes
+
+	immediate = {
+		if = {
+			limit = {
+				trait = crowned_by_myself
+				religion = persistent_event_target:coronation_religion
+				controls_religion = no
+			}
+			religion_authority = { modifier = self_crowned_schismatic }
+
+			if = {  # Additional penalties for rulers who had no justification for defying their RH.
+				limit = {
+					has_flag = flag_crowned_by_myself_unjustified
+				}
+				if = {  # Restore the Schismatic Ruler modifier if it was lost (e.g by converting).
+					limit = { NOT = { has_character_modifier = drd_schismatic_ruler } }
+					if = {
+						limit = {
+							drd_religion_has_a_clergy = yes  #SEE DRD_common_triggers.txt
+						}
+						add_character_modifier = {
+							name = drd_schismatic_ruler
+							days = -1
+						}
+					}
+					else = {
+						add_character_modifier = {
+							name = drd_schismatic_ruler_clergyless
+							days = -1
+						}
+					}
+				}
+				religion_head = {  # New religious heads inherit the opinion penalty.
+					if = {
+						limit = { NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_schismatic } } }
+						opinion = { who = FROM modifier = drd_opinion_schismatic }
+					}
+				}
+				any_independent_ruler = {  # Also apply it to any new RH-crowned ruler.
+					limit = {
+						religion = ROOT
+						trait = crowned_by_pope
+						religion = persistent_event_target:coronation_religion
+						controls_religion = no
+						NOT = { has_opinion_modifier = { who = FROM modifier = drd_opinion_schismatic } }
+					}
+					opinion = { who = FROM modifier = drd_opinion_schismatic }
+				}
+			}
+		}
+		else = {
+			remove_character_modifier = drd_schismatic_ruler
+		}
+		repeat_event = { id = DRD.402 months = 1 }  # Repeat at the start of every month.
+	}
+}

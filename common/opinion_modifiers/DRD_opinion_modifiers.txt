@@ -50,3 +50,8 @@ drd_opinion_fulfilled_request = {  # Do not make another request if the coronati
 	opinion = 0
 	years = 1000
 }
+
+drd_opinion_schismatic = {  # Self-crowned rulers, extends to FUTURE RHs and RH-crowned rulers if not justified.
+	opinion = -75
+	years = 1000
+}
