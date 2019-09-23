@@ -32,7 +32,6 @@ character_event = {
 					save_event_target_as = rh_title
 				}
 			}
-			
 		}
 	}
 	
@@ -410,7 +409,10 @@ character_event = {
 		trigger = {
 			independent = yes
 			is_tributary = no
-			religion_head = { is_vassal_or_below_of = ROOT }
+			religion_head = {
+				is_theocracy = no
+				is_vassal_or_below_of = ROOT
+			}
 		}
 		custom_tooltip = { text = EVTTOOLTIPEDRDHF20200 }
 		religion_head = { show_portrait = THIS }
@@ -431,7 +433,7 @@ character_event = {
 				}
 			}
 		}
-		ai_chance = { 
+		ai_chance = {  # Default option when available.
 			factor = 10
 		}
 	}
@@ -527,9 +529,6 @@ character_event = {
 				} 
 			}
 		}
-		else_if = {  #DRD-TODO: short-circuit the rest of this else_if chain until more options are implemented.
-			limit = { always = yes }
-		}
 		else_if = {
 			limit = {
 				religion_head = {
@@ -563,7 +562,7 @@ character_event = {
 			prestige = -50
 		}
 		set_character_flag = flag_crowned_by_spiritual
-		job_spiritual = { 
+		job_spiritual = {
 			save_event_target_as = coronation_priest 
 			show_scope_change = no	
 			opinion = {
@@ -578,7 +577,7 @@ character_event = {
 			}
 		}
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
-		ai_chance = { 
+		ai_chance = {
 			factor = 10
 			modifier = {  # If the RH is a vassal, always try asking them first.
 				factor = 0
@@ -2781,6 +2780,7 @@ letter_event = {
 				has_artifact_flag = christian  
 				NOT = { has_artifact_flag = rare } 
 				NOT = { has_artifact_flag = very_rare } 
+				NOT = { has_artifact_flag = unique }  #DRD-DIFF: vanilla omission.
 				NOT = { has_artifact_flag = flag_considering_donation } 
 			}
 			save_event_target_as = scoped_artifact
