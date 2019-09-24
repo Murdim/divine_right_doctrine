@@ -54,7 +54,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 						ai = no
 						multiplayer = yes
 					}
-					character_event = { id = DRD.299 days = 60 }
+					character_event = { id = DRD.204 days = 60 }
 				}
 			}
 
@@ -210,6 +210,22 @@ letter_event = {
 				}
 			}
 		}
+		any_independent_ruler = {
+			limit = {
+				religion = ROOT
+				trait = crowned_by_myself
+				religion = persistent_event_target:coronation_religion
+				higher_real_tier_than = DUKE
+				controls_religion = no
+			}
+			preferred_limit = { 
+				OR = {
+					has_character_modifier = drd_schismatic_ruler
+					has_character_modifier = drd_schismatic_ruler_clergyless
+				}
+			}
+			save_event_target_as = request_schismatic_ruler
+		}
 	}
 
 	option = {  # Use, or owe, a favor.
@@ -221,7 +237,7 @@ letter_event = {
 			text = EVTOPTADRD201_gain_favor
 			trigger = { NOT = { owes_favor_to = FROM } }
 		}
-		trigger = {  #TODO
+		trigger = {
 			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 		}
 		hidden_tooltip = {
@@ -231,7 +247,7 @@ letter_event = {
 	}
 
 	option = {  # If not holding any province, ask for a Count-tier title.
-		name = EVTOPTADRD201
+		name = EVTOPTBDRD201
 		trigger = {
 			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_county = { can_be_given_away = yes }
@@ -245,12 +261,13 @@ letter_event = {
 
 	option = {  # Overthrow a self-crowned ruler.
 		name = EVTOPTCDRD201
-		trigger = {  #TODO
+		trigger = {
 			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
-			always = no
+			event_target:request_schismatic_ruler = { always = yes }
 		}
 		hidden_tooltip = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+			FROM = { letter_event = { id = DRD.301 } }
 		}
 	}
 
@@ -487,6 +504,40 @@ letter_event = {
 	}
 }
 
+character_event = {  # Automatic answer after two months.
+	id = DRD.204
+	desc = {
+		text = EVTDESCDRD204_refuse
+		trigger = { check_variable = { which = local_request_rule value = 3 } }
+	}
+	desc = {
+		text = EVTDESCDRD204_money
+		trigger = { NOT = { check_variable = { which = local_request_rule value = 3 } } }
+	}
+	picture = GFX_evt_bishop
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
+
+	immediate = {
+		remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+		if = {  # Refuse to crown if allowed to do so.
+			limit = { check_variable = { which = local_request_rule value = 3 } }
+			FROM = { letter_event = { id = DRD.398 } }
+		}
+		else = {  # Otherwise, ask for money.
+			limit = { is_vassal_or_below_of = FROM }
+			set_variable = { which = local_request_money value = local_min_request_money }
+			FROM = { letter_event = { id = DRD.303 } }
+		}
+	}
+
+	option = {
+		name = OK
+	}
+}
+
 character_event = {  # Request was rejected (notification). ROOT = temporal RH, FROM = ruler.
 	id = DRD.210
 	desc = EVTDESCDRD210
@@ -511,17 +562,59 @@ character_event = {  # Request was accepted (notification). ROOT = temporal RH, 
 	}
 }
 
-character_event = {  # Automatic answer after two months.
-	id = DRD.299
-	desc = {
-		text = EVTDESCDRD299_refuse
-		trigger = { check_variable = { which = local_request_rule value = 3 } }
+character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH, FROM = ruler.
+	id = DRD.250
+	text = EVTDESCDRD250  # May be extended for other delayed requests if needed.
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
+
+	immediate = {
+		if = {
+			limit = {
+				ai = no
+				multiplayer = yes
+			}
+			character_event = { id = DRD.251 days = 30 }
+		}
 	}
-	desc = {
-		text = EVTDESCDRD299_money
-		trigger = { NOT = { check_variable = { which = local_request_rule value = 3 } } }
+
+	option = {
+		name = EVTOPTADRD250
+		if = {
+			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+			hidden_tooltip = { FROM = { character_event = { id = DRD.350 } }
+		ai_chance = {
+			factor = 10
+		}
 	}
-	picture = GFX_evt_bishop
+
+	option = {
+		name = EVTOPTBDRD250
+		if = {
+			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
+			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+			custom_tooltip = { text = drd_refuse_to_crown_warning }
+			tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me } }
+			hidden_tooltip = { FROM = { character_event = { id = DRD.351 } }
+		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { FROM = { is_foe = ROOT } }
+			}
+		}
+	}
+}
+
+character_event = {  # Automatic answer after 30 days.
+	id = DRD.251
+	text = EVTDESCDRD251
+	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
@@ -529,15 +622,7 @@ character_event = {  # Automatic answer after two months.
 
 	immediate = {
 		remove_opinion = { who = FROM modifier = drd_opinion_making_request }
-		if = {  # Refuse to crown if allowed to do so.
-			limit = { check_variable = { which = local_request_rule value = 3 } }
-			FROM = { letter_event = { id = DRD.398 } }
-		}
-		else = {  # Otherwise, ask for money.
-			limit = { is_vassal_or_below_of = FROM }
-			set_variable = { which = local_request_money value = local_min_request_money }
-			FROM = { letter_event = { id = DRD.303 } }
-		}
+		FROM = { character_event = { id = DRD.350 }
 	}
 
 	option = {
@@ -578,24 +663,78 @@ letter_event = {  # Request a favor. ROOT = ruler, FROM = temporal RH.
 		name = EVTOPTZDRD300_reasonable
 		hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
 		custom_tooltip = { text = coronation_canceled }
-		if = {
-			limit = { check_variable = { which = local_unreasonable value = 1 } }
-			if = {
-				limit = { NOT = { check_variable = { which = local_request_rule value = 3 } } }
-				custom_tooltip = { text = coronation_refuse_unreasonable_request }
-				opinion = { who = FROM modifier = drd_opinion_made_unreasonable_request }
+		custom_tooltip = { text = coronation_refuse_reasonable_request }
+		reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		ai_chance = {
+			factor = 0
+		}
+	}
+}
+
+letter_event = {  # Request to overthrow event_target:request_schismatic_ruler. ROOT = ruler, FROM = temporal RH.
+	id = DRD.301
+	desc = EVTDESCDRD301
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		opinion = {
+			who = event_target:request_schismatic_ruler
+			modifier = drd_opinion_request_overthrow_schismatic
+		}
+	}
+
+	option = {
+		name = EVTOPTADRD301
+		trigger = {
+			can_use_cb = {
+				target = event_target:request_schismatic_ruler
+				casus_belli = drd_overthrow
 			}
 		}
-		else = {
-			custom_tooltip = { text = coronation_refuse_reasonable_request }
-			reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		religion_head = {
+			opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+		}
+		war = {
+			target = event_target:request_schismatic_ruler
+			casus_belli = drd_overthrow
 		}
 		ai_chance = {
 			factor = 10
 			modifier = {
 				factor = 0
-				NOT = { check_variable = { which = local_unreasonable value = 1 } }
+				war = yes  # Should not happen.
 			}
+		}
+	}
+
+	option = {
+		name = EVTOPTBDRD301
+		religion_head = {
+			opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				can_use_cb = {
+					target = event_target:request_schismatic_ruler
+					casus_belli = drd_overthrow
+				}
+				war = no
+			}
+		}
+	}
+
+	option = {
+		name = EVTOPTZDRD300_reasonable
+		hidden_tooltip = { FROM = { character_event = { id = DRD.210 } } }
+		custom_tooltip = { text = coronation_canceled }
+		custom_tooltip = { text = coronation_refuse_reasonable_request }
+		reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+		ai_chance = {
+			factor = 0
 		}
 	}
 }
@@ -821,6 +960,36 @@ letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FRO
 	}
 }
 
+character_event = {  # Fulfilled a non-instantaneous request (e.g war), the coronation can proceed. ROOT = ruler, FROM = FROM.
+	id = DRD.350
+	text = EVTDESCDRD350  # May be extended for other delayed requests if needed.
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD350
+		hidden_tooltip = { repeat_event = { id = DRD.399 } }
+	}
+}
+
+character_event = {  # RH refuses to crown you after fulfilling a request for their predecessor. ROOT = ruler, FROM = FROM.
+	id = DRD.351
+	text = EVTDESCDRD351
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTBDRD351
+		custom_tooltip = { text = coronation_refuse_unreasonable_request }
+		opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me }
+		hidden_tooltip = { remove_character_modifier = coronation_request_cooldown }
+	}
+}
+
 letter_event = {  # RH refused to crown ROOT. ROOT = ruler, FROM = temporal RH.
 	id = DRD.398
 	text = EVTDESCDRD398
@@ -884,6 +1053,7 @@ letter_event = {  # Request was fulfilled, link back the vanilla-like event chai
 		set_variable = { which = local_min_request_money value = 0 }
 		set_variable = { which = local_max_request_money value = 0 }
 		clear_event_target = request_county
+		clear_event_target = request_schismatic_ruler
 		clear_event_target = request_lost_rh_artifact
 		clear_event_target = request_random_artifact
 
@@ -1016,6 +1186,8 @@ character_event = {  # Monthly self-coronation upkeep event.
 			limit = {
 				trait = crowned_by_myself
 				religion = persistent_event_target:coronation_religion
+				independent = yes
+				higher_real_tier_than = DUKE
 				controls_religion = no
 			}
 			religion_authority = { modifier = self_crowned_schismatic }
@@ -1025,7 +1197,12 @@ character_event = {  # Monthly self-coronation upkeep event.
 					has_flag = flag_crowned_by_myself_unjustified
 				}
 				if = {  # Restore the Schismatic Ruler modifier if it was lost (e.g by converting).
-					limit = { NOT = { has_character_modifier = drd_schismatic_ruler } }
+					limit = {
+						NOR = {
+							has_character_modifier = drd_schismatic_ruler
+							has_character_modifier = drd_schismatic_ruler_clergyless
+						}
+					}
 					if = {
 						limit = {
 							drd_religion_has_a_clergy = yes  #SEE DRD_common_triggers.txt
@@ -1062,6 +1239,7 @@ character_event = {  # Monthly self-coronation upkeep event.
 		}
 		else = {
 			remove_character_modifier = drd_schismatic_ruler
+			remove_character_modifier = drd_schismatic_ruler_clergyless
 		}
 		repeat_event = { id = DRD.402 months = 1 }  # Repeat at the start of every month.
 	}

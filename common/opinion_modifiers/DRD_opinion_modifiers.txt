@@ -51,7 +51,17 @@ drd_opinion_fulfilled_request = {  # Do not make another request if the coronati
 	years = 1000
 }
 
-drd_opinion_schismatic = {  # Self-crowned rulers, extends to FUTURE RHs and RH-crowned rulers if not justified.
-	opinion = -75
+drd_opinion_ongoing_request = {  # RH opinion towards rulers who accepted a request that cannot be instantly fulfilled (e.g war).
+	opinion = 10
+	years = 1000
+}
+
+drd_opinion_request_overthrow_schismatic = {  # Towards the ruler to overthrow.
+	opinion = 0
+	years = 1000
+}
+
+drd_opinion_schismatic = {  # For self-crowned rulers, extends to FUTURE RHs and RH-crowned rulers if not justified.
+	opinion = -50
 	years = 1000
 }

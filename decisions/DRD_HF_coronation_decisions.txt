@@ -9,7 +9,7 @@ decisions = {
 			has_dlc = "Holy Fury"
 			age = 11
 			prisoner = no
-			NOT = { trait = incapable }
+			is_incapable = no
 			OR = {
 				drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
 				AND = {  # Temporal heads can crown themselves even when they aren't required to do so.
@@ -21,6 +21,9 @@ decisions = {
 			NOR = { 
 				religion = catholic
 				religion = fraticelli
+				religion_head = {  # Already accepted to fulfill a request for the current RH.
+					has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request }
+				}
 			}
 		} 
 		allow = { 
@@ -132,6 +135,19 @@ decisions = {
 					}
 				}
 			}
+			conditional_tooltip = {  # Not if currently at war to fulfill a request given by a previous RH.
+				trigger = {  # Only if the defender is actually the target of a request.
+					any_war = {
+						using_cb = drd_overthrow
+						defender = {
+							reverse_has_opinion_modifier = {
+								who = ROOT
+								modifier = drd_opinion_request_overthrow_schismatic
+							}
+						}
+					}
+				}
+				NOT = { any_war = { using_cb = drd_overthrow } }  # Keep the tooltip simple.
 		}
 		effect = {
 			custom_tooltip = { text = begin_coronation_tooltip }

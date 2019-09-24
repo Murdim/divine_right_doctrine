@@ -1,0 +1,46 @@
+#DRD-FILE
+
+decisions = {
+	drd_give_up_on_coronation_request = {
+		only_playable = yes
+		ai = no
+
+		potential = {
+			religion_head = {  # Accepted to fulfill a request for the current RH.
+				has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request }
+			}
+		}
+
+		allow = {
+			always = yes
+		}
+
+		effect = {
+			custom_tooltip = { text = coronation_canceled }
+			custom_tooltip = { text = coronation_refuse_reasonable_request }
+			religion_head = {
+				remove_opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+				opinion = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
+			}
+			if = {
+				limit = { has_any_opinion_modifier = drd_opinion_request_overthrow_schismatic }
+				any_opinion_modifier_target = {
+					limit = {
+						reverse_has_opinion_modifier = {
+							who = ROOT
+							modifier = drd_opinion_request_overthrow_schismatic
+						}
+					}
+					reverse_remove_opinion = {
+						who = ROOT
+						modifier = drd_opinion_request_overthrow_schismatic
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}

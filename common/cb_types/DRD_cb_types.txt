@@ -1,2 +1,136 @@
 #DRD-FILE
 
+drd_overthrow = {
+	name = CB_NAME_DRD_OVERTHROW
+	war_name = WAR_NAME_DRD_OVERTHROW
+	sprite = 29
+	truce_days = 3650
+	is_permanent = yes
+	
+	defender_unoccupied_warscore = yes
+	
+	allowed_to_target_tributaries = yes
+	
+	sort_priority = 990
+	
+	can_use_gui = {
+		check_if_crusader_trigger = yes
+	}
+
+	can_use = {
+		ROOT = {
+			drd_religion_allows_coronation = yes
+			religion = FROM
+			OR = {  # Religious head, RH-crowned ruler, or asked by the RH to overthrow this specific ruler.
+				controls_religion = yes
+				AND = {
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+				}
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_request_overthrow_schismatic }
+			}
+		}
+		FROM = {
+			trait = crowned_by_myself
+			religion = persistent_event_target:coronation_religion
+			higher_real_tier_than = DUKE
+			controls_religion = no
+		}
+	}
+	
+	is_valid = {
+		FROM = {
+			trait = crowned_by_myself
+			religion = ROOT
+			religion = persistent_event_target:coronation_religion
+			higher_real_tier_than = DUKE
+			controls_religion = no
+		}
+	}
+
+	on_add = {
+		hidden_tooltip = { fire_haruspicy_event_effect = yes }
+		if = {
+			limit = { defender = { is_offmap_governor = offmap_china } }
+			attacker = { 
+				sound_effect = china_angered_emperor
+				detract_grace_super_huge_effect = yes
+			}
+		}
+	}
+	
+	on_success = {
+		any_attacker = {
+			limit = { NOT = { character = ROOT } }
+			hidden_tooltip = {
+				participation_scaled_prestige = 250
+			}
+		}
+		
+		ROOT = {
+			participation_scaled_prestige = 250
+			make_tributary = { who = FROM tributary_type = default }
+			hidden_tooltip = {
+				if = {
+					limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_request_overthrow_schismatic } }
+					if = {
+						limit = {
+							religion_head = {
+								has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request } }
+							}
+						}
+						character_event = { id = DRD.350 }  #SEE DRD_coronation_events.txt
+					}
+					else = {
+						religion_head = { character_event = { id = DRD.250 } }
+					}
+				}
+			}
+		}
+		
+		FROM = {
+			prestige = -500
+			abdicate = yes
+		}
+	}
+
+	on_fail = {
+		ROOT = {
+			prestige = -100
+		}
+		FROM = {
+			prestige = 50
+		}
+	}
+
+	on_reverse_demand = {
+		ROOT = {
+			transfer_scaled_wealth = {
+				to = FROM
+				value = 4.0
+			}
+			piety = -500
+			prestige = -250
+		}
+		
+		FROM = {
+			prestige = 500
+		}
+	}
+
+	attacker_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	attacker_ai_defeat_worth = {
+		factor = 100
+	}
+
+	defender_ai_victory_worth = {
+		factor = -1 # always accept
+	}
+	
+	defender_ai_defeat_worth = {
+		factor = 100
+	}
+}

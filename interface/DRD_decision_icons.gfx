@@ -5,4 +5,8 @@ spriteTypes = {
                 name = "GFX_drd_prepare_coronation_ceremony"
                 texturefile = "gfx\\interface\\decision_icon_coronation_ceremony.dds"
         }
+        spriteType = {
+                name = "GFX_drd_give_up_on_coronation_request"
+                texturefile = "gfx\\interface\\decision_icon_coronation_ceremony.dds"
+        }
 }
