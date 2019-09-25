@@ -437,7 +437,7 @@ character_event = {
 			factor = 10
 		}
 	}
-	option = {  #DRD-DIFF: crowned in defiance of RH.
+	option = {  #DRD-DIFF: crowned in defiance of temporal RH.
 		name = EVTOPTFDRDHF20200
 		trigger = {
 			independent = yes
@@ -486,7 +486,154 @@ character_event = {
 		}
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = {
-			factor = 10
+			factor = 1
+			modifier = {  # If the RH is a vassal, always try asking them first.
+				factor = 0
+				religion_head = {
+					is_vassal_or_below_of = ROOT
+					NOR = {
+						has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me }
+					}
+				}
+			}
+			modifier = {  # If the RH is NOT a vassal, RH or their top liege must be an enemy, OR lunatic/possessed.
+				factor = 0
+				NOR = {
+					religion_head = {
+						OR = {
+							is_vassal_or_below_of = ROOT
+							war_with = ROOT  # Not open war, but any situation where armies are hostile.
+							ROOT = { is_foe = PREV }  # Rival OR committed a crime against you.
+							top_liege = {
+								OR = {
+									ROOT = { is_foe = PREV }
+									war_with = ROOT
+								}
+							}
+						}
+					}
+					trait = lunatic
+					trait = possessed
+				}
+			}
+			modifier = {  # Much more likely with a proper justification.
+				factor = 3
+				religion_head = {
+					reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
+					NOT = { reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me } }
+				}
+			}
+			modifier = {
+				factor = 5
+				religion_head = { reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me } }
+			}
+			modifier = {
+				factor = 4
+				religion_head = { ROOT = { is_foe = PREV } }  # Rival OR committed a crime against you.
+			}
+			modifier = {  # Tier (compared to RH) & power (RH if liege, top liege otherwise).
+				factor = 0
+				religion_head = {
+					NOT = { ROOT = { is_foe = PREV } }  # Enemies only care up to a certain point.
+					higher_real_tier_than = ROOT
+				}
+			}
+			modifier = {
+				factor = 0.2
+				religion_head = { NOT = { lower_real_tier_than = ROOT } }
+			}
+			modifier = {
+				factor = 0
+				religion_head = {
+					NOT = { ROOT = { is_foe = PREV } }  # Enemies only care up to a certain point.
+					NOT = { is_vassal_or_below_of = ROOT }
+					top_liege = { relative_power = { who = FROM power = 2 } }
+				}
+			}
+			modifier = {
+				factor = 0.5
+				religion_head = {
+					NOT = { is_vassal_or_below_of = ROOT }
+					top_liege = { relative_power = { who = FROM power = 1.6 } }
+				}
+			}
+			modifier = {
+				factor = 0.5
+				religion_head = {
+					OR = {
+						AND = {
+							is_vassal_or_below_of = ROOT
+							relative_power = { who = FROM power = 1.2 }
+						}
+						AND = {
+							NOT = { is_vassal_or_below_of = ROOT }
+							top_liege = { relative_power = { who = FROM power = 1.2 } }
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				religion_head = {
+					OR = {
+						AND = {
+							is_vassal_or_below_of = ROOT
+							NOT = { relative_power = { who = FROM power = 0.8 } }
+						}
+						AND = {
+							NOT = { is_vassal_or_below_of = ROOT }
+							top_liege = { NOT = { relative_power = { who = FROM power = 0.8 } } }
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				religion_head = {
+					OR = {
+						AND = {
+							is_vassal_or_below_of = ROOT
+							NOT = { relative_power = { who = FROM power = 0.4 } }
+						}
+						AND = {
+							NOT = { is_vassal_or_below_of = ROOT }
+							top_liege = { NOT = { relative_power = { who = FROM power = 0.4 } } }
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0.2
+				religion_head = {
+					top_liege = { relative_power = { who = FROM power = 1.5 } }
+				}
+			}
+			modifier = {  # Other factors (traits).
+				factor = 0.5
+				trait = content
+			}
+			modifier = {
+				factor = 0.5
+				trait = zealous
+			}
+			modifier = {
+				factor = 1.5
+				trait = proud
+			}
+			modifier = {
+				factor = 2
+				trait = ambitious
+			}
+			modifier = {
+				factor = 2
+				trait = lunatic
+			}
+			modifier = {
+				factor = 3
+				trait = possessed
+			}
 		}
 	}
 	option = {  #DRD-DIFF: Do not seek sanction from the church.
@@ -642,11 +789,11 @@ character_event = {
 						}
 					}
 					is_vassal_or_below_of = ROOT
-					NOT = {
-						has_opinion_modifier = {
-							who = ROOT
-							modifier = opinion_requested_independence 
-						}
+					NOR = {
+						has_opinion_modifier = { who = ROOT modifier = opinion_requested_independence }
+						has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me }
 					}
 				}
 			}

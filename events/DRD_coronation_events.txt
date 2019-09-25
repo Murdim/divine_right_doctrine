@@ -6,7 +6,7 @@ namespace=DRD  # 200-499
 # 300-399: pre-coronation request acceptance, rejection & fulfillment.
 # 400-499: other, e.g coronation ceremony, rh_protection related events.
 
-character_event = {  # Debug event.
+character_event = {
 	id = DRD.9200
 	is_triggered_only = yes
 	hide_window = yes
@@ -112,12 +112,9 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 			}
 		}
 
-		if = {
-			limit = { FROM = { ai = no } }  # For l10 purposes only.
-			any_demesne_title = {
-				limit = { controls_religion = yes }
-				save_event_target_as = rh_title
-			}
+		any_demesne_title = {  # For l10 purposes only.
+			limit = { controls_religion = yes }
+			save_event_target_as = rh_title
 		}
 	}
 
@@ -126,6 +123,46 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 		trigger = { NOT = { is_variable_equal = { which = local_request_rule value = 2 } } }
 		custom_tooltip = { text = drd_request_prestige_cost_warning }
 		hidden_tooltip = { repeat_event = { id = DRD.201 } }
+		ai_chance = {
+			factor = 10
+			modifier = {  # Always refuse if ROOT rejected a reasonable request in the past 5 years.
+				factor = 0
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+			}
+			modifier = {  # Very likely to ask for land if not holding any province.
+				factor = 20
+				NOT = {
+					any_demesne_title = {
+						tier = COUNT
+						is_titular = no
+					}
+				}
+			}
+			modifier = {  # More likely if ROOT owes FROM a favor.
+				factor = 3
+				owes_favor_to = FROM
+			}
+			modifier = {  # More likely if there is a self-crowned ruler to overthrow.
+				factor = 3
+				any_independent_ruler = {
+					religion = ROOT
+					trait = crowned_by_myself
+					religion = persistent_event_target:coronation_religion
+					higher_real_tier_than = DUKE
+					controls_religion = no
+					is_within_diplo_range = FROM
+					NOR = {
+						is_allied_with = ROOT
+						is_allied_with = FROM
+						any_current_enemy = { NOT = { religion_group = ROOT } }
+					}
+				}
+			}
+			modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+		}
 	}
 
 	option = {  # Other requests: money, religious artifact...
@@ -133,6 +170,30 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 		trigger = { NOT = { is_variable_equal = { which = local_request_rule value = 2 } } }
 		custom_tooltip = { text = drd_request_prestige_cost_warning }
 		hidden_tooltip = { repeat_event = { id = DRD.202 } }
+		ai_chance = {
+			factor = 10
+			modifier = {  # Always refuse if ROOT rejected a reasonable request in the past 5 years.
+				factor = 0
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+			}
+			modifier = {  # Very likely to ask for the special crown artifact if FROM has it.
+				factor = 20
+				any_demesne_title = {
+					limit = { controls_religion = yes }
+					persistent_event_target:rh_artifact = {
+						owner = { character = FROM }
+					}
+				}
+			}
+			modifier = {  # More likely to ask for money if bankrupt.
+				factor = 3
+				NOT = { wealth = 0 }
+			}
+			modifier = {
+				factor = 1.5
+				trait = greedy
+			}
+		}
 	}
 
 	option = {  # Unreasonable demands. May incite FROM to crown themselves instead.
@@ -144,6 +205,63 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 			custom_tooltip = { text = drd_unreasonable_request_warning }
 		}
 		hidden_tooltip = { repeat_event = { id = DRD.203 } }
+		ai_chance = {
+			factor = 10
+			modifier = {  # Always refuse if ROOT rejected a reasonable request in the past 5 years.
+				factor = 0
+				has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_reasonable_request }
+			}
+			modifier = {  # Only give FROM a reason to crown themselves if the prestige cost is high or ROOT has bad traits.
+				factor = 0
+				NOR = {
+					is_variable_equal = { which = local_request_rule value = 3 }
+					reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_made_unreasonable_request }
+					check_variable = { which = local_fylkir_prestige_cost value = 2000 }
+					trait = lunatic
+					AND = {
+						OR = {
+							trait = possessed
+							trait = greedy
+							trait = arbitrary
+						}
+						NOT = { opinion = { who = ROOT value = -30 } }
+					}
+				}
+			}
+			modifier = {  # Much more likely if FROM already rejected one of our unreasonable requests.
+				factor = 5
+				reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_made_unreasonable_request }
+				NOT = { reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_to_crown_me } }
+			}
+			modifier = {
+				factor = 3
+				FROM = { is_foe = ROOT }
+			}
+			modifier = {
+				factor = 1.5
+				trait = greedy
+			}
+			modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { which = local_fylkir_prestige_cost value = 1000 }
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { which = local_fylkir_prestige_cost value = 2000 }
+			}
+			modifier = {
+				factor = 1.5
+				check_variable = { which = local_fylkir_prestige_cost value = 3000 }
+			}
+			modifier = {
+				factor = 2
+				check_variable = { which = local_fylkir_prestige_cost value = 5000 }
+			}
+		}
 	}
 
 	option = {  # No choice, FROM already fulfilled a previous request for you.
@@ -161,6 +279,65 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 			tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me } }
 		}
 		hidden_tooltip = { FROM = { letter_event = { id = DRD.398 } } }
+		ai_chance = {
+			factor = 10
+			modifier = {  # Only take a risk if FROM is weak or has already refused an unreasonable request.
+				factor = 0
+				NOR = {
+					is_variable_equal = { which = local_request_rule value = 3 }
+					reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_to_crown_me }
+					relative_power = { who = FROM power = 1.5 }
+					AND = {
+						reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_made_unreasonable_request }
+						NOT = { opinion = { who = ROOT value = -30 } }
+					}
+				}
+			}
+			modifier = {  # Much more likely if ROOT already refused to crown FROM.
+				factor = 10
+				reverse_has_opinion_modifier = { who = FROM modifier = drd_opinion_refused_to_crown_me }
+			}
+			modifier = {
+				factor = 3
+				FROM = { is_foe = ROOT }
+			}
+			modifier = {
+				factor = 1.5
+				trait = arbitrary
+			}
+			modifier = {
+				factor = 0.5
+				opinion = { who = ROOT value = 0 }
+			}
+			modifier = {
+				factor = 0.5
+				opinion = { who = ROOT value = -30 }
+			}
+			modifier = {
+				factor = 0.5
+				opinion = { who = ROOT value = -60 }
+			}
+			modifier = {
+				factor = 0.5
+				opinion = { who = ROOT value = -90 }
+			}
+			modifier = {
+				factor = 2
+				check_variable = { which = local_fylkir_prestige_cost value = 1000 }
+			}
+			modifier = {
+				factor = 2
+				check_variable = { which = local_fylkir_prestige_cost value = 2000 }
+			}
+			modifier = {
+				factor = 2
+				check_variable = { which = local_fylkir_prestige_cost value = 3000 }
+			}
+			modifier = {
+				factor = 3
+				check_variable = { which = local_fylkir_prestige_cost value = 5000 }
+			}
+		}
 	}
 }
 
@@ -217,6 +394,12 @@ letter_event = {
 				religion = persistent_event_target:coronation_religion
 				higher_real_tier_than = DUKE
 				controls_religion = no
+				is_within_diplo_range = FROM
+				NOR = {
+					is_allied_with = ROOT
+					is_allied_with = FROM
+					any_current_enemy = { NOT = { religion_group = ROOT } }
+				}
 			}
 			preferred_limit = { 
 				OR = {
@@ -224,6 +407,11 @@ letter_event = {
 					has_character_modifier = drd_schismatic_ruler_clergyless
 				}
 			}
+			preferred_limit = { NOT = { relative_power = { who = ROOT power = 3 } } }
+			preferred_limit = { NOT = { distance_from_realm = { who = FROM value = 100 } } }
+			preferred_limit = { NOT = { relative_power = { who = ROOT power = 2 } } }
+			preferred_limit = { NOT = { distance_from_realm = { who = FROM value = 200 } } }
+			preferred_limit = { NOT = { distance_from_realm = { who = FROM value = 400 } } }
 			save_event_target_as = request_schismatic_ruler
 		}
 	}
@@ -244,6 +432,13 @@ letter_event = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			FROM = { letter_event = { id = DRD.300 } }
 		}
+		ai_chance = {
+			factor = 10
+			modifier = {  # More likely if ROOT owes FROM a favor.
+				factor = 3
+				owes_favor_to = FROM
+			}
+		}
 	}
 
 	option = {  # If not holding any province, ask for a Count-tier title.
@@ -257,17 +452,23 @@ letter_event = {
 			event_target:request_county = { save_event_target_as = request_title }
 			FROM = { letter_event = { id = DRD.302 } }
 		}
+		ai_chance = {
+			factor = 200  # Very likely if available at all.
+		}
 	}
 
 	option = {  # Overthrow a self-crowned ruler.
 		name = EVTOPTCDRD201
 		trigger = {
 			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
-			event_target:request_schismatic_ruler = { always = yes }
+			event_target:request_schismatic_ruler = { is_alive = yes }
 		}
 		hidden_tooltip = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			FROM = { letter_event = { id = DRD.301 } }
+		}
+		ai_chance = {
+			factor = 30  # More likely if available at all.
 		}
 	}
 
@@ -327,6 +528,17 @@ letter_event = {
 			set_variable = { which = local_request_money which = local_min_request_money }
 			FROM = { letter_event = { id = DRD.303 } }
 		}
+		ai_chance = {
+			factor = 10
+			modifier = {  # More likely to ask for money if bankrupt.
+				factor = 3
+				NOT = { wealth = 0 }
+			}
+			modifier = {
+				factor = 1.5
+				trait = greedy
+			}
+		}
 	}
 
 	option = {  # FROM has our crown, ask them to return it.
@@ -339,6 +551,9 @@ letter_event = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_lost_rh_artifact = { save_event_target_as = request_artifact }
 			FROM = { letter_event = { id = DRD.304 } }
+		}
+		ai_chance = {
+			factor = 200  # Very likely if available at all.
 		}
 	}
 
@@ -366,6 +581,13 @@ letter_event = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_random_artifact = { save_event_target_as = request_artifact }
 			FROM = { letter_event = { id = DRD.304 } }
+		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				trait = zealous
+			}
 		}
 	}
 
@@ -444,10 +666,22 @@ letter_event = {
 						NOT = { quality = 4 }
 					}
 				}
+				preferred_limit = {  # AI prioritizes unequipped artifacts.
+					ROOT = { ai = yes }
+					FROM = { ai = yes }
+					is_artifact_equipped = no
+				}
 				preferred_limit = { quality = 5 }
 				preferred_limit = { quality = 4 }
 				preferred_limit = { quality = 3 }
 				preferred_limit = { quality = 2 }
+				preferred_limit = {
+					OR = {
+						has_flag = religious
+						has_flag = about_religion
+					}
+					original_owner = { religion = ROOT }
+				}
 				save_event_target_as = request_random_artifact
 			}
 		}
@@ -464,6 +698,21 @@ letter_event = {
 			set_variable = { which = local_request_money which = local_max_request_money }
 			FROM = { letter_event = { id = DRD.303 } }
 		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				trait = greedy
+			}
+			modifier = {  # Request will be declined.
+				factor = 0.1
+				FROM = { wealth < 0 }
+			} 
+			modifier = {
+				factor = 0.5
+				FROM = { wealth < local_max_request_money }
+			} 
+		}
 	}
 
 	option = {  # Ask for a new Count-tier title.
@@ -477,6 +726,21 @@ letter_event = {
 			event_target:request_county = { save_event_target_as = request_title }
 			FROM = { letter_event = { id = DRD.302 } }
 		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 1.5
+				trait = ambitious
+			}
+			modifier = {  # Request will be declined.
+				factor = 0.1
+				FROM = { demesne_size < 3 }
+			}
+			modifier = {
+				factor = 3
+				FROM = { demesne_size_compared_to_limit > 0 }
+			}
+		}
 	}
 
 	option = {  # Ask for one of their most valuable artifacts.
@@ -489,6 +753,22 @@ letter_event = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			event_target:request_random_artifact = { save_event_target_as = request_artifact }
 			FROM = { letter_event = { id = DRD.304 } }
+		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { event_target:request_random_artifact = { quality = 4 } }
+			}
+			modifier = {
+				factor = 0.5
+				NOT = { event_target:request_random_artifact = { quality = 5 } }
+			}
+			modifier = {
+				factor = 1.5
+				event_target:request_random_artifact = { has_flag = religious }
+				trait = zealous
+			}
 		}
 	}
 
@@ -666,7 +946,7 @@ letter_event = {  # Request a favor. ROOT = ruler, FROM = temporal RH.
 		custom_tooltip = { text = coronation_refuse_reasonable_request }
 		reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
 		ai_chance = {
-			factor = 0
+			factor = 0  # AI always accepts reasonable requests.
 		}
 	}
 }
@@ -734,7 +1014,7 @@ letter_event = {  # Request to overthrow event_target:request_schismatic_ruler. 
 		custom_tooltip = { text = coronation_refuse_reasonable_request }
 		reverse_opinion = { who = FROM modifier = drd_opinion_refused_reasonable_request }
 		ai_chance = {
-			factor = 0
+			factor = 0  # AI always accepts reasonable requests.
 		}
 	}
 }
@@ -774,6 +1054,34 @@ letter_event = {  # Request for event_target:request_title. ROOT = ruler, FROM =
 			hidden_tooltip = { character_event = { id = DRD.212 } }
 		}
 		hidden_tooltip = { repeat_event = { id = DRD.399 } }
+		ai_chance = {
+			factor = 10
+			modifier = {  # Always refuse unreasonable requests if demesne size is below 3.
+				factor = 0
+				check_variable = { which = local_unreasonable value = 1 }
+				demesne_size < 3
+			}
+			modifier = {  # More likely if over demesne limit.
+				factor = 3
+				demesne_size_compared_to_limit > 0
+			}
+			modifier = {  # Less likely if not at demesne limit.
+				factor = 0.5
+				demesne_size_compared_to_limit < 0
+			}
+			modifier = {  # Less and less likely the further it is from the limit.
+				factor = 0.5
+				demesne_size_compared_to_limit < -1
+			}
+			modifier = {
+				factor = 0.5
+				demesne_size_compared_to_limit < -2
+			}
+			modifier = {
+				factor = 0.5
+				demesne_size_compared_to_limit < -3
+			}
+		}
 	}
 
 	option = {
@@ -801,7 +1109,7 @@ letter_event = {  # Request for event_target:request_title. ROOT = ruler, FROM =
 		}
 		ai_chance = {
 			factor = 10
-			modifier = {
+			modifier = {  # AI always accepts reasonable requests.
 				factor = 0
 				NOT = { check_variable = { which = local_unreasonable value = 1 } }
 			}
@@ -824,19 +1132,51 @@ letter_event = {  # Request for local_request_money ducats. ROOT = ruler, FROM =
 	is_triggered_only = yes
 
 	immediate = {
-		set_variable = { which = local_request_money which = local_request_money_neg }
+		set_variable = { which = local_request_money_neg which = local_request_money }
 		multiply_variable = { which = local_request_money_neg value = -1 }
+		if = {  # Used for AI weights.
+			limit = { ai = yes }
+			set_variable = { which = local_request_money_leeway which = local_request_money }
+			change_variable = { which = local_request_money_leeway value = 100 }
+			set_variable = { which = local_request_money_double which = local_request_money }
+			multiply_variable = { which = local_request_money_double value = 2 }
+		}
 	}
 
 	option = {
 		name = EVTOPTADRD303
 		wealth = local_request_money_neg
 		hidden_tooltip = {
+			if = {  # Used for AI weights.
+				limit = { ai = yes }
+				set_variable = { which = local_request_money_leeway value = 0 }
+				set_variable = { which = local_request_money_double value = 0 }
+			}
 			FROM = {
 				wealth = local_request_money
 				character_event = { id = DRD.212 }
 			}
 			repeat_event = { id = DRD.399 }
+		}
+		ai_chance = {
+			factor = 10
+			modifier = {  # Always refuse unreasonable requests if it would bankrupt ROOT.
+				factor = 0
+				check_variable = { which = local_unreasonable value = 1 }
+				wealth < local_request_money
+			}
+			modifier = {  # More likely if ROOT has more than enough money.
+				factor = 2
+				wealth > local_request_money_leeway
+			}
+			modifier = {
+				factor = 2
+				wealth > local_request_money_double
+			}
+			modifier = {
+				factor = 0.3
+				trait = greedy
+			}
 		}
 	}
 
@@ -866,7 +1206,7 @@ letter_event = {  # Request for local_request_money ducats. ROOT = ruler, FROM =
 		ai_chance = {
 			factor = 10
 			modifier = {
-				factor = 0
+				factor = 0  # AI always accepts reasonable requests.
 				NOT = { check_variable = { which = local_unreasonable value = 1 } }
 			}
 		}
@@ -925,6 +1265,55 @@ letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FRO
 			hidden_tooltip = { character_event = { id = DRD.212 } }
 		}
 		hidden_tooltip = { repeat_event = { id = DRD.399 } }
+		ai_chance = {
+			factor = 10
+			modifier = {  # Always refuse unreasonable requests if the artifact is equipped, not religious, and has no replacement.
+				factor = 0
+				check_variable = { which = local_unreasonable value = 1 }
+				event_target:request_artifact = { is_artifact_equipped = yes }
+				NOR = {
+					event_target:request_artifact = { has_flag = religious }
+					event_target:request_artifact = { has_flag = about_religion }
+					AND = {  # Can't filter by equip slot directly? What the hell PDX?
+						event_target:request_artifact = { has_flag = combat_weapon } 
+						any_artifact = {
+							is_artifact_active = yes
+							is_artifact_equipped = no 
+							has_flag = combat_weapon
+						}
+					}  # The following blocks are condensed version of this one for various artifact types.
+					AND = { event_target:request_artifact = { has_flag = scepter } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = scepter } }
+					AND = { event_target:request_artifact = { has_flag = crown } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = crown } }
+					AND = { event_target:request_artifact = { has_flag = bracelet } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = bracelet } }
+					AND = { event_target:request_artifact = { has_flag = necklace } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = necklace } }
+					AND = { event_target:request_artifact = { OR = { has_flag = armor has_flag = armor_set has_flag = horse_armor } } any_artifact = { is_artifact_active = yes is_artifact_equipped = no OR = { has_flag = armor has_flag = armor_set has_flag = horse_armor } } }
+					AND = { event_target:request_artifact = { has_flag = clothing } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = clothing } }
+					AND = { event_target:request_artifact = { has_flag = mask } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = mask } }
+					AND = { event_target:request_artifact = { has_flag = book } any_artifact = { is_artifact_active = yes is_artifact_equipped = no has_flag = book } }
+				}
+			}
+			modifier = {
+				factor = 0.7
+				event_target:request_artifact = { quality = 5 }
+			}
+			modifier = {
+				factor = 2
+				event_target:request_artifact = { NOT = { quality = 4 } }
+			}
+			modifier = {
+				factor = 3
+				event_target:request_artifact = { is_artifact_active = no }
+			}
+			modifier = {
+				factor = 1.5
+				event_target:request_artifact = {
+					OR = {
+						has_flag = religious
+						has_flag = about_religion
+					} 
+				}
+			}
+		}
 	}
 
 	option = {
