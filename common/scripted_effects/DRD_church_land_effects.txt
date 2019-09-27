@@ -1,0 +1,96 @@
+#DRD-FILE
+
+drd_offer_church_lands = {  # ROOT = ruler, FROM = RH (holder of event_target:rh_title), event_target:rh_new_duchy = offered lands.
+	custom_tooltip = { text = tooltip_expand_church_lands }
+	event_target:rh_new_duchy = {
+		grant_title_no_opinion = FROM
+		any_direct_de_jure_vassal_title = {  # Give FROM direct control of holy sites and counties that wouldn't join their realm.
+			limit = {
+				location = {
+					OR = {
+						any_province_holding = { is_holy_site = FROM }
+						AND = {
+							is_capital = no
+							owner = {
+								NOR = {
+									character = FROM
+									is_vassal_or_below_of = FROM
+								}
+							}
+						}
+					}
+				}
+			}
+			grant_title_no_opinion = FROM
+		}
+	}
+	opinion = { who = FROM modifier = drd_expanded_church_lands }
+	hidden_tooltip = {
+		event_target:rh_title = {
+			if = {  # Save rh_new_duchy in the first available duchy "slot".
+				limit = { NOT = { persistent_event_target:rh_duchy_1 = { always = yes } } }
+				save_persistent_event_target = { name = rh_duchy_1 scope = event_target:rh_new_duchy }
+			}
+			else_if = {
+				limit = { NOT = { persistent_event_target:rh_duchy_2 = { always = yes } } }
+				save_persistent_event_target = { name = rh_duchy_2 scope = event_target:rh_new_duchy }
+			}
+			else_if = {
+				limit = { NOT = { persistent_event_target:rh_duchy_3 = { always = yes } } }
+				save_persistent_event_target = { name = rh_duchy_3 scope = event_target:rh_new_duchy }
+			}
+			else_if = {
+				limit = { NOT = { persistent_event_target:rh_duchy_4 = { always = yes } } }
+				save_persistent_event_target = { name = rh_duchy_4 scope = event_target:rh_new_duchy }
+			}
+			persistent_event_target:rh_kingdom = {  # Add to rh_kingdom's de jure lands if it exists and is held by FROM.
+				if = {
+					limit = { holder_scope = FROM }
+					event_target:rh_new_duchy = { de_jure_liege = PREV }
+				}
+			}
+		}
+	}
+
+	if = {
+		limit = {
+			OR = {
+				tier = EMPEROR
+				FROM = { independent = yes }
+			}	
+			event_target:rh_title = {
+				persistent_event_target:rh_duchy_1  = { always = yes }
+				NOT = { persistent_event_target:rh_kingdom = { always = yes } }
+			}
+		}
+		custom_tooltip = { text = tooltip_empower_religious_head }
+		FROM = { drd_religious_head_create_state = yes }
+		if = {
+			limit = { tier = EMPEROR }
+			event_target:rh_title = {
+				persistent_event_target:rh_kingdom = { de_jure_liege = ROOT }
+			}
+		}
+	}
+}
+
+drd_religious_head_create_state = {  # FROM = RH, event_target:rh_title = FROM's RH title.
+	create_title = {
+		tier = KING
+		name = the_rh_title_adj_state
+		short_name = yes
+		base_title = event_target:rh_title
+		holder = THIS
+	}
+	new_title = { save_event_target_as = rh_kingdom }
+	event_target:rh_kingdom = {
+		save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
+	}
+	event_target:rh_title = {
+		persistent_event_target:rh_duchy_1 = { de_jure_liege = event_target:rh_kingdom }
+		persistent_event_target:rh_duchy_2 = { de_jure_liege = event_target:rh_kingdom }
+		persistent_event_target:rh_duchy_3 = { de_jure_liege = event_target:rh_kingdom }
+		persistent_event_target:rh_duchy_4 = { de_jure_liege = event_target:rh_kingdom }
+		save_persistent_event_target = { name = rh_kingdom scope = event_target:rh_kingdom }
+	}
+}

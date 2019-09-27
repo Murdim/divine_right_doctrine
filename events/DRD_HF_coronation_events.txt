@@ -837,6 +837,157 @@ letter_event = {
 			#DRD-DIFF: avoid checking for distinct religions
 		}
 	}
+
+	immediate = {  #DRD-DIFF: If holding the true RH title, save it and find a duchy that FROM could grant as church lands.
+		if = {
+			limit = { controls_religion = yes }
+			any_demesne_title = {
+				limit = { controls_religion = yes }
+				save_event_target_as = rh_title
+				persistent_event_target:rh_kingdom = { save_event_target_as = rh_kingdom }
+				persistent_event_target:rh_duchy_1 = { save_event_target_as = rh_duchy_1 }
+				persistent_event_target:rh_duchy_2 = { save_event_target_as = rh_duchy_2 }
+				persistent_event_target:rh_duchy_3 = { save_event_target_as = rh_duchy_3 }
+				persistent_event_target:rh_duchy_4 = { save_event_target_as = rh_duchy_4 }
+			}
+
+			FROM = {  # Never ask for FROM's de facto OR de jure capital duchy.
+				capital_scope = {
+					duchy = { save_event_target_as = from_de_facto_capital_duchy }
+				}
+				primary_title = {
+					capital_scope = {
+						duchy = { save_event_target_as = from_de_jure_capital_duchy }
+					}
+				}
+			}
+
+			else_if = {  # First duchy must contain a holy site and not be completely isolated.
+				limit = { NOT = { event_target:rh_duchy_1 = { always = yes } } }
+				FROM = {
+					random_realm_province = {
+						limit = {
+							any_province_holding = { is_holy_site = ROOT }
+							duchy = {
+								NOT = { title = event_target:from_de_facto_capital_duchy }
+								NOT = { title = event_target:from_de_jure_capital_duchy }
+								FROM = { completely_controls = PREV }
+								any_direct_de_jure_vassal_title = {
+									location = {
+										any_neighbor_province = {
+											has_owner = yes
+											duchy = { NOT = { title = PREVPREVPREVPREV } }
+										}
+									}
+								}
+							}
+							OR = {
+								AND = {
+									kingdom = { has_holder = no }
+									empire = { has_holder = no }
+								}
+								kingdom = { holder_scope = { character = FROM } }
+								empire = { holder_scope = { character = FROM } }
+							}
+						}
+						duchy = { save_event_target_as = rh_new_duchy }
+					}
+				}
+			}
+
+			else_if = {  # Other duchies must border "de jure" church lands.
+				limit = {
+					OR = {  # Second duchy unlocks empowerment (if not autocephalous), which is required to go further.
+						NOT = { event_target:rh_duchy_2 = { always = yes } }
+						AND = {  # Empowered heads can have up to 4 duchies in their church lands.
+							persistent_event_target:rh_kingdom = { always = yes } }
+							NAND = {
+								event_target:rh_duchy_3 = { always = yes }
+								event_target:rh_duchy_4 = { always = yes }
+							}
+						}
+					}
+				}
+
+				while = {  # Check for each church land duchy, by order of acquisition.
+					count = 3
+					limit = { NOT = { event_target:rh_new_duchy = { always = yes } } }
+					change_variable = { which = local_duchy_count value = 1 }
+					if = {
+						limit = { is_variable_equal = { which = local_duchy_count value = 1 }
+						event_target:rh_duchy_1 = { save_event_target_as = tmp_duchy }
+					}
+					else_if = {
+						limit = { is_variable_equal = { which = local_duchy_count value = 2 }
+						event_target:rh_duchy_2 = { save_event_target_as = tmp_duchy }
+					}
+					else_if = {
+						limit = { is_variable_equal = { which = local_duchy_count value = 3 }
+						event_target:rh_duchy_3 = { save_event_target_as = tmp_duchy }
+					}
+
+					event_target:tmp_duchy = {
+						random_direct_de_jure_vassal_title = {
+							limit = {
+								location = {
+									any_neighbor_province = {
+										owner = {
+											OR = {
+												character = FROM
+												is_vassal_or_below_of = FROM
+											}
+										}
+										duchy = {
+											NOR = {
+												title = event_target:from_de_facto_capital_duchy
+												title = event_target:from_de_jure_capital_duchy
+												title = event_target:rh_duchy_1
+												title = event_target:rh_duchy_2
+												title = event_target:rh_duchy_3
+											}
+											FROM = { completely_controls = PREV }
+										}
+									}
+								}
+							}
+							location = {
+								random_neighbor_province = {
+									limit = {
+										owner = {
+											OR = {
+												character = FROM
+												is_vassal_or_below_of = FROM
+											}
+										}
+										duchy = {
+											NOR = {
+												title = event_target:from_de_facto_capital_duchy
+												title = event_target:from_de_jure_capital_duchy
+												title = event_target:rh_duchy_1
+												title = event_target:rh_duchy_2
+												title = event_target:rh_duchy_3
+											}
+											FROM = { completely_controls = PREV }
+										}
+									}
+									duchy = { save_event_target_as = rh_new_duchy }
+								}
+							}
+						}
+					}
+					clear_event_target = tmp_duchy
+				}
+				set_variable = { which = local_duchy_count value = 0 }
+			}
+			clear_event_target = from_de_facto_capital_duchy
+			clear_event_target = from_de_jure_capital_duchy
+			clear_event_target = rh_kingdom
+			clear_event_target = rh_duchy_1
+			clear_event_target = rh_duchy_2
+			clear_event_target = rh_duchy_3
+			clear_event_target = rh_duchy_4
+		}
+	}
 	
 	option = { #For random priest
 		name = EVTOPTAHF20201
@@ -1382,18 +1533,24 @@ letter_event = {
 				}
 				FROM = { letter_event = { id = DRD_HF.20240 } } #Give me a relic.
 			} 
-			20 = {  #DRD-DIFF: Hierocratic heads can ask for independence if they have a reason to do so
+			20 = {  #DRD-DIFF: Hierocratic heads can ask for independence if they have a reason to do so.
 				modifier = {
 					factor = 0
 					OR = {
 						controls_religion = no
-						has_autocephaly = yes  # Heads of autocephalous religions will never ask for independence
-						NOR = {  # Must either have a king-tier title, dislike their liege, or be ambitious with some power base.
+						has_autocephaly = yes  # Heads of autocephalous religions will never ask for independence.
+						NOR = {  # Must either have a king-tier title, dislike their liege, or have a power base.
 							higher_tier_than = DUKE
 							NOT = { opinion = { who = FROM value = -20 } }
-							AND = {
-								realm_size = 10
-								trait = ambitious
+							realm_size = 25
+							AND = {  # Lower realm size requirement if Ambitious or entitled to church lands.
+								realm_size = 8
+								OR = {
+									trait = ambitious
+									event_target:rh_title = {
+										persistent_event_target:rh_duchy_1 = { always = yes }
+									}
+								}
 							}
 						}
 					}
@@ -1403,7 +1560,7 @@ letter_event = {
 					NOT = { vassal_of = FROM }
 				}
 				modifier = {
-					factor = 8  #DRD-DIFF: compensate for the lower base weight
+					factor = 8  #DRD-DIFF: compensate for the lower base weight.
 					has_opinion_modifier = { #Opinion modifier keeps track of the Pope's previous decision, should the player deny his first request and then attempt to ask again immediately after for a different result.
 						who = FROM 
 						modifier = opinion_requested_independence 
@@ -2026,6 +2183,12 @@ letter_event = {
 	is_triggered_only = yes
 	#DRD-DIFF: avoid checking for distinct religions
 	
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_offer_church_lands = yes  #SEE DRD_church_land_effects.txt
+	}
+
 	option = {
 		name = EVTOPTAHF20211
 		set_character_flag = flag_crowned_by_pope
@@ -7701,7 +7864,7 @@ character_event = {
 				age = 16
 				controls_religion = yes
 			}
-			event_scope:coronation_artifact = { has_flag = crown }
+			event_target:coronation_artifact = { has_flag = crown }
 		}
 		text = EVTDESCDRDHFO20366		# Localization for any religious head with an artifact crown (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
@@ -7715,7 +7878,7 @@ character_event = {
 				age = 16
 				controls_religion = yes
 			}
-			NOT = { event_scope:coronation_artifact = { has_flag = crown } }
+			NOT = { event_target:coronation_artifact = { has_flag = crown } }
 		}
 		text = EVTDESCDRDHFP20366		# Localization for any religious head without an artifact crown (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
@@ -7901,11 +8064,23 @@ character_event = {
 			} 
 			add_trait = crowned_by_pope
 		}
-		else_if = {  # Other religious heads give a less powerful trait than the Pope, since they are not as hard to please.
+		else_if = {
 			limit = { 
 				has_character_flag = flag_crowned_by_pope 
 			} 
-			add_trait = crowned_by_bishop
+			if = {  # Empowered theocratic RHs also give the Pope-tier trait.
+				limit = {
+					event_target:rh_title = {
+						persistent_event_target:rh_kingdom = {
+							holder_scope = { character = event_target:coronation_priest }
+						}
+					}
+				}
+				add_trait = crowned_by_pope
+			}
+			else = {  # Other religious heads give a less powerful trait, since they are not as hard to please as the Pope.
+				add_trait = crowned_by_bishop
+			}
 		}
 		else_if = { 
 			limit = { 
@@ -8382,7 +8557,7 @@ character_event = {
 				age = 16
 				controls_religion = yes
 			}
-			event_scope:coronation_artifact = { has_flag = crown }
+			event_target:coronation_artifact = { has_flag = crown }
 		}
 		text = EVTDESCDRDHFO20367		# Localization for any religious head with an artifact crown (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
@@ -8396,7 +8571,7 @@ character_event = {
 				age = 16
 				controls_religion = yes
 			}
-			NOT = { event_scope:coronation_artifact = { has_flag = crown } }
+			NOT = { event_target:coronation_artifact = { has_flag = crown } }
 		}
 		text = EVTDESCDRDHFP20367		# Localization for any religious head without an artifact crown (not in a barn).
 		picture = GFX_evt_a_crowning_ceremony
