@@ -1063,23 +1063,23 @@ letter_event = {  # Request for event_target:request_title. ROOT = ruler, FROM =
 			}
 			modifier = {  # More likely if over demesne limit.
 				factor = 3
-				demesne_size_compared_to_limit > 0
+				demesne_size_compared_to_limit > 1
 			}
 			modifier = {  # Less likely if not at demesne limit.
 				factor = 0.5
-				demesne_size_compared_to_limit < 0
+				demesne_size_compared_to_limit < 1
 			}
 			modifier = {  # Less and less likely the further it is from the limit.
 				factor = 0.5
-				demesne_size_compared_to_limit < -1
+				demesne_size_compared_to_limit < 0.8
 			}
 			modifier = {
 				factor = 0.5
-				demesne_size_compared_to_limit < -2
+				demesne_size_compared_to_limit < 0.6
 			}
 			modifier = {
 				factor = 0.5
-				demesne_size_compared_to_limit < -3
+				demesne_size_compared_to_limit < 0.4
 			}
 		}
 	}
