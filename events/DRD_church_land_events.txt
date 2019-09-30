@@ -1,0 +1,136 @@
+#DRD-FILE
+
+namespace=DRD  # 500-599
+
+character_event = {  # On usurping a empowered RH's special King-tier title. ROOT = usurper, FROM = title.
+	id = DRD.510
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {
+		FROM = {
+			has_flag = drd_rh_state
+			persistent_event_target:rh_title = { holder_scope = { always = yes } }
+		}
+	}
+
+	immediate = {  # Give it back to the RH, but one of its de jure duchies is transferred to another kingdom.
+		persistent_event_target:rh_title = {
+			holder_scope = {
+				save_event_target_as = usurped_head
+				grant_title_no_opinion = FROM
+			}
+		}
+
+		set_variable = { which = local_top_priority value = -100 }
+		FROM = {  # Prioritize duchies where ROOT holds more provinces than the RH.
+			any_direct_de_jure_vassal_title = {
+				any_direct_de_jure_vassal_title = {
+					if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									character = ROOT
+									is_vassal_or_below_of = ROOT
+								}
+							}
+						}
+						change_variable = { which = local_root_counties value = 1 }
+					}
+					if = {
+						limit = {
+							holder_scope = {
+								OR = {
+									character = event_target:usurped_head
+									is_vassal_or_below_of = event_target:usurped_head
+								}
+							}
+						}
+						change_variable = { which = local_head_counties value = 1 }
+					}
+				}
+				if = {  # Only try to steal duchies where ROOT actually owns provinces.
+					limit = { check_variable = { which = local_root_counties value = 1 } }
+					subtract_variable = { which = local_root_counties which = local_head_counties }
+					if = {
+						limit = { check_variable = { which = local_root_counties which = local_top_priority } }
+						set_variable = { which = local_root_counties which = local_top_priority }
+						save_event_target_as = lost_duchy
+					}
+				}
+				set_variable = { which = local_root_counties value = 0 }
+				set_variable = { which = local_head_counties value = 0 }
+			}
+		}
+		set_variable = { which = local_top_priority value = 0 }
+
+		event_target:lost_duchy = {
+			ROOT = {
+				if = {
+					limit = {
+						tier = KING
+						primary_title = { temporary = no }
+					}
+					primary_title = { save_event_target_as = new_kingdom }
+				}
+				else_if = {
+					limit = {
+						any_demesne_title = {
+							tier = KING
+							temporary = no
+						}
+					}
+					random_demesne_title = {
+						limit = {
+							tier = KING
+							temporary = no
+						}
+						preferred_limit = {
+							ROOT = {
+								primary_title = {
+									tier = EMPEROR
+									temporary = no
+									any_direct_de_jure_vassal_title = {
+										title = PREVPREVPREV
+									}
+								}
+							}
+						}
+						preferred_limit = {
+							ROOT = {
+								primary_title = {
+									temporary = no
+									capital_scope = {
+										kingdom = {
+											title = PREVPREVPREVPREV
+										}
+									}
+								}
+							}
+						}
+						preferred_limit = {
+							ROOT = {
+								capital_scope = {
+									kingdom = {
+										title = PREVPREVPREV
+									}
+								}
+							}
+						}
+						save_event_target_as = new_kingdom
+					}
+				}
+				else_if = {
+					limit = { primary_title = { temporary = no } }
+					primary_title = { capital_scope = { kingdom = { save_event_target_as = new_kingdom } } }
+				}
+				else = {
+					capital_scope = { kingdom = { save_event_target_as = new_kingdom } }
+				}
+			}
+			de_jure_liege = event_target:new_kingdom
+			ROOT = { character_event = { id = DRD.511 } }
+			event_target:usurped_head = { character_event = { id = DRD.512 } }
+		}
+	}
+}

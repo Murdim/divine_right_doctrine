@@ -862,15 +862,25 @@ letter_event = {
 				}
 			}
 
-			else_if = {  # First duchy must contain a holy site and not be completely isolated.
+			if = {  # First duchy must contain a holy site and not be completely isolated.
 				limit = { NOT = { event_target:rh_duchy_1 = { always = yes } } }
 				FROM = {
 					random_realm_province = {
 						limit = {
 							any_province_holding = { is_holy_site = ROOT }
 							duchy = {
-								NOT = { title = event_target:from_de_facto_capital_duchy }
-								NOT = { title = event_target:from_de_jure_capital_duchy }
+								NOR = {
+									title = event_target:from_de_facto_capital_duchy
+									title = event_target:from_de_jure_capital_duchy
+									holder_scope = {  # No holder OR holder is (a vassal of) ROOT or FROM.
+										NOR = {
+											character = ROOT
+											character = FROM
+											is_vassal_or_below_of = ROOT
+											is_vassal_or_below_of = FROM
+										}
+									}
+								}
 								FROM = { completely_controls = PREV }
 								any_direct_de_jure_vassal_title = {
 									location = {
@@ -890,6 +900,12 @@ letter_event = {
 								empire = { holder_scope = { character = FROM } }
 							}
 						}
+						preferred_limit = { holder_scope = { character = ROOT } }
+						preferred_limit = { duchy = { ROOT = { completely_controls = PREV } } }
+						preferred_limit = { duchy = { holder_scope = { character = ROOT } } }
+						preferred_limit = { duchy = { holder_scope = { is_vassal_or_below_of = ROOT } } }
+						preferred_limit = { duchy = { any_direct_de_jure_vassal_title = { holder_scope = { character = ROOT } } } }
+						preferred_limit = { duchy = { any_direct_de_jure_vassal_title = { holder_scope = { is_vassal_or_below_of = ROOT } } } }
 						duchy = { save_event_target_as = rh_new_duchy }
 					}
 				}
@@ -897,10 +913,10 @@ letter_event = {
 
 			else_if = {  # Other duchies must border "de jure" church lands.
 				limit = {
-					OR = {  # Second duchy unlocks empowerment (if not autocephalous), which is required to go further.
+					OR = {  # Second duchy unlocks empowerment (if not autocephalous) which is required to go further.
 						NOT = { event_target:rh_duchy_2 = { always = yes } }
 						AND = {  # Empowered heads can have up to 4 duchies in their church lands.
-							persistent_event_target:rh_kingdom = { always = yes } }
+							persistent_event_target:rh_kingdom = { holder_scope = { character = ROOT } }
 							NAND = {
 								event_target:rh_duchy_3 = { always = yes }
 								event_target:rh_duchy_4 = { always = yes }
@@ -908,25 +924,18 @@ letter_event = {
 						}
 					}
 				}
+				set_variable = { which = local_can_expand_church_lands value = 1 }
+			}
 
-				while = {  # Check for each church land duchy, by order of acquisition.
-					count = 3
-					limit = { NOT = { event_target:rh_new_duchy = { always = yes } } }
-					change_variable = { which = local_duchy_count value = 1 }
+			while = {  # Check for each church land duchy, by order of acquisition.
+				count = 4
+				drd_rh_title_iter_duchy = yes  #SEE DRD_church_land_effects.txt
+				event_target:iter_duchy = {
 					if = {
-						limit = { is_variable_equal = { which = local_duchy_count value = 1 }
-						event_target:rh_duchy_1 = { save_event_target_as = tmp_duchy }
-					}
-					else_if = {
-						limit = { is_variable_equal = { which = local_duchy_count value = 2 }
-						event_target:rh_duchy_2 = { save_event_target_as = tmp_duchy }
-					}
-					else_if = {
-						limit = { is_variable_equal = { which = local_duchy_count value = 3 }
-						event_target:rh_duchy_3 = { save_event_target_as = tmp_duchy }
-					}
-
-					event_target:tmp_duchy = {
+						limit = {
+							is_variable_equal = { which = local_can_expand_church_lands value = 1 }
+							NOT = { event_target:rh_new_duchy = { always = yes } }
+						}
 						random_direct_de_jure_vassal_title = {
 							limit = {
 								location = {
@@ -944,6 +953,14 @@ letter_event = {
 												title = event_target:rh_duchy_1
 												title = event_target:rh_duchy_2
 												title = event_target:rh_duchy_3
+												holder_scope = {
+													NOR = {
+														character = ROOT
+														character = FROM
+														is_vassal_or_below_of = ROOT
+														is_vassal_or_below_of = FROM
+													}
+												}
 											}
 											FROM = { completely_controls = PREV }
 										}
@@ -975,9 +992,7 @@ letter_event = {
 							}
 						}
 					}
-					clear_event_target = tmp_duchy
 				}
-				set_variable = { which = local_duchy_count value = 0 }
 			}
 			clear_event_target = from_de_facto_capital_duchy
 			clear_event_target = from_de_jure_capital_duchy
@@ -986,6 +1001,9 @@ letter_event = {
 			clear_event_target = rh_duchy_2
 			clear_event_target = rh_duchy_3
 			clear_event_target = rh_duchy_4
+			clear_event_target = rh_iter_duchy
+			set_variable = { which = local_can_expand_church_lands value = 0 }
+			set_variable = { which = local_duchy_count value = 0 }
 		}
 	}
 	
@@ -1877,6 +1895,36 @@ letter_event = {
 		}
 		ai_chance = { factor = 100 }
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = {
+			factor = 20
+			drd_ai_offer_church_lands_score_value = yes  #SEE DRD_coronation_score_values.txt
+			modifier = {
+				factor = 0
+				event_target:son_monk_candidate = {
+					NOR = {
+						is_councilor = yes
+						is_heir = yes
+						any_claim = {
+							NOT = {
+								holder_scope = {
+									OR = {
+										character = ROOT
+										is_vassal_or_below_of = ROOT
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20206
 		custom_tooltip = { text = coronation_canceled }
@@ -2124,6 +2172,14 @@ letter_event = {
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = { factor = 100 }
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20209
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = { factor = 0 }
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20209
 		custom_tooltip = { text = coronation_canceled }
@@ -2166,6 +2222,25 @@ letter_event = {
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = { factor = 100 }
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = {
+			factor = 20
+			drd_ai_offer_church_lands_score_value = yes  #SEE DRD_coronation_score_values.txt
+			modifier = {
+				factor = 0
+				NOR = {
+					trait = cynical
+					trait = slothful
+					is_in_society = yes
+				}
+			}
+		}
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20210
 		custom_tooltip = { text = coronation_canceled }
@@ -2183,16 +2258,20 @@ letter_event = {
 	is_triggered_only = yes
 	#DRD-DIFF: avoid checking for distinct religions
 	
-	option = {  #DRD-DIFF: Offer to expand church lands instead.
-		name = EVTOPTXDRDHF20211
-		trigger = { event_target:rh_new_duchy = { always = yes } }
-		drd_offer_church_lands = yes  #SEE DRD_church_land_effects.txt
-	}
-
 	option = {
 		name = EVTOPTAHF20211
 		set_character_flag = flag_crowned_by_pope
 		custom_tooltip = { text = TT_EVTOPTAHF20211 }
+		if = {  #DRD-DIFF: Church lands turn into "RH state" kingdom if they already include two duchies.
+			limit = {
+				event_target:rh_title = {
+					persistent_event_target:rh_duchy_1 = { always = yes }
+					persistent_event_target:rh_duchy_2 = { always = yes }
+				}
+			}
+			custom_tooltip = { text = tooltip_empower_religious_head }
+			FROM = { drd_religious_head_create_state = yes }
+		}
 		FROM = { save_event_target_as = coronation_priest 
 				show_scope_change = no	
 			opinion = {
@@ -2216,18 +2295,50 @@ letter_event = {
 			factor = 20
 			modifier = {
 				factor = 0
-				trait = ambitious
-			}
-			modifier = {
-				factor = 0
 				NOR = {
 					trait = cynical
+					trait = zealous
 					trait = slothful
+					trait = content
 					is_dumb_trigger = yes
+					AND = {
+						tier = KING
+						event_target:rh_title = {
+							persistent_event_target:rh_duchy_1 = { always = yes }
+							persistent_event_target:rh_duchy_2 = { always = yes }
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0.2
+				trait = ambitious
+			}
+			modifier = {  # Less likely if the option to expand church lands is available.
+				factor = 0.5
+				event_target:rh_new_duchy = { always = yes }
+			}
+			modifier = {  # Much more likely if it would lead to the formation of a proper RH state.
+				factor = 10
+				tier = KING
+				event_target:rh_title = {
+					persistent_event_target:rh_duchy_1 = { always = yes }
+					persistent_event_target:rh_duchy_2 = { always = yes }
 				}
 			}
 		}
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = {
+			factor = 20
+			drd_ai_offer_church_lands_score_value = yes  #SEE DRD_coronation_score_values.txt
+		}
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20211
 		custom_tooltip = { text = coronation_canceled }
@@ -2630,6 +2741,24 @@ letter_event = {
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = { factor = 100 }
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = {
+			factor = 5
+			drd_ai_offer_church_lands_score_value = yes  #SEE DRD_coronation_score_values.txt
+			modifier = {
+				factor = 0
+				NOR = {
+					trait = greedy
+					wealth < 0
+				}
+			}
+		}
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20212
 		custom_tooltip = { text = coronation_canceled }
@@ -3182,6 +3311,17 @@ letter_event = {
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = { factor = 100 }
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = {
+			factor = 3
+			drd_ai_offer_church_lands_score_value = yes  #SEE DRD_coronation_score_values.txt
+		}
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20240
 		custom_tooltip = { text = coronation_canceled }
@@ -3245,6 +3385,17 @@ letter_event = {
 		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = { factor = 100 }
 	}
+
+	option = {  #DRD-DIFF: Offer to expand church lands instead.
+		name = EVTOPTXDRDHF20211
+		trigger = { event_target:rh_new_duchy = { always = yes } }
+		drd_expand_church_lands = yes  #SEE DRD_church_land_effects.txt
+		ai_chance = {
+			factor = 20
+			drd_ai_offer_church_lands_score_value = yes  #SEE DRD_coronation_score_values.txt
+		}
+	}
+
 	option = {	#End of the line
 		name = EVTOPTBHF20241
 		custom_tooltip = { text = coronation_canceled }
@@ -3335,16 +3486,17 @@ character_event = {
 		clr_character_flag = flag_crowned_by_myself
 	}
 	
-	immediate = {
+	immediate = {  #DRD-DIFF: do not make another request if the coronation was cancelled + cleanup.
 		save_event_target_as = coronation_ruler
 		add_character_modifier = {
 			name = out_traveling
 			duration = 66
 			hidden = yes #Make the character inaccessible, the ruler himself is not actually out, he's still at court.
 		}
-		event_target:coronation_priest = {  #DRD-DIFF: do not make another request if the coronation was cancelled.
+		event_target:coronation_priest = {
 			opinion = { who = ROOT modifier = drd_opinion_fulfilled_request }  #TODO: only used for temporal RH for now.
 		}
+		clear_event_target = rh_new_duchy
 	}
 
 	option = {

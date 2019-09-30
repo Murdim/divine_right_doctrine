@@ -56,6 +56,7 @@ on_new_holder_usurpation = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
 		DRD.110  #SEE DRD_coronation_artifact_events.txt: add the Uncrowned hidden trait to new Kings and Emperors.
 		DRD.122  #SEE DRD_coronation_artifact_events.txt: Divine Right Temporal head artifact crown usurpation.
+		DRD.510  #SEE DRD_church_land_events.txt: "RH state" titles cannot be usurped, steal a de jure duchy instead.
 		DRD_HF.20417  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
 	}
 }

@@ -1,0 +1,82 @@
+drd_ai_offer_church_lands_score_value = {  # THIS = ROOT = ruler, FROM = RH (holder of event_target:rh_title)
+	modifier = {  # Will never give land to a RH that is controlled by someone else.
+		factor = 0
+		FROM = {
+			independent = no
+			NOT = { is_vassal_or_below_of = ROOT }
+		}
+	}
+	modifier = {  # More likely to give land to a vassal RH than an independent one.
+		factor = 2
+		FROM = { is_vassal_or_below_of = ROOT }
+	}
+	modifier = {  # Emperors are not as worried about their vassal RH becoming King-tier.
+		factor = 2
+		FROM = { is_vassal_or_below_of = ROOT }
+		tier = EMPEROR
+	}
+	modifier = {
+		factor = 1.5
+		trait = zealous
+	}
+	modifier = {
+		factor = 0
+		realm_size < 30
+	}
+	modifier = {
+		factor = 0.5
+		realm_size < 50
+	}
+	modifier = {
+		factor = 0.5
+		realm_size < 80
+	}
+	modifier = {
+		factor = 1.5
+		realm_size > 150
+	}
+	modifier = {
+		factor = 1.5
+		realm_size > 250
+	}
+	modifier = {
+		factor = 1.5
+		realm_size > 400
+	}
+	modifier = {
+		factor = 0.3
+		NOT = { opinion = { who = FROM value = -80 } }
+	}
+	modifier = {
+		factor = 0.5
+		NOT = { opinion = { who = FROM value = -60 } }
+	}
+	modifier = {
+		factor = 0.5
+		NOT = { opinion = { who = FROM value = -40 } }
+	}
+	modifier = {
+		factor = 0.7
+		NOT = { opinion = { who = FROM value = -20 } }
+	}
+	modifier = {
+		factor = 0.7
+		NOT = { opinion = { who = FROM value = 0 } }
+	}
+	modifier = {
+		factor = 1.2
+		opinion = { who = FROM value = 20 }
+	}
+	modifier = {
+		factor = 1.2
+		opinion = { who = FROM value = 40 }
+	}
+	modifier = {
+		factor = 1.2
+		opinion = { who = FROM value = 60 }
+	}
+	modifier = {
+		factor = 1.2
+		opinion = { who = FROM value = 80 }
+	}
+}

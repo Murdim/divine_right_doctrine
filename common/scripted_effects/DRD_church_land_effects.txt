@@ -1,9 +1,53 @@
 #DRD-FILE
 
-drd_offer_church_lands = {  # ROOT = ruler, FROM = RH (holder of event_target:rh_title), event_target:rh_new_duchy = offered lands.
+# event_target:iter_duchy scopes to the current duchy title. It should be cleared at the end of the loop.
+# local_duchy_count contains the number of remaining duchies after the current one, and goes from 3 to 0.
+# while = {
+#	count = 4  # Do NOT add a trigger condition.
+#	drd_rh_title_iter_duchy = yes  #SEE DRD_church_land_effects.txt
+# 	event_target:iter_duchy = { }  # Do something.
+# }
+# clear_event_target = iter_duchy
+drd_rh_title_iter_duchy = {  # Iterate over the "church land" duchies of the scoped RH title, by order of acquisition.
+	clear_event_target = iter_duchy
+	if = {
+		limit = { is_variable_equal = { which = local_duchy_count value = 3 }
+		event_target:rh_duchy_2 = { save_event_target_as = iter_duchy }
+	}
+	else_if = {
+		limit = { is_variable_equal = { which = local_duchy_count value = 2 }
+		event_target:rh_duchy_3 = { save_event_target_as = iter_duchy }
+	}
+	else_if = {
+		limit = { is_variable_equal = { which = local_duchy_count value = 1 }
+		event_target:rh_duchy_4 = { save_event_target_as = iter_duchy }
+	}
+	else = {
+		change_variable = { which = local_duchy_count value = 4 }
+		event_target:rh_duchy_1 = { save_event_target_as = iter_duchy }
+	}
+	subtract_variable = { which = local_duchy_count value = 1 }
+}
+
+drd_expand_church_lands = {  # THIS = ROOT = ruler, FROM = RH (holder of event_target:rh_title), event_target:rh_new_duchy = offered lands.
 	custom_tooltip = { text = tooltip_expand_church_lands }
 	event_target:rh_new_duchy = {
-		grant_title_no_opinion = FROM
+		if = {  # Grant the duchy title to FROM unless already held by them or one of their vassals.
+			limit = {
+				NOT = {
+					holder_scope = {
+						OR = {
+							character = FROM
+							is_vassal_or_below_of = FROM
+						}
+					}
+				}
+			}
+			if = {  #TODO Previous holder is warned and gets an opinion penalty towards ROOT.
+				limit = { holder_scope = { NOT = { character = ROOT } } }
+			}
+			grant_title_no_opinion = FROM
+		}
 		any_direct_de_jure_vassal_title = {  # Give FROM direct control of holy sites and counties that wouldn't join their realm.
 			limit = {
 				location = {
@@ -20,6 +64,9 @@ drd_offer_church_lands = {  # ROOT = ruler, FROM = RH (holder of event_target:rh
 						}
 					}
 				}
+			}
+			if = {  #TODO Previous holder is warned and gets an opinion penalty towards ROOT.
+				limit = { holder_scope = { NOT = { character = ROOT } } }
 			}
 			grant_title_no_opinion = FROM
 		}
@@ -45,11 +92,15 @@ drd_offer_church_lands = {  # ROOT = ruler, FROM = RH (holder of event_target:rh
 			}
 			persistent_event_target:rh_kingdom = {  # Add to rh_kingdom's de jure lands if it exists and is held by FROM.
 				if = {
-					limit = { holder_scope = FROM }
+					limit = { holder_scope = { character = FROM } }
 					event_target:rh_new_duchy = { de_jure_liege = PREV }
 				}
 			}
 		}
+	}
+	any_player = {
+		limit = { religion = ROOT }
+		#TODO notification.
 	}
 
 	if = {
@@ -59,7 +110,8 @@ drd_offer_church_lands = {  # ROOT = ruler, FROM = RH (holder of event_target:rh
 				FROM = { independent = yes }
 			}	
 			event_target:rh_title = {
-				persistent_event_target:rh_duchy_1  = { always = yes }
+				persistent_event_target:rh_duchy_1 = { always = yes }
+				persistent_event_target:rh_duchy_2 = { always = yes }
 				NOT = { persistent_event_target:rh_kingdom = { always = yes } }
 			}
 		}
@@ -74,23 +126,47 @@ drd_offer_church_lands = {  # ROOT = ruler, FROM = RH (holder of event_target:rh
 	}
 }
 
-drd_religious_head_create_state = {  # FROM = RH, event_target:rh_title = FROM's RH title.
+drd_religious_head_create_state = {  # event_target:rh_title = THIS' RH title.
+	save_event_target_as = rh_char
 	create_title = {
 		tier = KING
 		name = the_rh_title_adj_state
 		short_name = yes
 		base_title = event_target:rh_title
-		holder = THIS
+		holder = event_target:rh_char
 	}
 	new_title = { save_event_target_as = rh_kingdom }
 	event_target:rh_kingdom = {
+		set_flag = drd_rh_state
 		save_persistent_event_target = { name = rh_title scope = event_target:rh_title }
 	}
 	event_target:rh_title = {
-		persistent_event_target:rh_duchy_1 = { de_jure_liege = event_target:rh_kingdom }
+		persistent_event_target:rh_duchy_1 = {
+			de_jure_liege = event_target:rh_kingdom
+			random_direct_de_jure_vassal_title = {  # The original holy site becomes capital.
+				limit = { location = { any_province_holding = { is_holy_site = event_target:rh_char } } }
+				location = {
+					PREVPREV = { set_preferred_capital = PREV }
+					event_target:rh_kingdom = { set_preferred_capital = PREV }
+					event_target:rh_title = { set_preferred_capital = PREV }
+				}
+				event_target:rh_char = { 
+					if = {
+						limit = { has_landed_title = PREV }
+						capital = PREV
+					}
+				}
+			}
+		}
 		persistent_event_target:rh_duchy_2 = { de_jure_liege = event_target:rh_kingdom }
 		persistent_event_target:rh_duchy_3 = { de_jure_liege = event_target:rh_kingdom }
 		persistent_event_target:rh_duchy_4 = { de_jure_liege = event_target:rh_kingdom }
 		save_persistent_event_target = { name = rh_kingdom scope = event_target:rh_kingdom }
+	}
+	clear_event_target = rh_char
+	clear_event_target = rh_kingdom
+	any_player = {
+		limit = { religion_group = ROOT }
+		#TODO narrative event.
 	}
 }
