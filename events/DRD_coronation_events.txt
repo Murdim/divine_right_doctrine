@@ -433,6 +433,7 @@ letter_event = {
 		}
 		trigger = {
 			has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request }
+			NOT = { holds_favor_on = FROM }
 		}
 		hidden_tooltip = {
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
@@ -487,7 +488,7 @@ letter_event = {
 		}
 	}
 
-	option = {  # Go back.
+	option = {  # Go back. Will actually be used by the AI if none of the actual options are available.
 		name = EVTOPTZDRD200
 		hidden_tooltip = {
 			clear_event_target = request_county
