@@ -23,9 +23,15 @@ drd_overthrow = {
 			religion = FROM
 			OR = {  # Religious head, RH-crowned ruler, or asked by the RH to overthrow this specific ruler.
 				controls_religion = yes
-				AND = {
+				AND = {  # Always available to RH-crowned players, but the AI needs an additional reason.
 					trait = crowned_by_pope
 					religion = persistent_event_target:coronation_religion
+					OR = {  # Self-crowned ruler is unjustified, did so while ROOT was already crowned, or an enemy.
+						ai = no
+						has_opinion_modifier = { who = FROM modifier = drd_opinion_schismatic }
+						FROM = { is_foe = ROOT }
+						ai_zeal = 50  # ... or ROOT is a religious fanatic.
+					}
 				}
 				has_opinion_modifier = { who = FROM modifier = drd_opinion_request_overthrow_schismatic }
 			}

@@ -142,7 +142,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 				factor = 3
 				owes_favor_to = FROM
 			}
-			modifier = {  # More likely if there is a self-crowned ruler to overthrow.
+			modifier = {  # More likely if ROOT wants a self-crowned ruler to be overthrown.
 				factor = 3
 				any_independent_ruler = {
 					religion = ROOT
@@ -155,6 +155,10 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 						is_allied_with = ROOT
 						is_allied_with = FROM
 						any_current_enemy = { NOT = { religion_group = ROOT } }
+					}
+					OR = {  # Self-crowned ruler is an enemy, unjustified, or did so while ROOT was in power.
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_schismatic }
+						is_foe = ROOT
 					}
 				}
 			}
@@ -401,7 +405,9 @@ letter_event = {
 					any_current_enemy = { NOT = { religion_group = ROOT } }
 				}
 			}
-			preferred_limit = { 
+			preferred_limit = { reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_schismatic } }
+			preferred_limit = { is_foe = ROOT }
+			preferred_limit = {
 				OR = {
 					has_character_modifier = drd_schismatic_ruler
 					has_character_modifier = drd_schismatic_ruler_clergyless
@@ -468,7 +474,16 @@ letter_event = {
 			FROM = { letter_event = { id = DRD.301 } }
 		}
 		ai_chance = {
-			factor = 30  # More likely if available at all.
+			factor = 5
+			modifier = {  # More likely if the self-crowned ruler is an enemy, unjustified, or did so while ROOT was in power.
+				factor = 6
+				event_target:request_schismatic_ruler = {
+					OR = {
+						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_schismatic }
+						is_foe = ROOT
+					}
+				}
+			}
 		}
 	}
 
