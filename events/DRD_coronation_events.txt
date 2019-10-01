@@ -413,9 +413,9 @@ letter_event = {
 					has_character_modifier = drd_schismatic_ruler_clergyless
 				}
 			}
-			preferred_limit = { NOT = { relative_power = { who = ROOT power = 3 } } }
+			preferred_limit = { NOT = { relative_power = { who = ROOT power = 3 } } }
 			preferred_limit = { NOT = { distance_from_realm = { who = FROM value = 100 } } }
-			preferred_limit = { NOT = { relative_power = { who = ROOT power = 2 } } }
+			preferred_limit = { NOT = { relative_power = { who = ROOT power = 2 } } }
 			preferred_limit = { NOT = { distance_from_realm = { who = FROM value = 200 } } }
 			preferred_limit = { NOT = { distance_from_realm = { who = FROM value = 400 } } }
 			save_event_target_as = request_schismatic_ruler
@@ -882,7 +882,8 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 		if = {
 			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
-			hidden_tooltip = { FROM = { character_event = { id = DRD.350 } }
+			hidden_tooltip = { FROM = { character_event = { id = DRD.350 } } }
+		}
 		ai_chance = {
 			factor = 10
 		}
@@ -895,7 +896,7 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
 			custom_tooltip = { text = drd_refuse_to_crown_warning }
 			tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me } }
-			hidden_tooltip = { FROM = { character_event = { id = DRD.351 } }
+			hidden_tooltip = { FROM = { character_event = { id = DRD.351 } } }
 		}
 		ai_chance = {
 			factor = 10
@@ -918,7 +919,7 @@ character_event = {  # Automatic answer after 30 days.
 
 	immediate = {
 		remove_opinion = { who = FROM modifier = drd_opinion_making_request }
-		FROM = { character_event = { id = DRD.350 }
+		FROM = { character_event = { id = DRD.350 } }
 	}
 
 	option = {
@@ -1485,7 +1486,12 @@ character_event = {
 		add_rival = FROM
 		opinion = { who = FROM modifier = drd_opinion_schismatic }
 		opinion = { who = event_target:coronation_priest modifier = drd_opinion_schismatic }
-		tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp } }
+		if = {
+			limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+		} else = {
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+		}
 		hidden_tooltip = { FROM = { character_event = { id = DRD.401 } } }
 		ai_chance = {
 			factor = 50
@@ -1510,7 +1516,12 @@ character_event = {
 		}
 		opinion = { who = FROM modifier = drd_opinion_schismatic }
 		opinion = { who = event_target:coronation_priest modifier = drd_opinion_schismatic }
-		tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp } }
+		if = {
+			limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+		} else = {
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+		}
 		ai_chance = {
 			factor = 10
 			modifier = {
@@ -1546,7 +1557,12 @@ character_event = {
 				}
 			}
 		}
-		tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp } }
+		if = {
+			limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+		} else = {
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+		}
 	}
 }
 
@@ -1557,6 +1573,7 @@ character_event = {
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
+	show_root = yes
 
 	option = {
 		name = EVTOPTADRD401
@@ -1570,6 +1587,7 @@ character_event = {  # Wait for the first day of the next month.
 	hide_window = yes
 
 	immediate = {
+		prestige = 1000
 		export_to_variable = { which = local_current_day value = day }
 		if = {
 			limit = { is_variable_equal = { which = local_current_day value = 0 } }
@@ -1601,6 +1619,7 @@ character_event = {  # Monthly self-coronation upkeep event.
 				limit = {
 					has_flag = flag_crowned_by_myself_unjustified
 				}
+				religion_authority = { modifier = self_crowned_schismatic }
 				if = {  # Restore the Schismatic Ruler modifier if it was lost (e.g by converting).
 					limit = {
 						NOR = {

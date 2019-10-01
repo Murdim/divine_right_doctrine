@@ -1,11 +1,16 @@
 #DRD-FILE
 
-self_crowned_schismatic = {  # Refreshed every month.
+self_crowned_schismatic = {  # Refreshed every month, applied twice if unjustified.
 	authority = -10
 	months = 1
 }
 
-self_crowned_schismatic_tmp = {  # Copy used for the first month.
+self_crowned_schismatic_tmp_justified = {  # Used for the first month.
 	authority = -10
+	days = 1
+}
+
+self_crowned_schismatic_tmp_unjustified = {  # Used for the first month.
+	authority = -20
 	days = 1
 }

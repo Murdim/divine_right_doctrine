@@ -148,6 +148,7 @@ decisions = {
 					}
 				}
 				NOT = { any_war = { using_cb = drd_overthrow } }  # Keep the tooltip simple.
+			}
 		}
 		effect = {
 			custom_tooltip = { text = begin_coronation_tooltip }

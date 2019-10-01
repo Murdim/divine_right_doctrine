@@ -863,7 +863,7 @@ letter_event = {
 			}
 
 			if = {  # First duchy must contain a holy site and not be completely isolated.
-				limit = { NOT = { event_target:rh_duchy_1 = { always = yes } } }
+				limit = { NOT = { event_target:rh_duchy_1 = { always = yes } } }
 				FROM = {
 					random_realm_province = {
 						limit = {
@@ -914,7 +914,7 @@ letter_event = {
 			else_if = {  # Other duchies must border "de jure" church lands.
 				limit = {
 					OR = {  # Second duchy unlocks empowerment (if not autocephalous) which is required to go further.
-						NOT = { event_target:rh_duchy_2 = { always = yes } }
+						NOT = { event_target:rh_duchy_2 = { always = yes } }
 						AND = {  # Empowered heads can have up to 4 duchies in their church lands.
 							persistent_event_target:rh_kingdom = { holder_scope = { character = ROOT } }
 							NAND = {
@@ -8220,7 +8220,7 @@ character_event = {
 			limit = { 
 				has_character_flag = flag_crowned_by_pope 
 			} 
-			if = {  # Empowered theocratic RHs also give the Pope-tier trait.
+			if = {  # Empowered theocratic RHs also give the Pope-tier trait.
 				limit = {
 					event_target:rh_title = {
 						persistent_event_target:rh_kingdom = {
@@ -8262,6 +8262,10 @@ character_event = {
 						days = -1
 					}
 				}
+				religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified }
+			}
+			else = {
+				religion_authority = { modifier = self_crowned_schismatic_tmp_justified }
 			}
 		}
 		else = {  # Other situations (including RH self-coronation) give the weakest version of the trait.
@@ -8338,7 +8342,6 @@ character_event = {
 		} 
 		if = {  #DRD-DIFF: consequences of self-coronation in defiance of the RH.
 			limit = { has_flag = flag_crowned_by_myself }
-			religion_authority = { modifier = self_crowned_schismatic_tmp }
 			repeat_event = { id = DRD.402 days = 1 }  # Upkeep event loop.
 			any_player = {  # Warn uninvited players of the same religion...
 				limit = { 
