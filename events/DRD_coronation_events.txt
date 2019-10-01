@@ -1473,6 +1473,7 @@ character_event = {
 	desc = EVTDESCDRD400
 	picture = GFX_evt_a_crowning_ceremony
 	border = GFX_event_normal_frame_religion
+	hide_new = yes
 
 	is_triggered_only = yes
 	trigger = { 
@@ -1490,7 +1491,7 @@ character_event = {
 			limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
 			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
 		} else = {
-			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_justified } }
 		}
 		hidden_tooltip = { FROM = { character_event = { id = DRD.401 } } }
 		ai_chance = {
@@ -1520,7 +1521,7 @@ character_event = {
 			limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
 			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
 		} else = {
-			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_justified } }
 		}
 		ai_chance = {
 			factor = 10
@@ -1561,7 +1562,7 @@ character_event = {
 			limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
 			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
 		} else = {
-			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+			tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_justified } }
 		}
 	}
 }
@@ -1571,9 +1572,9 @@ character_event = {
 	desc = EVTDESCDRD401
 	picture = GFX_evt_catching_heretic
 	border = GFX_event_normal_frame_religion
+	hide_new = yes
 
 	is_triggered_only = yes
-	show_root = yes
 
 	option = {
 		name = EVTOPTADRD401

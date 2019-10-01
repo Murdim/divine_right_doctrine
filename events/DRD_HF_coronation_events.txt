@@ -452,39 +452,48 @@ character_event = {
 		}
 		if = {  # Rulers face additional penalties unless they have a good reason to defy their RH.
 			limit = {  # Vassal RH who already refused to crown or made an unreasonable coronation request, or an open enemy.
-				OR = {
-					religion_head = {
+				religion_head = {
+					OR = {
 						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_made_unreasonable_request }
 						reverse_has_opinion_modifier = { who = ROOT modifier = drd_opinion_refused_to_crown_me }
 						ROOT = { is_foe = PREV }  # Rival OR committed a crime against you.
 					}
 				}
 			}
-			piety = -50
-			custom_tooltip = { text = EVTTOOLTIPFDRDHF20200_justified }
+			if = {
+				limit = { religion_head = { ROOT = { is_foe = PREV } } }
+				custom_tooltip = { text = EVTTOOLTIPFDRDHF20200_foe }
+				prestige = 100
+				piety = -100
+			}
+			else = {
+				custom_tooltip = { text = EVTTOOLTIPFDRDHF20200_disobedient }
+				piety = -50
+			}
 			clr_character_flag = flag_crowned_by_myself_unjustified
 		}
 		else = {
-			piety = -300
 			custom_tooltip = { text = EVTTOOLTIPFDRDHF20200_unjustified }
+			piety = -300
 			set_character_flag = flag_crowned_by_myself_unjustified
 		}
-		set_character_flag = flag_crowned_by_myself
-		job_spiritual = {
-			save_event_target_as = coronation_priest 
-			show_scope_change = no	
-			opinion = {
-				modifier = opinion_supposed_to_crown
-				months = 1
-				who = ROOT
+		hidden_tooltip = {
+			set_character_flag = flag_crowned_by_myself
+			job_spiritual = {
+				save_event_target_as = coronation_priest 
+				opinion = {
+					modifier = opinion_supposed_to_crown
+					months = 1
+					who = ROOT
+				}
+				reverse_opinion = {
+					modifier = opinion_supposed_to_crown
+					months = 1
+					who = ROOT
+				}
 			}
-			reverse_opinion = {
-				modifier = opinion_supposed_to_crown
-				months = 1
-				who = ROOT
-			}
+			character_event = { id = DRD_HF.20300 }  # Go to budget event
 		}
-		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
 		ai_chance = {
 			factor = 1
 			modifier = {  # If the RH is a vassal, always try asking them first.
@@ -610,6 +619,10 @@ character_event = {
 					top_liege = { relative_power = { who = FROM power = 1.5 } }
 				}
 			}
+			modifier = {  # Never while bankrupt.
+				factor = 0
+				wealth < 0
+			}
 			modifier = {  # Other factors (traits).
 				factor = 0.5
 				trait = content
@@ -704,7 +717,15 @@ character_event = {
 			job_spiritual = { religion = ROOT }
 		}
 		custom_tooltip = { text = EVTTOOLTIPGDRDHF20200 }
-		if = { #DRD-DIFF: if a hierocratic(-like) vassal head is snubbed by an Emperor, they'll get mad.
+		if = {
+			limit = { religion_head = { is_theocracy = yes } }
+			custom_tooltip = { text = EVTTOOLTIPGDRDHF20200_clergyless_ignore_head }
+		}
+		else_if = {
+			limit = { controls_religion = no }
+			custom_tooltip = { text = EVTTOOLTIPGDRDHF20200_under_temporal_head }
+		}
+		if = {  # If a hierocratic(-like) vassal head is snubbed by an Emperor, they'll get mad.
 			limit = { 
 				tier = EMPEROR
 				has_autocephaly = no
@@ -3541,9 +3562,12 @@ character_event = {
 					is_within_diplo_range = ROOT
 					higher_real_tier_than = DUKE
 					NOT = { distance_from_realm = { who = ROOT value = 120 } }
-					NAND = {  #DRD-DIFF: do not invite the RH to a schismatic coronation.
-						controls_religion = yes
+					NAND = {  #DRD-DIFF: do not invite RH or RH-crowned rulers to a schismatic coronation.
 						ROOT = { has_flag = flag_crowned_by_myself }
+						OR = {
+							controls_religion = yes
+							trait = crowned_by_pope
+						}
 					}
 				}
 				character_event = { id = DRD_HF.20302 } #Send Invitations to other same-religion neighbors
@@ -3575,6 +3599,10 @@ character_event = {
 				factor = 0.75
 				trait = greedy
 			} 
+			modifier = {  #DRD-DIFF: more likely for self-coronations.
+				factor = 3
+				has_flag = flag_crowned_by_myself
+			}
 		}
 	}
 	option = {
@@ -8267,6 +8295,37 @@ character_event = {
 			else = {
 				religion_authority = { modifier = self_crowned_schismatic_tmp_justified }
 			}
+			repeat_event = { id = DRD.402 days = 1 }  # Upkeep event loop.
+			any_player = {  # Warn uninvited players of the same religion...
+				limit = { 
+					religion = ROOT
+					NOT = { character = ROOT }
+					NOT = { has_opinion_modifier = { who = ROOT modifier = opinion_coronation_guest } }
+				}
+				hidden_tooltip = { character_event = { id = DRD.400 } }
+			}
+			religion_head = {  # ... plus the religious head, since they have a choice to make...
+				show_scope_change = no
+				tooltip = { opinion = { who = FROM modifier = drd_opinion_schismatic } }
+				if = {
+					limit = { ai = yes }
+					hidden_tooltip = { character_event = { id = DRD.400 } }
+				}
+			}
+			any_independent_ruler = {  # ... as well as any RH-crowned ruler.
+				limit = {
+					religion = ROOT
+					trait = crowned_by_pope
+					religion = persistent_event_target:coronation_religion
+					controls_religion = no
+				}
+				show_scope_change = no
+				tooltip = { opinion = { who = FROM modifier = drd_opinion_schismatic } }
+				if = {
+					limit = { ai = yes }
+					hidden_tooltip = { character_event = { id = DRD.400 } }
+				}
+			}
 		}
 		else = {  # Other situations (including RH self-coronation) give the weakest version of the trait.
 			add_trait = crowned_by_priest
@@ -8340,43 +8399,6 @@ character_event = {
 				character_event = { id = DRD_HF.20370 days = 3 random = 3 } #wrap up, clear all flags.
 			} 
 		} 
-		if = {  #DRD-DIFF: consequences of self-coronation in defiance of the RH.
-			limit = { has_flag = flag_crowned_by_myself }
-			repeat_event = { id = DRD.402 days = 1 }  # Upkeep event loop.
-			any_player = {  # Warn uninvited players of the same religion...
-				limit = { 
-					religion = ROOT
-					NOT = { character = ROOT }
-					NOT = {
-						has_opinion_modifier = { 
-							who = ROOT 
-							modifier = opinion_coronation_guest 
-						}
-					}
-				}
-				hidden_tooltip = { character_event = { id = DRD.400 } }
-			}
-			religion_head = {  # ... plus the religious head, since they have a choice to make...
-				tooltip = { opinion = { who = FROM modifier = drd_opinion_schismatic } }
-				if = {
-					limit = { ai = yes }
-					hidden_tooltip = { character_event = { id = DRD.400 } }
-				}
-			}
-			any_independent_ruler = {  # ... as well as any RH-crowned ruler.
-				limit = {
-					religion = ROOT
-					trait = crowned_by_pope
-					religion = persistent_event_target:coronation_religion
-					controls_religion = no
-				}
-				tooltip = { opinion = { who = FROM modifier = drd_opinion_schismatic } }
-				if = {
-					limit = { ai = yes }
-					hidden_tooltip = { character_event = { id = DRD.400 } }
-				}
-			}
-		}
 		ai_chance = { 	
 			factor = 95		
 		}
@@ -8827,7 +8849,14 @@ character_event = {
 			limit = { 
 				FROM = { has_character_flag = flag_crowned_by_myself } 
 			} 
-			piety = -20
+			if = {
+				limit = { FROM = { has_flag = flag_crowned_by_myself_unjustified } }
+				tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_unjustified } }
+				piety = -50
+			} else = {
+				tooltip = { religion_authority = { modifier = self_crowned_schismatic_tmp_justified } }
+				piety = -20
+			}
 		}
 		else = { 
 			piety = 10
