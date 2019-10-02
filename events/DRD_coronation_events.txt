@@ -59,40 +59,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 			}
 
 			# Compute the prestige hit that will be applied at the end of the coronation chain.
-			if = {
-				limit = { relative_power = { who = FROM power = 1.5 } }
-				set_variable = { which = local_fylkir_prestige_cost value = 5000 }
-			}
-			else_if = {
-				limit = { relative_power = { who = FROM power = 1 } }
-				set_variable = { which = local_fylkir_prestige_cost value = 3000 }
-			}
-			else_if = {
-				limit = { relative_power = { who = FROM power = 0.75 } }
-				set_variable = { which = local_fylkir_prestige_cost value = 2000 }
-			}
-			else_if = {
-				limit = { relative_power = { who = FROM power = 0.5 } }
-				set_variable = { which = local_fylkir_prestige_cost value = 1200 }
-			}
-			else_if = {
-				limit = { relative_power = { who = FROM power = 0.25 } }
-				set_variable = { which = local_fylkir_prestige_cost value = 600 }
-			}
-			else = {
-				set_variable = { which = local_fylkir_prestige_cost value = 300 }
-			}
-			if = {  # Base value is capped at 100 + 40% of current prestige (if positive).
-				limit = { prestige = 0 }
-				export_to_variable = { which = local_fylkir_prestige_max value = prestige }
-				multiply_variable = { which = local_fylkir_prestige_max value = 0.4 }
-			}
-			change_variable = { which = local_fylkir_prestige_max value = 100 }
-			if = {
-				check_variable = { which = local_fylkir_prestige_max which = local_fylkir_prestige_cost }
-				set_variable = { which = local_fylkir_prestige_cost which = local_fylkir_prestige_max }
-			}
-			change_variable = { which = local_fylkir_prestige_max value = 0 }
+			drd_fylkir_calculate_prestige_cost_to_crown_from = yes  #SEE DRD_coronation_effects.txt
 		}
 
 		if = {  # Small money request: highest between 0.5x the ruler's yearly income and 300.
@@ -860,28 +827,30 @@ character_event = {  # Request was accepted (notification). ROOT = temporal RH, 
 
 character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH, FROM = ruler.
 	id = DRD.250
-	text = EVTDESCDRD250  # May be extended for other delayed requests if needed.
+	desc = EVTDESCDRD250  # May be extended for other delayed requests if needed.
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
-	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
 
 	immediate = {
-		if = {
+		if = {  # Use drd_opinion_ongoing_request to block coronation AND use it as a timer.
 			limit = {
 				ai = no
 				multiplayer = yes
 			}
-			character_event = { id = DRD.251 days = 30 }
+			opinion = { who = FROM modifier = drd_opinion_ongoing_request days = 31 }
+			repeat_event = { id = DRD.251 days = 30 }
 		}
+		drd_fylkir_calculate_prestige_cost_to_crown_from = yes  #SEE DRD_coronation_effects.txt
 	}
 
 	option = {
 		name = EVTOPTADRD250
 		if = {
-			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
-			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_ongoing_request } }
+			custom_tooltip = { text = drd_request_prestige_cost_warning }
+			remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
 			hidden_tooltip = { FROM = { character_event = { id = DRD.350 } } }
 		}
 		ai_chance = {
@@ -892,8 +861,8 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 	option = {
 		name = EVTOPTBDRD250
 		if = {
-			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
-			remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_ongoing_request } }
+			remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
 			custom_tooltip = { text = drd_refuse_to_crown_warning }
 			tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me } }
 			hidden_tooltip = { FROM = { character_event = { id = DRD.351 } } }
@@ -910,15 +879,15 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 
 character_event = {  # Automatic answer after 30 days.
 	id = DRD.251
-	text = EVTDESCDRD251
+	desc = EVTDESCDRD251
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
-	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_making_request } }
+	trigger = { has_opinion_modifier = { who = FROM modifier = drd_opinion_ongoing_request } }
 
 	immediate = {
-		remove_opinion = { who = FROM modifier = drd_opinion_making_request }
+		remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
 		FROM = { character_event = { id = DRD.350 } }
 	}
 
@@ -993,6 +962,9 @@ letter_event = {  # Request to overthrow event_target:request_schismatic_ruler. 
 		religion_head = {
 			opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
 		}
+		hidden_tooltip = {
+			set_variable = { which = coronation_fylkir_prestige_cost which = local_fylkir_prestige_cost }
+		}
 		war = {
 			target = event_target:request_schismatic_ruler
 			casus_belli = drd_overthrow
@@ -1010,6 +982,9 @@ letter_event = {  # Request to overthrow event_target:request_schismatic_ruler. 
 		name = EVTOPTBDRD301
 		religion_head = {
 			opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+		}
+		hidden_tooltip = {
+			set_variable = { which = coronation_fylkir_prestige_cost which = local_fylkir_prestige_cost }
 		}
 		ai_chance = {
 			factor = 10
@@ -1368,7 +1343,7 @@ letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FRO
 
 character_event = {  # Fulfilled a non-instantaneous request (e.g war), the coronation can proceed. ROOT = ruler, FROM = FROM.
 	id = DRD.350
-	text = EVTDESCDRD350  # May be extended for other delayed requests if needed.
+	desc = EVTDESCDRD350  # May be extended for other delayed requests if needed.
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
@@ -1382,7 +1357,7 @@ character_event = {  # Fulfilled a non-instantaneous request (e.g war), the coro
 
 character_event = {  # RH refuses to crown you after fulfilling a request for their predecessor. ROOT = ruler, FROM = FROM.
 	id = DRD.351
-	text = EVTDESCDRD351
+	desc = EVTDESCDRD351
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
@@ -1398,7 +1373,7 @@ character_event = {  # RH refuses to crown you after fulfilling a request for th
 
 letter_event = {  # RH refused to crown ROOT. ROOT = ruler, FROM = temporal RH.
 	id = DRD.398
-	text = EVTDESCDRD398
+	desc = EVTDESCDRD398
 	border = GFX_event_letter_frame_religion
 
 	is_triggered_only = yes

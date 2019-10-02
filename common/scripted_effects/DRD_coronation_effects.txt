@@ -1,0 +1,38 @@
+#DRD-FILE
+
+drd_fylkir_calculate_prestige_cost_to_crown_from = {  # Sets local_fylkir_prestige_cost.
+	if = {
+		limit = { relative_power = { who = FROM power = 1.5 } }
+		set_variable = { which = local_fylkir_prestige_cost value = 5000 }
+	}
+	else_if = {
+		limit = { relative_power = { who = FROM power = 1 } }
+		set_variable = { which = local_fylkir_prestige_cost value = 3000 }
+	}
+	else_if = {
+		limit = { relative_power = { who = FROM power = 0.75 } }
+		set_variable = { which = local_fylkir_prestige_cost value = 2000 }
+	}
+	else_if = {
+		limit = { relative_power = { who = FROM power = 0.5 } }
+		set_variable = { which = local_fylkir_prestige_cost value = 1200 }
+	}
+	else_if = {
+		limit = { relative_power = { who = FROM power = 0.25 } }
+		set_variable = { which = local_fylkir_prestige_cost value = 600 }
+	}
+	else = {
+		set_variable = { which = local_fylkir_prestige_cost value = 300 }
+	}
+	if = {  # Base value is capped at 100 + 40% of current prestige (if positive).
+		limit = { prestige = 0 }
+		export_to_variable = { which = local_fylkir_prestige_max value = prestige }
+		multiply_variable = { which = local_fylkir_prestige_max value = 0.4 }
+	}
+	change_variable = { which = local_fylkir_prestige_max value = 100 }
+	if = {
+		check_variable = { which = local_fylkir_prestige_max which = local_fylkir_prestige_cost }
+		set_variable = { which = local_fylkir_prestige_cost which = local_fylkir_prestige_max }
+	}
+	change_variable = { which = local_fylkir_prestige_max value = 0 }
+}
