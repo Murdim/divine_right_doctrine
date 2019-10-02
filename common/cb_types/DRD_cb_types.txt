@@ -99,6 +99,8 @@ drd_overthrow = {
 		FROM = {
 			prestige = -500
 			abdicate = yes
+			remove_trait = crowned_by_myself
+			imprison = ROOT
 		}
 	}
 

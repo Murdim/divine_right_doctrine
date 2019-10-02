@@ -1641,6 +1641,9 @@ character_event = {  # Monthly self-coronation upkeep event.
 			remove_character_modifier = drd_schismatic_ruler
 			remove_character_modifier = drd_schismatic_ruler_clergyless
 		}
-		repeat_event = { id = DRD.402 months = 1 }  # Repeat at the start of every month.
+		if = {  # Do NOT repeat if ROOT lost their Crowned trait altogether (e.g by being overthrown).
+			limit = { trait = crowned_by_myself }
+			repeat_event = { id = DRD.402 months = 1 }  # Repeat at the start of every month.
+		}
 	}
 }
