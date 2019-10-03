@@ -116,28 +116,28 @@ drd_character_create_generic_crown = {
 drd_artifact_add_dead_crown_trait_to_prev = {
 	trigger_switch = {
 		on_trigger = artifact_type
-		crown_fylkir = {
+		crown_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_fylkir }
 		}
-		crown_tengri_fylkir= {
+		crown_tengri_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_tengri_fylkir }
 		}
-		crown_finnish_fylkir = {
+		crown_finnish_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_finnish_fylkir }
 		}
-		crown_west_african_fylkir = {
+		crown_west_african_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_west_african_fylkir }
 		}
-		crown_zun_fylkir = {
+		crown_zun_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_zun_fylkir }
 		}
-		crown_slavic_fylkir = {
+		crown_slavic_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_slavic_fylkir }
 		}
-		crown_romuva_fylkir = {
+		crown_romuva_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_romuva_fylkir }
 		}
-		crown_aztec_fylkir = {
+		crown_aztec_fylkir_divine_right = {
 			PREV = { add_trait = dead_crown_aztec_fylkir }
 		}
 		crown_generic_peaceful_divine_right = {
@@ -161,28 +161,28 @@ drd_artifact_add_dead_crown_trait_to_prev = {
 drd_artifact_remove_dead_crown_trait_from_prev = {
 	trigger_switch = {
 		on_trigger = artifact_type
-		crown_fylkir = {
+		crown_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_fylkir }
 		}
-		crown_tengri_fylkir= {
+		crown_tengri_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_tengri_fylkir }
 		}
-		crown_finnish_fylkir = {
+		crown_finnish_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_finnish_fylkir }
 		}
-		crown_west_african_fylkir = {
+		crown_west_african_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_west_african_fylkir }
 		}
-		crown_zun_fylkir = {
+		crown_zun_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_zun_fylkir }
 		}
-		crown_slavic_fylkir = {
+		crown_slavic_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_slavic_fylkir }
 		}
-		crown_romuva_fylkir = {
+		crown_romuva_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_romuva_fylkir }
 		}
-		crown_aztec_fylkir = {
+		crown_aztec_fylkir_divine_right = {
 			PREV = { remove_trait = dead_crown_aztec_fylkir }
 		}
 		crown_generic_peaceful_divine_right = {
