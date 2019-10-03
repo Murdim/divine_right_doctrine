@@ -150,7 +150,7 @@ letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanct
 			modifier = {  # Very likely to ask for the special crown artifact if FROM has it.
 				factor = 20
 				any_demesne_title = {
-					limit = { controls_religion = yes }
+					controls_religion = yes
 					persistent_event_target:rh_artifact = {
 						owner = { character = FROM }
 					}
@@ -1259,7 +1259,7 @@ letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FRO
 		name = EVTOPTADRD304
 		FROM = { 
 			event_target:request_artifact = {
-				transfer_artifact = { from = ROOT to = FROM }
+				transfer_artifact = { from = ROOT to = PREV }
 				if = {
 					limit = {
 						has_flag = divine_right_regalia
