@@ -12,28 +12,33 @@ decisions = {
 		}
 
 		allow = {
-			always = yes
+			religion_head = {  # Accepted to fulfill a request for the current RH.
+				has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request }
+			}
 		}
 
 		effect = {
 			custom_tooltip = { text = coronation_canceled }
 			custom_tooltip = { text = coronation_refuse_reasonable_request }
 			religion_head = {
+				show_scope_change = no
 				remove_opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
 				opinion = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
 			}
-			if = {
-				limit = { has_any_opinion_modifier = drd_opinion_request_overthrow_schismatic }
-				any_opinion_modifier_target = {
-					limit = {
-						reverse_has_opinion_modifier = {
+			hidden_tooltip = {
+				if = {
+					limit = { has_any_opinion_modifier = drd_opinion_request_overthrow_schismatic }
+					any_opinion_modifier_target = {
+						limit = {
+							reverse_has_opinion_modifier = {
+								who = ROOT
+								modifier = drd_opinion_request_overthrow_schismatic
+							}
+						}
+						reverse_remove_opinion = {
 							who = ROOT
 							modifier = drd_opinion_request_overthrow_schismatic
 						}
-					}
-					reverse_remove_opinion = {
-						who = ROOT
-						modifier = drd_opinion_request_overthrow_schismatic
 					}
 				}
 			}

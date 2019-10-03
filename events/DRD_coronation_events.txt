@@ -825,9 +825,25 @@ character_event = {  # Request was accepted (notification). ROOT = temporal RH, 
 	}
 }
 
-character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH, FROM = ruler.
+character_event = {  # Request was accepted (notification). ROOT = temporal RH, FROM = ruler, FROMFROM = enemy.
 	id = DRD.250
-	desc = EVTDESCDRD250  # May be extended for other delayed requests if needed.
+	desc = EVTDESCDRD250
+
+	is_triggered_only = yes
+	notification = yes
+
+	immediate = {
+		FROM = { character_event = { id = DRD.350 } }
+	}
+
+	option = {
+		name = OK
+	}
+}
+
+character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH, FROM = ruler, FROMFROM = enemy.
+	id = DRD.251
+	desc = EVTDESCDRD251  # May be extended for other delayed requests if needed.
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
@@ -840,18 +856,18 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 				multiplayer = yes
 			}
 			opinion = { who = FROM modifier = drd_opinion_ongoing_request days = 31 }
-			repeat_event = { id = DRD.251 days = 30 }
+			repeat_event = { id = DRD.252 days = 30 }
 		}
 		drd_fylkir_calculate_prestige_cost_to_crown_from = yes  #SEE DRD_coronation_effects.txt
 	}
 
 	option = {
-		name = EVTOPTADRD250
+		name = EVTOPTADRD251
 		if = {
 			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_ongoing_request } }
 			custom_tooltip = { text = drd_request_prestige_cost_warning }
 			remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
-			hidden_tooltip = { FROM = { character_event = { id = DRD.350 } } }
+			hidden_tooltip = { FROM = { character_event = { id = DRD.351 } } }
 		}
 		ai_chance = {
 			factor = 10
@@ -859,13 +875,13 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 	}
 
 	option = {
-		name = EVTOPTBDRD250
+		name = EVTOPTBDRD251
 		if = {
 			limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_ongoing_request } }
 			remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
 			custom_tooltip = { text = drd_refuse_to_crown_warning }
 			tooltip = { reverse_opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me } }
-			hidden_tooltip = { FROM = { character_event = { id = DRD.351 } } }
+			hidden_tooltip = { FROM = { character_event = { id = DRD.352 } } }
 		}
 		ai_chance = {
 			factor = 10
@@ -878,8 +894,8 @@ character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH,
 }
 
 character_event = {  # Automatic answer after 30 days.
-	id = DRD.251
-	desc = EVTDESCDRD251
+	id = DRD.252
+	desc = EVTDESCDRD252
 	picture = GFX_evt_crusaders
 	border = GFX_event_normal_frame_religion
 
@@ -888,7 +904,7 @@ character_event = {  # Automatic answer after 30 days.
 
 	immediate = {
 		remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
-		FROM = { character_event = { id = DRD.350 } }
+		FROM = { character_event = { id = DRD.351 } }
 	}
 
 	option = {
@@ -1341,7 +1357,7 @@ letter_event = {  # Request for event_target:request_artifact. ROOT = ruler, FRO
 	}
 }
 
-character_event = {  # Fulfilled a non-instantaneous request (e.g war), the coronation can proceed. ROOT = ruler, FROM = FROM.
+character_event = {  # Fulfilled a non-instantaneous request (e.g war), the coronation can proceed. ROOT = ruler, FROM = RH, FROMFROMFROM = enemy.
 	id = DRD.350
 	desc = EVTDESCDRD350  # May be extended for other delayed requests if needed.
 	picture = GFX_evt_crusaders
@@ -1355,7 +1371,7 @@ character_event = {  # Fulfilled a non-instantaneous request (e.g war), the coro
 	}
 }
 
-character_event = {  # RH refuses to crown you after fulfilling a request for their predecessor. ROOT = ruler, FROM = FROM.
+character_event = {  # RH accepts to crown you after fulfilling a request for their predecessor. ROOT = ruler, FROM = RH, FROMFROMFROM = enemy.
 	id = DRD.351
 	desc = EVTDESCDRD351
 	picture = GFX_evt_crusaders
@@ -1364,7 +1380,21 @@ character_event = {  # RH refuses to crown you after fulfilling a request for th
 	is_triggered_only = yes
 
 	option = {
-		name = EVTOPTBDRD351
+		name = EVTOPTADRD351
+		hidden_tooltip = { repeat_event = { id = DRD.399 } }
+	}
+}
+
+character_event = {  # RH refuses to crown you after fulfilling a request for their predecessor. ROOT = ruler, FROM = RH, FROMFROMFROM = enemy.
+	id = DRD.352
+	desc = EVTDESCDRD352
+	picture = GFX_evt_crusaders
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTBDRD352
 		custom_tooltip = { text = coronation_refuse_unreasonable_request }
 		opinion = { who = FROM modifier = drd_opinion_refused_to_crown_me }
 		hidden_tooltip = { remove_character_modifier = coronation_request_cooldown }

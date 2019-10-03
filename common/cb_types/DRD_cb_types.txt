@@ -82,14 +82,14 @@ drd_overthrow = {
 					if = {
 						limit = {
 							religion_head = {
-								has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request } }
+								has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request }
 							}
 						}
 						set_variable = { which = local_fylkir_prestige_cost which = coronation_fylkir_prestige_cost }
-						character_event = { id = DRD.350 }  #SEE DRD_coronation_events.txt
+						religion_head = { character_event = { id = DRD.250 } }  #SEE DRD_coronation_events.txt
 					}
 					else = {
-						religion_head = { character_event = { id = DRD.250 } }
+						religion_head = { character_event = { id = DRD.251 } }  #SEE DRD_coronation_events.txt
 					}
 					set_variable = { which = coronation_fylkir_prestige_cost value = 0 }
 				}
