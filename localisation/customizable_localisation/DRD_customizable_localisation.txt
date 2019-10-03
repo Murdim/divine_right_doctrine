@@ -86,6 +86,30 @@ defined_text = {
 }
 
 defined_text = {
+	name = GetCrownedByPopeName
+	use_first_valid = yes
+	text = {
+		trigger = {
+			is_alive = yes
+		}
+		localisation_key = string_crowned_by_pope_alive
+	}
+	text = {
+		trigger = {
+			NOT = { trait = crowned_nonchristian_hidden }
+			OR = {
+				religion = catholic
+				religion = fraticelli
+			}
+		}
+		localisation_key = string_crowned_by_pope_dead
+	}
+	fallback_text = {  # Different name for non-Christian priests
+		localisation_key = string_drd_crowned_by_powerful_religious_head
+	}
+}
+
+defined_text = {
 	name = GetCrownedByBishopDesc
 	
 	text = {
@@ -207,6 +231,30 @@ defined_text = {
 	}
 	fallback_text = {  # Different name for non-Christian priests
 		localisation_key = string_drd_crowned_by_nonchristian_priest_desc
+	}
+}
+
+defined_text = {
+	name = GetCrownedByPopeDesc
+	use_first_valid = yes
+	text = {
+		trigger = {
+			NOT = { trait = crowned_nonchristian_hidden }
+			OR = {
+				religion = catholic
+				religion = fraticelli
+			}
+		}
+		localisation_key = string_drd_crowned_by_pope_desc
+	}
+	text = {
+		trigger = {
+			is_alive = yes
+		}
+		localisation_key = string_drd_crowned_by_powerful_religious_head_alive_desc
+	}
+	fallback_text = {  # Different name for non-Christian priests
+		localisation_key = string_drd_crowned_by_powerful_religious_head_dead_desc
 	}
 }
 
