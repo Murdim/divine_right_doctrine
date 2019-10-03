@@ -930,10 +930,10 @@ letter_event = {  # Request a favor. ROOT = ruler, FROM = temporal RH.
 		name = EVTOPTADRD300
 		if = {
 			limit = { holds_favor_on = FROM }
-			reverse_remove_favor = FROM
+			remove_favor = FROM
 		}
 		else = {
-			add_favor = FROM
+			reverse_add_favor = FROM
 		}
 		hidden_tooltip = {
 			FROM = { character_event = { id = DRD.212 } }
