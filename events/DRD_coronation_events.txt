@@ -6,19 +6,6 @@ namespace=DRD  # 200-499
 # 300-399: pre-coronation request acceptance, rejection & fulfillment.
 # 400-499: other, e.g coronation ceremony, rh_protection related events.
 
-character_event = {
-	id = DRD.9200
-	is_triggered_only = yes
-	hide_window = yes
-
-	immediate = {
-		religion_head = {
-			opinion = { who = ROOT modifier = drd_opinion_making_request }
-			letter_event = { id = DRD.200 }
-		}
-	}
-}
-
 letter_event = {  # ROOT = temporal RH, FROM = ruler requesting their full sanction.
 	id = DRD.200
 	desc = EVTDESCDRD200
