@@ -24,6 +24,7 @@ decisions = {
 				show_scope_change = no
 				remove_opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
 				opinion = { who = ROOT modifier = drd_opinion_refused_reasonable_request }
+				hidden_tooltip = { character_event = { id = DRD.253 } }
 			}
 			hidden_tooltip = {
 				if = {

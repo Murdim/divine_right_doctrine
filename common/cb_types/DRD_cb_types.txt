@@ -6,13 +6,13 @@ drd_overthrow = {
 	sprite = 29
 	truce_days = 3650
 	is_permanent = yes
-	
+
 	defender_unoccupied_warscore = yes
-	
+
 	allowed_to_target_tributaries = yes
-	
+
 	sort_priority = 990
-	
+
 	can_use_gui = {
 		check_if_crusader_trigger = yes
 	}
@@ -43,7 +43,7 @@ drd_overthrow = {
 			controls_religion = no
 		}
 	}
-	
+
 	is_valid = {
 		FROM = {
 			trait = crowned_by_myself
@@ -64,7 +64,7 @@ drd_overthrow = {
 			}
 		}
 	}
-	
+
 	on_success = {
 		any_attacker = {
 			limit = { NOT = { character = ROOT } }
@@ -79,17 +79,17 @@ drd_overthrow = {
 			hidden_tooltip = {
 				if = {
 					limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_request_overthrow_schismatic } }
-					if = {
-						limit = {
-							religion_head = {
-								has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request }
-							}
+					remove_opinion = { who = FROM modifier = drd_opinion_request_overthrow_schismatic }
+					religion_head = {
+						if = {
+							limit = { has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request } }
+							remove_opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+							ROOT = { set_variable = { which = local_fylkir_prestige_cost which = coronation_fylkir_prestige_cost } }
+							character_event = { id = DRD.250 }  #SEE DRD_coronation_events.txt: proceed to the coronation.
 						}
-						set_variable = { which = local_fylkir_prestige_cost which = coronation_fylkir_prestige_cost }
-						religion_head = { character_event = { id = DRD.250 } }  #SEE DRD_coronation_events.txt
-					}
-					else = {
-						religion_head = { character_event = { id = DRD.251 } }  #SEE DRD_coronation_events.txt
+						else = {
+							character_event = { id = DRD.251 }  #SEE DRD_coronation_events.txt: accept or refuse to uphold the deal.
+						}
 					}
 					set_variable = { which = coronation_fylkir_prestige_cost value = 0 }
 				}
@@ -114,6 +114,19 @@ drd_overthrow = {
 	on_fail = {
 		ROOT = {
 			prestige = -100
+			hidden_tooltip = {
+				if = {
+					limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_request_overthrow_schismatic } }
+					remove_opinion = { who = FROM modifier = drd_opinion_request_overthrow_schismatic }
+					religion_head = {
+						if = {
+							limit = { has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request } }
+							remove_opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+							character_event = { id = DRD.254 }  #SEE DRD_coronation_events.txt: RH is notified of the failure.
+						}
+					}
+				}
+			}
 		}
 		FROM = {
 			prestige = 50
@@ -128,6 +141,19 @@ drd_overthrow = {
 			}
 			piety = -500
 			prestige = -250
+			hidden_tooltip = {
+				if = {
+					limit = { has_opinion_modifier = { who = FROM modifier = drd_opinion_request_overthrow_schismatic } }
+					remove_opinion = { who = FROM modifier = drd_opinion_request_overthrow_schismatic }
+					religion_head = {
+						if = {
+							limit = { has_opinion_modifier = { who = ROOT modifier = drd_opinion_ongoing_request } }
+							remove_opinion = { who = ROOT modifier = drd_opinion_ongoing_request }
+							character_event = { id = DRD.254 }  #SEE DRD_coronation_events.txt: RH is notified of the failure.
+						}
+					}
+				}
+			}
 		}
 		
 		FROM = {
@@ -138,7 +164,7 @@ drd_overthrow = {
 	attacker_ai_victory_worth = {
 		factor = -1 # always accept
 	}
-	
+
 	attacker_ai_defeat_worth = {
 		factor = 100
 	}
@@ -146,7 +172,7 @@ drd_overthrow = {
 	defender_ai_victory_worth = {
 		factor = -1 # always accept
 	}
-	
+
 	defender_ai_defeat_worth = {
 		factor = 100
 	}

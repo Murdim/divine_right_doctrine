@@ -812,7 +812,7 @@ character_event = {  # Request was accepted (notification). ROOT = temporal RH, 
 	}
 }
 
-character_event = {  # Request was accepted (notification). ROOT = temporal RH, FROM = ruler, FROMFROM = enemy.
+character_event = {  # FROM fulfilled your non-instantaneous request (notification). ROOT = ruler, FROM = RH, FROMFROMFROM = enemy.
 	id = DRD.250
 	desc = EVTDESCDRD250
 
@@ -828,7 +828,7 @@ character_event = {  # Request was accepted (notification). ROOT = temporal RH, 
 	}
 }
 
-character_event = {  # Fulfilled a request made by a previous RH. ROOT = new RH, FROM = ruler, FROMFROM = enemy.
+character_event = {  # FROM fulfilled a request made by a previous RH. ROOT = new RH, FROM = ruler, FROMFROM = enemy.
 	id = DRD.251
 	desc = EVTDESCDRD251  # May be extended for other delayed requests if needed.
 	picture = GFX_evt_crusaders
@@ -893,6 +893,30 @@ character_event = {  # Automatic answer after 30 days.
 		remove_opinion = { who = FROM modifier = drd_opinion_ongoing_request }
 		FROM = { character_event = { id = DRD.351 } }
 	}
+
+	option = {
+		name = OK
+	}
+}
+
+character_event = {  # FROM gave up on your request (notification).
+	id = DRD.253
+	desc = EVTDESCDRD253
+
+	is_triggered_only = yes
+	notification = yes
+
+	option = {
+		name = OK
+	}
+}
+
+character_event = {  # FROM failed to fulfill your request (notification).
+	id = DRD.254
+	desc = EVTDESCDRD253
+
+	is_triggered_only = yes
+	notification = yes
 
 	option = {
 		name = OK
