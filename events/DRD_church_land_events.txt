@@ -2,6 +2,18 @@
 
 namespace=DRD  # 500-599
 
+character_event = {
+	id = DRD.500
+	title = EVTTITLEDRD500
+	desc = EVTDESCDRD500
+
+	is_triggered_only = yes
+
+	option = {
+		name = EVTOPTADRD500
+	}
+}
+
 character_event = {  # On usurping an empowered RH's special King-tier title. ROOT = usurper, FROM = title.
 	id = DRD.510
 	is_triggered_only = yes

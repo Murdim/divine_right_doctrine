@@ -130,7 +130,7 @@ drd_religious_head_create_state = {  # event_target:rh_title = THIS' RH title.
 	save_event_target_as = rh_char
 	create_title = {
 		tier = KING
-		name = the_rh_title_adj_state
+		name = rh_title_adj_state
 		short_name = yes
 		base_title = event_target:rh_title
 		holder = event_target:rh_char
@@ -167,6 +167,6 @@ drd_religious_head_create_state = {  # event_target:rh_title = THIS' RH title.
 	clear_event_target = rh_kingdom
 	any_player = {
 		limit = { religion_group = ROOT }
-		#TODO narrative event.
+		character_event = { id = DRD.500 }
 	}
 }
