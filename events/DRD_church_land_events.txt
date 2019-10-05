@@ -85,6 +85,7 @@ character_event = {  # On usurping an empowered RH's special King-tier title. RO
 						character_event = { id = DRD.512 }
 						any_liege = { character_event = { id = DRD.512 } }
 						set_defacto_liege = ROOT
+						hidden_tooltip = { emf_liege_change = yes }  #MOD HIP/EMF: compatibilty, no effect otherwise.
 					}
 					ROOT = { character_event = { id = DRD.512 } }
 				}
