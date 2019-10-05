@@ -334,3 +334,37 @@ defined_text = {
 		localisation_key = string_drd_nominate_priest_maybe_means_yes
 	}
 }
+
+defined_text = {
+	name = GetChurchLandDuchies
+	use_first_valid = yes
+	text = {
+		trigger = {
+			event_target:rh_new_duchy = { always = true }
+			trigger = { persistent_event_target:rh_duchy_1 = { always = true } }
+		}
+		localisation_key = string_drd_church_land_duchies_and_new
+	}
+	text = {
+		trigger = { persistent_event_target:rh_duchy_4 = { always = true } }
+		localisation_key = string_drd_church_land_duchies_and_4
+	}
+	text = {
+		trigger = { persistent_event_target:rh_duchy_3 = { always = true } }
+		localisation_key = string_drd_church_land_duchies_and_3
+	}
+	text = {
+		trigger = { persistent_event_target:rh_duchy_2 = { always = true } }
+		localisation_key = string_drd_church_land_duchies_and_2
+	}
+	fallback_text = {
+		localisation_key = string_drd_church_land_duchy_1_or_new
+	}
+}
+
+defined_text = {
+	name = GetCommaName
+	use_first_valid = yes
+	fallback_text = {
+		localisaiton_key = string_drd_CommaName
+	}

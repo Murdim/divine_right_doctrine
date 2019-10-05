@@ -2,15 +2,52 @@
 
 namespace=DRD  # 500-599
 
-character_event = {
+character_event = {  # ROOT = RH, event_target:rh_title = RH title, event_target:rh_kingdom = new Kingdom
 	id = DRD.500
 	title = EVTTITLEDRD500
 	desc = EVTDESCDRD500
+	picture = GFX_evt_church_council
+	border = GFX_event_normal_frame_religion
+
+	is_triggered_only = yes
+
+	immediate = {
+		any_player = {
+			limit = {
+				NOT = { character = ROOT }
+				OR = {
+					religion_group = ROOT
+					is_heresy_of = ROOT
+					is_parent_religion = ROOT
+				}
+			}
+			character_event = { id = DRD.501 }
+		}
+	}
+
+	option = {
+		name = EVTOPTADRD500
+	}
+}
+
+character_event = {  # FROM = RH, event_target:rh_title = RH title, event_target:rh_kingdom = new Kingdom
+	id = DRD.501
+	title = EVTTITLEDRD500
+	desc = EVTDESCDRD501
+	picture = GFX_evt_church_council
+	border = GFX_event_normal_frame_religion
 
 	is_triggered_only = yes
 
 	option = {
-		name = EVTOPTADRD500
+		name = {
+			trigger = { religion = FROM }
+			text = EVTOPTADRD501_same_religion
+		}
+		name = {
+			trigger = { NOT = { religion = FROM } }
+			text = EVTOPTADRD501_other_religion
+		}
 	}
 }
 
@@ -180,6 +217,9 @@ character_event = {  # On usurping an empowered RH's special King-tier title. RO
 character_event = {
 	id = DRD.511
 	desc = EVTDESCDRD511
+	picture = GFX_evt_powerful_ruler
+	border = GFX_event_normal_frame_diplomacy
+
 	is_triggered_only = yes
 
 	option = {
@@ -197,6 +237,9 @@ character_event = {
 character_event = {
 	id = DRD.512
 	desc = EVTDESCDRD512
+	picture = GFX_evt_powerful_ruler
+	border = GFX_event_normal_frame_diplomacy
+
 	is_triggered_only = yes
 
 	option = {

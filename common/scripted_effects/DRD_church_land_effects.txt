@@ -164,9 +164,6 @@ drd_religious_head_create_state = {  # event_target:rh_title = THIS' RH title.
 		save_persistent_event_target = { name = rh_kingdom scope = event_target:rh_kingdom }
 	}
 	clear_event_target = rh_char
+	character_event = { id = DRD.500 }  #SEE DRD_church_land_events.txt: will notify all players of the same religion group.
 	clear_event_target = rh_kingdom
-	any_player = {
-		limit = { religion_group = ROOT }
-		character_event = { id = DRD.500 }
-	}
 }
