@@ -1,5 +1,11 @@
 #DRD-FILE: add new conditions to triggers that are defined and used in OTHER mods.
 
 emf_uses_native_coronation = {  #SEE EMF/HIP emf_coronation_triggers.txt: disable EMF coronations for DRD-using religions.
-	drd_religion_allows_coronation = no
+	OR = {
+		drd_religion_allows_coronation = no  # Disabled for uncrowned characters with access to the DRD coronation event chain.
+		trait = crowned_by_pope  # Does NOT apply to characters who ARE already DRD-crowned, EMF wouldn't know what to do with them otherwise.
+		trait = crowned_by_bishop
+		trait = crowned_by_priest
+		trait = crowned_by_myself
+	}
 }

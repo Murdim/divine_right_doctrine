@@ -60,6 +60,7 @@ drd_ruler_is_uncrowned = {  # True if a ruler of the appropriate religion, rank 
 		trait = crowned_by_bishop
 		trait = crowned_by_pope
 		trait = crowned_by_myself
+		emf_is_crowned = yes  #MOD HIP/EMF emf_coronation_triggers.txt: compatibility.
 	}
 }
 

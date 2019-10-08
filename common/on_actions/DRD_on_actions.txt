@@ -37,18 +37,21 @@ on_death = {
 on_new_holder = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+		DRD.410  #SEE DRD_coronation_events.txt: HIP/EMF compatibility for dethroned Basileus.
 	}
 }
 
 on_new_holder_inheritance = {
 	events = {
 		DRD.7  #SEE DRD_priest_nomination_events.txt: cancel nomination
+		DRD.410  #SEE DRD_coronation_events.txt: HIP/EMF compatibility for dethroned Basileus.
 	}
 }
 
 on_new_holder_usurpation = {
 	events = {
 		DRD_HF.20417  #SEE DRD_HF_coronation_events.txt: remove uncrowned modifiers
+		DRD.410  #SEE DRD_coronation_events.txt: HIP/EMF compatibility for dethroned Basileus.
 	}
 }
 
