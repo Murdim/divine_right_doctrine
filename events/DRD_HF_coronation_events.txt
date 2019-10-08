@@ -1237,7 +1237,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20206
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -1468,7 +1468,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20209
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -1538,7 +1538,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20210	
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -2540,7 +2540,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20240
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
