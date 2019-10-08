@@ -254,3 +254,44 @@ character_event = {
 		}
 	}
 }
+
+letter_event = {
+	id = DRD.520
+	desc = EVTDESCDRD520
+	border = GFX_event_letter_frame_religion
+
+	is_triggered_only = yes
+	
+	option = {
+		name = EVTOPTADRD520
+		set_character_flag = flag_crowned_by_pope
+		FROM = { 
+			save_event_target_as = coronation_priest
+			opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+			reverse_opinion = {
+				modifier = opinion_supposed_to_crown
+				months = 1
+				who = ROOT
+			}
+		}
+		drd_return_church_lands = yes  #SEE DRD_church_land_effects.txt
+		hidden_tooltip = { character_event = { id = DRD_HF.20300 } } #Go to budget event
+		ai_chance = { factor = 100 }
+	}
+
+	option = {	#End of the line
+		name = EVTOPTBHF20211
+		custom_tooltip = { text = coronation_canceled }
+		FROM = { 
+			opinion = {
+				modifier = opinion_requested_church_lands
+				years = 10
+				who = ROOT
+			}
+		} 
+		ai_chance = { factor = 0 }
+	}

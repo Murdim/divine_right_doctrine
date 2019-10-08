@@ -65,3 +65,9 @@ drd_opinion_schismatic = {  # For self-crowned rulers, extends to FUTURE RHs and
 	opinion = -50
 	years = 1000
 }
+
+drd_opinion_requested_church_lands = {
+	opinion = -10
+	years = 10
+}
+

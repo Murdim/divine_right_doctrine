@@ -1483,7 +1483,7 @@ letter_event = {  # Request was fulfilled, link back the vanilla-like event chai
 	}
 }
 
-character_event = {
+character_event = {  # ROOT reacts to FROM's self-coronation.
 	id = DRD.400
 	title = EVTTITLEDRD400
 	desc = EVTDESCDRD400
