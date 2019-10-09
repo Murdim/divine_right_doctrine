@@ -7019,7 +7019,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFB20366		# Localization for any adult Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {  # DRD-DIFF: no special case for HRE/Francia
 		trigger = {
@@ -7032,7 +7032,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFC20366		# Localization for any child Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {
 		trigger = {
@@ -7151,8 +7151,7 @@ character_event = {
 		picture = GFX_evt_coronation_orthodox
 	}
 
-
-	picture = GFX_evt_found_hre
+	picture = GFX_evt_a_crowning_ceremony
 	border = GFX_event_normal_frame_religion
 	hide_new = yes
 
@@ -7434,7 +7433,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFB20367		# Localization for any adult Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {  # DRD-DIFF: no special case for HRE/Francia
 		trigger = {
@@ -7447,7 +7446,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFC20367		# Localization for any child Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {
 		trigger = {
