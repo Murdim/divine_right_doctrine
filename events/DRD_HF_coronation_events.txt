@@ -7172,6 +7172,8 @@ character_event = {
 				trait = crowned_by_pope
 				trait = crowned_by_bishop
 				trait = crowned_by_priest
+				trait = strong_basileus
+				trait = weak_basileus
 			} 
 		}
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
