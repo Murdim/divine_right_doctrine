@@ -8000,7 +8000,13 @@ character_event = {
 	trigger = {  # Duplicate event for non-Catholics
 		is_save_game = no
 		has_dlc = "Holy Fury"
-		drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
+		OR = {
+			drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
+			AND = {  # MOD HIP/EMF: if fired after EMF's init event, replace emf_crowned with a vanilla Crowned trait.
+				trait = emf_crowned
+				drd_religion_allows_coronation = yes
+			}
+		}
 		NOR = {
 			religion = catholic
 			religion = fraticelli
