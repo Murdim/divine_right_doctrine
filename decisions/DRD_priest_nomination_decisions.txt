@@ -16,6 +16,7 @@ targetted_decisions = {
 			is_incapable = no
 			NOT = { has_any_opinion_modifier = drd_opinion_sponsoring_nomination }
 			NOT = { has_character_modifier = drd_nomination_cancelled_today }
+			NOT = { religion_head = { is_theocracy = no } }  # Should not fake an interaction with a playable RH, disabled for now.
 		}
 
 		potential = {

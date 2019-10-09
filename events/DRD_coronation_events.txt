@@ -1688,3 +1688,55 @@ character_event = {  # Monthly self-coronation upkeep event.
 		}
 	}
 }
+
+character_event = {  #MOD HIP/EMF compatibility: dethroned (Eastern) Roman emperors receive the T2 Crowned trait.
+	id = DRD.410
+	is_triggered_only = yes
+	hide_window = yes
+
+	trigger = {  # Based on emf_coronation.1320 in emf_coronation.txt.
+		FROM = {
+			emf_is_roman_empire = yes  #SEE emf_title_triggers.txt
+			is_primary_holder_title = yes
+		}
+		FROMFROM = {  # Valid whether or not the Basileus trait was already replaced with a flag.
+			is_alive = yes
+			OR = {
+				trait = strong_basileus
+				trait = weak_basileus
+				has_flag = was_strong_basileus_byz
+				has_flag = was_weak_basileus_byz
+			}
+		}
+	}
+
+	immediate = {
+		FROMFROM = {
+			if = {  # The Basileus trait will be overridden by Crowned, set the flag NOW if it was not already replaced.
+				limit = { trait = strong_basileus }
+				set_flag = was_strong_basileus_byz
+			}
+			if = {
+				limit = { trait = weak_basileus }
+				set_flag = was_weak_basileus_byz
+			}
+			if = {
+				limit = { persistent_event_target:coronation_priest_per = { always = yes } }
+				add_trait = crowned_by_bishop
+			}
+			else_if = {  # If FROMFROM does not already have a coronation priest, use the current Patriarch.
+				limit = { religion_head = { always = yes } }
+				add_trait = crowned_by_bishop
+				add_trait = crowned_by_religious_head_hidden
+				religion_head = {
+					ROOT_FROMFROM = {
+						save_persistent_event_target = { name = coronation_priest_per scope = PREV }
+					}
+				}
+			}
+			else = {  # Edge case: FROMFROM does not have a RH, give them the T1 trait.
+				add_trait = crowned_by_priest
+			}
+		}
+	}
+}

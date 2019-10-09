@@ -36,3 +36,347 @@ drd_fylkir_calculate_prestige_cost_to_crown_from = {  # Sets local_fylkir_presti
 	}
 	change_variable = { which = local_fylkir_prestige_max value = 0 }
 }
+
+drd_emf_add_flag_crowned_by_rh_basileus = {  #MOD HIP/EMF: Largely copied from emf_coronation.1324 in emf_coronation.txt.
+	random_list = {
+		75 = {
+			modifier = {
+				factor = 2
+				ROOT = { martial = 18 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { martial = 15 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { martial = 12 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { diplomacy = 18 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { diplomacy = 15 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { diplomacy = 12 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { stewardship = 15 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { learning = 18 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { intrigue = 15 }
+			}
+			modifier = {
+				factor = 1.5
+				ROOT = { religion_authority = 0.8 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { father_even_if_dead = { trait = strong_basileus } }
+			}
+			modifier = {
+				factor = 1.6
+				ROOT = { trait = zealous }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = just }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = ambitious }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = gregarious }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = brave }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = patient }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = fair }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { trait = genius }
+			}
+			modifier = {
+				factor = 1.8
+				ROOT = { trait = quick }
+			}
+			modifier = {
+				factor = 1.8
+				ROOT = { trait = shrewd }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { is_strong_trigger = yes }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = duelist }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = hunter }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = temperate }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = diligent }
+			}
+			modifier = {
+				factor = 1.8
+				ROOT = { trait = born_in_the_purple }
+			}
+			set_flag = flag_crowned_by_rh_strong_basileus
+		}
+		100 = {
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { martial = 9 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { martial = 6 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { martial = 3 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { diplomacy = 9 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { diplomacy = 6 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { diplomacy = 3 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { stewardship = 5 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { intrigue = 5 } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { learning = 5 } }
+			}
+			modifier = {
+				factor = 1.5
+				ROOT = { NOT = { culture = greek } }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { is_female = yes }
+			}
+			modifier = {
+				factor = 1.5
+				ROOT = { has_flag = forced_patriarch_to_abdicate }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { NOT = { religion_authority = 0.4 } }
+			}
+			modifier = {
+				factor = 1.8
+				NOT = { ROOT = { owns = 496 } }
+			}
+			modifier = {
+				factor = 1.6
+				ROOT = { NOT = { realm_size = 50 } }
+			}
+			modifier = {
+				factor = 1.6
+				ROOT = { NOT = { realm_size = 100 } }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { NOT = { realm_size = 150 } }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { age = 50 }
+			}
+			modifier = {
+				factor = 1.5
+				ROOT = { age = 60 }
+			}
+			modifier = {
+				factor = 1.7
+				ROOT = { age = 70 }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { age = 80 }
+			}
+			modifier = {
+				factor = 2.5
+				ROOT = { age = 90 }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = depressed }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { trait = lunatic }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { trait = possessed }
+			}
+			modifier = {
+				factor = 1.8
+				ROOT = { trait = infirm }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = drunkard }
+			}
+			modifier = {
+				factor = 1.5
+				ROOT = { trait = bastard }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = legit_bastard }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { trait = kinslayer }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = clubfooted }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = harelip }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = hunchback }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = lisp }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = stutter }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = ugly }
+			}
+			modifier = {
+				factor = 1.3
+				ROOT = { trait = dwarf }
+			}
+			modifier = {
+				factor = 1.8
+				ROOT = { trait = slow }
+			}
+			modifier = {
+				factor = 1.8
+				ROOT = { trait = dull }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { trait = imbecile }
+			}
+			modifier = {
+				factor = 2.5
+				ROOT = { trait = inbred }
+			}
+			modifier = {
+				factor = 1.7
+				ROOT = { is_weak_trigger = yes }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = blinded }
+			}
+			modifier = {
+				factor = 2
+				ROOT = { trait = eunuch }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = trusting }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = paranoid }
+			}
+			modifier = {
+				factor = 1.5
+				ROOT = { trait = arbitrary }
+			}
+			modifier = {
+				factor = 1.6
+				ROOT = { trait = content }
+			}
+			modifier = {
+				factor = 1.4
+				ROOT = { trait = shy }
+			}
+			modifier = {
+				factor = 1.7
+				ROOT = { trait = craven }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = deceitful }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = gluttonous }
+			}
+			modifier = {
+				factor = 1.2
+				ROOT = { trait = greedy }
+			}
+			modifier = {
+				factor = 0
+				ROOT = {
+					prestige = 2500
+					piety = 500
+					NOT = {
+						any_vassal = {
+							higher_tier_than = COUNT
+							NOT = { opinion = { who = PREV value = 0 } }
+						}
+					}
+				}
+			}
+			set_flag = flag_crowned_by_rh_weak_basileus
+		}
+	}
+}

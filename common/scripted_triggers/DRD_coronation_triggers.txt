@@ -77,6 +77,10 @@ drd_character_is_crowned = {  # Check if the character has any Crowned trait, wh
 			trait = crowned_by_bishop
 			trait = crowned_by_pope
 			trait = crowned_by_myself
+			trait = emf_crowned   #MOD HIP/EMF: compatibility.
+			trait = emf_crowned_by_pope
+			trait = strong_basileus
+			trait = weak_basileus
 		}
 	}
 }
