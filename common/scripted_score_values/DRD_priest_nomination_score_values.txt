@@ -1352,7 +1352,7 @@ drd_religious_head_root_opinion_score = {
 		localisation_key = drd_priest_nomination_candidate_opinion_score
 		rightful_religious_head_scope = {
 			NOT = { character = ROOT }
-			opinion = { who = ROOT value = 200 }
+			opinion = { who = ROOT value = 100 }
 		}
 	}
 }
@@ -1452,7 +1452,7 @@ drd_religious_head_from_opinion_score = {
 		localisation_key = drd_priest_nomination_sponsor_opinion_score
 		rightful_religious_head_scope = {
 			NOT = { character = ROOT }
-			opinion = { who = FROM value = 200 }
+			opinion = { who = FROM value = 100 }
 		}
 	}
 }
