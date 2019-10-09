@@ -163,6 +163,7 @@ character_event = {
 		name = EVTOPTBDRDHF20200
 		trigger = { 
 			NOT = { trait = excommunicated }
+			NOT = { emf_uses_byzantine_coronation = yes }  #DRD-DIFF: with HIP/EMF, the Basileus must be crowned by the real RH.
 			#DRD-DIFF: investiture is assumed to be disabled for the religion
 			any_realm_character = {  #DRD-DIFF: scripted trigger includes autocephaly
 				drd_character_is_powerful_priest = yes  #SEE DRD_coronation_triggers.txt
@@ -223,6 +224,7 @@ character_event = {
 		name = EVTOPTCHF20200
 		trigger = { 
 			#DRD-DIFF: investiture is assumed to be disabled for the religion
+			NOT = { emf_uses_byzantine_coronation = yes }  #DRD-DIFF: with HIP/EMF, the Basileus must be crowned by the real RH.
 			any_realm_character = {   #DRD-DIFF: scripted trigger includes autocephaly
 				is_theocracy = yes 
 				is_landed = yes
@@ -1235,7 +1237,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20206
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -1466,7 +1468,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20209
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -1536,7 +1538,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20210	
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -2538,7 +2540,7 @@ letter_event = {
 	option = {
 		name = EVTOPTAHF20240
 		if = {  #DRD-DIFF: true religious heads use the same event as powerful priests.
-			limit = { controls_religion = yes }
+			limit = { FROM = { controls_religion = yes } }
 			set_character_flag = flag_crowned_by_pope
 		}
 		else = {
@@ -2663,6 +2665,8 @@ character_event = {
 			OR = { 
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope 
+				has_character_flag = flag_crowned_by_rh_strong_basileus
+				has_character_flag = flag_crowned_by_rh_weak_basileus
 			}
 			war = no
 		}
@@ -2695,6 +2699,14 @@ character_event = {
 			name = out_traveling
 			duration = 66
 			hidden = yes #Make the character inaccessible, the ruler himself is not actually out, he's still at court.
+		}
+		if = {  #DRD-DIFF: When used alongside HIP, (Eastern) Roman Emperors get different outcomes.
+			limit = {
+				has_character_flag = flag_crowned_by_pope
+				emf_uses_byzantine_coronation = yes  #MOD HIP/EMF emf_title_triggers.txt
+			}
+			clr_flag = flag_crowned_by_pope
+			drd_emf_add_flag_crowned_by_rh_basileus = yes  #SEE DRD_coronation_effects.txt
 		}
 	}
 
@@ -2890,6 +2902,8 @@ letter_event = {
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_rh_strong_basileus
+				has_character_flag = flag_crowned_by_rh_weak_basileus
 			}
 		}
 	}
@@ -2991,6 +3005,8 @@ letter_event = {
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_rh_strong_basileus
+				has_character_flag = flag_crowned_by_rh_weak_basileus
 			}
 		}
 	}
@@ -3095,6 +3111,8 @@ letter_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_rh_strong_basileus
+			has_character_flag = flag_crowned_by_rh_weak_basileus
 		}
 	}
 	notification = yes
@@ -3116,6 +3134,8 @@ letter_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_rh_strong_basileus
+			has_character_flag = flag_crowned_by_rh_weak_basileus
 		}
 	}
 	notification = yes
@@ -3169,6 +3189,8 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_rh_strong_basileus
+			has_character_flag = flag_crowned_by_rh_weak_basileus
 		}
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
 	}
@@ -6946,6 +6968,8 @@ character_event = {
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_rh_strong_basileus
+				has_character_flag = flag_crowned_by_rh_weak_basileus
 			}
 			NOR = {
 				trait = crowned_by_priest
@@ -6995,7 +7019,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFB20366		# Localization for any adult Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {  # DRD-DIFF: no special case for HRE/Francia
 		trigger = {
@@ -7008,7 +7032,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFC20366		# Localization for any child Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {
 		trigger = {
@@ -7116,9 +7140,18 @@ character_event = {
 		text = EVTDESCDRDHFN20366		# War Coronation description.
 		picture = GFX_evt_mounted_combat_day_hf
 	}
+	desc = {  #DRD-DIFF: HIP-style Strong Basileus coronation.
+		trigger = { ROOT = { has_character_flag = flag_crowned_by_rh_strong_basileus } }
+		text = EVTDESCDRDHFB20366  #TODO more descriptive description, since the one in HIP is far too long to be used here.
+		picture = GFX_evt_coronation_orthodox
+	}
+	desc = {  #DRD-DIFF: HIP-style Weak Basileus coronation.
+		trigger = { ROOT = { has_character_flag = flag_crowned_by_rh_weak_basileus } }
+		text = EVTDESCDRDHFB20366
+		picture = GFX_evt_coronation_orthodox
+	}
 
-
-	picture = GFX_evt_found_hre
+	picture = GFX_evt_a_crowning_ceremony
 	border = GFX_event_normal_frame_religion
 	hide_new = yes
 
@@ -7130,12 +7163,16 @@ character_event = {
 				has_character_flag = flag_crowned_by_priest
 				has_character_flag = flag_crowned_by_bishop
 				has_character_flag = flag_crowned_by_pope
+				has_character_flag = flag_crowned_by_rh_strong_basileus
+				has_character_flag = flag_crowned_by_rh_weak_basileus
 			}
 			NOR = { 
 				trait = crowned_by_myself
 				trait = crowned_by_pope
 				trait = crowned_by_bishop
 				trait = crowned_by_priest
+				trait = strong_basileus
+				trait = weak_basileus
 			} 
 		}
 		event_target:coronation_priest = { is_alive = yes } #Check if the priest supposed to be crowning you is still alive.
@@ -7174,6 +7211,8 @@ character_event = {
 			limit = {
 				OR = {
 					has_character_flag = flag_crowned_by_pope 
+					has_character_flag = flag_crowned_by_rh_strong_basileus
+					has_character_flag = flag_crowned_by_rh_weak_basileus
 					rightful_religious_head = event_target:coronation_priest
 				}
 			}
@@ -7271,6 +7310,27 @@ character_event = {
 			} 
 			add_trait = crowned_by_priest  #DRD-DIFF: localization fix, no need for a tooltip anymore
 		}
+		else_if = {
+			limit = {
+				has_character_flag = flag_crowned_by_rh_strong_basileus
+			} 
+			prestige = 250
+			add_trait = strong_basileus
+			religion_authority = { modifier = strong_emperor_byz }
+			pf_court_plus2_effect = yes
+			pf_tradition_plus2_effect = yes
+			emf_imperial_decay_minus_2 = yes
+		}
+		else_if = {
+			limit = {
+				has_character_flag = flag_crowned_by_rh_weak_basileus
+			} 
+			add_trait = weak_basileus
+			religion_authority = { modifier = weak_emperor_byz }
+			pf_court_plus1_effect = yes
+			pf_tradition_plus1_effect = yes
+			emf_imperial_decay_minus_1 = yes
+		}
 
 		#Assign possible modifier.
 		if = { 
@@ -7364,7 +7424,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFB20367		# Localization for any adult Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {  # DRD-DIFF: no special case for HRE/Francia
 		trigger = {
@@ -7377,7 +7437,7 @@ character_event = {
 			}
 		}
 		text = EVTDESCDRDHFC20367		# Localization for any child Emperor crowned by the Pope (not in a barn).
-		picture = GFX_evt_found_hre
+		picture = GFX_evt_coronation
 	}
 	desc = {
 		trigger = {
@@ -7484,6 +7544,16 @@ character_event = {
 		text = EVTDESCDRDHFN20367		# War Coronation description.
 		picture = GFX_evt_mounted_combat_day_hf
 	}
+	desc = {  #DRD-DIFF: HIP-style Strong Basileus coronation.
+		trigger = { FROM = { has_character_flag = flag_crowned_by_rh_strong_basileus } }
+		text = EVTDESCDRDHFB20366
+		picture = GFX_evt_coronation_orthodox
+	}
+	desc = {  #DRD-DIFF: HIP-style Weak Basileus coronation.
+		trigger = { FROM = { has_character_flag = flag_crowned_by_rh_weak_basileus } }
+		text = EVTDESCDRDHFB20366
+		picture = GFX_evt_coronation_orthodox
+	}
 
 	picture = GFX_evt_a_crowning_ceremony
 	border = GFX_event_normal_frame_religion
@@ -7538,6 +7608,28 @@ character_event = {
 				FROM = { has_character_flag = flag_crowned_by_priest } 
 			} 
 			piety = 30
+		}
+		else_if = {
+			limit = { 
+				FROM = { has_character_flag = flag_crowned_by_rh_strong_basileus }
+			}
+			tooltip = {
+				FROM = {
+					add_trait = strong_basileus
+					religion_authority = { modifier = strong_emperor_byz }
+				}
+			}
+		}
+		else_if = {
+			limit = { 
+				FROM = { has_character_flag = flag_crowned_by_rh_weak_basileus }
+			} 
+			tooltip = {
+				FROM = {
+					add_trait = weak_basileus
+					religion_authority = { modifier = weak_emperor_byz }
+				}
+			}
 		}
 
 		#Assign scaled prestige.
@@ -7701,6 +7793,8 @@ character_event = {
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
+		clr_character_flag = flag_crowned_by_rh_strong_basileus
+		clr_character_flag = flag_crowned_by_rh_weak_basileus
 
 		clr_character_flag = flag_coronation_foreign_friendship
 		clr_character_flag = flag_coronation_vassal_friendship
@@ -7898,10 +7992,17 @@ character_event = {
 	trigger = {  # Duplicate event for non-Catholics
 		is_save_game = no
 		has_dlc = "Holy Fury"
-		drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
+		OR = {
+			drd_ruler_is_uncrowned = yes  #SEE DRD_coronation_triggers.txt
+			AND = {  # MOD HIP/EMF: if fired after EMF's init event, replace emf_crowned with a vanilla Crowned trait.
+				trait = emf_crowned
+				drd_religion_allows_coronation = yes
+			}
+		}
 		NOR = {
 			religion = catholic
 			religion = fraticelli
+			emf_uses_byzantine_coronation = yes  #MOD HIP/EMF emf_title_triggers.txt: let HIP add the appropriate Basileus trait.
 		}
 		is_vice_royalty = no
 	}
@@ -8082,6 +8183,8 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_rh_strong_basileus
+			has_character_flag = flag_crowned_by_rh_weak_basileus
 		}
 	}
 
@@ -9547,6 +9650,8 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_rh_strong_basileus
+			has_character_flag = flag_crowned_by_rh_weak_basileus
 		}
 	}
 
@@ -9581,6 +9686,8 @@ character_event = {
 			has_character_flag = flag_crowned_by_priest
 			has_character_flag = flag_crowned_by_bishop
 			has_character_flag = flag_crowned_by_pope
+			has_character_flag = flag_crowned_by_rh_strong_basileus
+			has_character_flag = flag_crowned_by_rh_weak_basileus
 			has_character_flag = flag_antipope_for_coronation 
 			has_character_flag = flag_excommunicated_for_coronation  
 			has_character_flag = flag_pepin_for_coronation  
@@ -9618,6 +9725,8 @@ character_event = {
 		clr_character_flag = flag_crowned_by_priest
 		clr_character_flag = flag_crowned_by_bishop
 		clr_character_flag = flag_crowned_by_pope
+		clr_character_flag = flag_crowned_by_rh_strong_basileus
+		clr_character_flag = flag_crowned_by_rh_weak_basileus
 
 		clr_character_flag = flag_coronation_foreign_friendship
 		clr_character_flag = flag_coronation_vassal_friendship
@@ -9948,11 +10057,11 @@ character_event = {
 				50 = {
 					modifier = {  #DRD-DIFF: already stated to be repulsed by the liege.
 						factor = 0
-						FROMFROM = { has_character_flag = flag_homage_deformed }
+						FROMFROM = { has_character_flag = flag_homage_deformed }
 					}
 					modifier = {  #DRD-DIFF: already stated to be attracted to the liege.
 						factor = 2
-						FROMFROM = { has_character_flag = flag_homage_attractive }
+						FROMFROM = { has_character_flag = flag_homage_attractive }
 					}
 					modifier = {
 						factor = 0
@@ -10149,11 +10258,11 @@ character_event = {
 				65 = {
 					modifier = {  #DRD-DIFF: familiarity seems threatening.
 						factor = 0.5
-						FROMFROM = { has_character_flag = flag_homage_evil }
+						FROMFROM = { has_character_flag = flag_homage_evil }
 					}
 					modifier = {  #DRD-DIFF: familiarity seems authentic.
 						factor = 2
-						FROMFROM = { has_character_flag = flag_homage_good }
+						FROMFROM = { has_character_flag = flag_homage_good }
 					}
 					modifier = {
 						factor = 0.5
