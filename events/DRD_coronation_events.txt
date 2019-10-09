@@ -26,7 +26,6 @@ character_event = {  #MOD HIP/EMF compatibility: dethroned (Eastern) Roman emper
 
 	immediate = {
 		FROMFROM = {
-			piety = 10000
 			if = {  # The Basileus trait will be overridden by Crowned, set the flag NOW if it was not already replaced.
 				limit = { trait = strong_basileus }
 				set_flag = was_strong_basileus_byz
