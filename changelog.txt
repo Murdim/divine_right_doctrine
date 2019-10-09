@@ -1,5 +1,5 @@
-2019-10-09 v0.2.2
------------------
+2019-10-09 v0.4
+---------------
 
 - Fix compatibility with HIP/EMF Strong/Weak Basileus. (Eastern) Roman
 Emperors now receive one of these two traits from the DRD coronation chain,
@@ -11,8 +11,8 @@ DRD coronation, but are accepted by those who do.
 - Fix some French localisation commands.
 
 
-2019-07-03 v0.2.1
------------------
+2019-07-03 v0.3
+---------------
 
 - Added more varied outcomes to the homage event chain.
 - Solved conflict with HIP and EMF-style coronation.
