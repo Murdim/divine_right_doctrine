@@ -1,3 +1,16 @@
+2019-10-09 v0.2.2
+-----------------
+
+- Fix compatibility with HIP/EMF Strong/Weak Basileus. (Eastern) Roman
+Emperors now receive one of these two traits from the DRD coronation chain,
+under the conditions fixed in HIP.
+- Priest nomination, Homage and Uncrowned penalties now take HIP coronation
+traits into account. They are not required for religions that do not use
+DRD coronation, but are accepted by those who do.
+- Fix Orthodox/Iconoclast RH coronation event picture.
+- Fix some French localisation commands.
+
+
 2019-07-03 v0.2.1
 -----------------
 
