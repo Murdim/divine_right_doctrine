@@ -71,3 +71,17 @@ drd_opinion_requested_church_lands = {
 	years = 10
 }
 
+drd_gave_land_to_church_duchy = {  # Placeholder modifier in event option tooltips.
+	opinion = -20
+	years = 100
+}
+
+drd_gave_land_to_church_county = {  # Placeholder modifier in event option tooltips.
+	opinion = -10
+	years = 100
+}
+
+drd_gave_land_to_church = {  # The above modifiers are implemented with multiple stacks of this one.
+	opinion = -5
+	years = 100
+}

@@ -341,7 +341,7 @@ defined_text = {
 	text = {
 		trigger = {
 			event_target:rh_new_duchy = { always = yes }
-			trigger = { persistent_event_target:rh_duchy_1 = { always = yes } }
+			persistent_event_target:rh_duchy_1 = { always = yes }
 		}
 		localisation_key = string_drd_church_land_duchies_and_new
 	}
@@ -366,5 +366,6 @@ defined_text = {
 	name = GetCommaName
 	use_first_valid = yes
 	fallback_text = {
-		localisaiton_key = string_drd_CommaName
+		localisation_key = string_drd_comma_name
 	}
+}

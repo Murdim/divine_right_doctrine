@@ -1,0 +1,12 @@
+#DRD-FILE
+
+drd_duchy_in_rh_title_church_lands = {
+	event_target:rh_title = {
+		OR = {
+			persistent_event_target:rh_duchy_1 = { title = PREVPREV }
+			persistent_event_target:rh_duchy_2 = { title = PREVPREV }
+			persistent_event_target:rh_duchy_3 = { title = PREVPREV }
+			persistent_event_target:rh_duchy_4 = { title = PREVPREV }
+		}
+	}
+}

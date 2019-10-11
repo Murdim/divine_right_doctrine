@@ -873,257 +873,253 @@ letter_event = {
 			any_demesne_title = {
 				limit = { controls_religion = yes }
 				save_event_target_as = rh_title
-				persistent_event_target:rh_kingdom = { save_event_target_as = rh_kingdom }
 				persistent_event_target:rh_seat = { save_event_target_as = rh_seat }
-				persistent_event_target:rh_duchy_1 = { save_event_target_as = rh_duchy_1 }
-				persistent_event_target:rh_duchy_2 = { save_event_target_as = rh_duchy_2 }
-				persistent_event_target:rh_duchy_3 = { save_event_target_as = rh_duchy_3 }
-				persistent_event_target:rh_duchy_4 = { save_event_target_as = rh_duchy_4 }
-			}
 
-			FROM = {  # Never ask for FROM's de facto OR de jure capital duchy.
-				capital_scope = {
-					duchy = { save_event_target_as = from_de_facto_capital_duchy }
-				}
-				primary_title = {
+				FROM = {  # Never ask for FROM's de facto OR de jure capital duchy.
 					capital_scope = {
-						duchy = { save_event_target_as = from_de_jure_capital_duchy }
+						duchy = { save_event_target_as = from_de_facto_capital_duchy }
 					}
-				}
-			}
-
-			if = {  # First duchy must contain a holy site and not be completely isolated.
-				limit = { NOT = { event_target:rh_duchy_1 = { always = yes } } }
-				FROM = {
-					random_realm_province = {
-						limit = {
-							any_province_holding = { is_holy_site = ROOT }
-							duchy = {
-								NOR = {
-									title = event_target:from_de_facto_capital_duchy
-									title = event_target:from_de_jure_capital_duchy
-									holder_scope = {  # No holder OR holder is (a vassal of) ROOT or FROM.
-										NOR = {
-											character = ROOT
-											character = FROM
-											is_vassal_or_below_of = ROOT
-											is_vassal_or_below_of = FROM
-										}
-									}
-								}
-								FROM = { completely_controls = PREV }
-								any_direct_de_jure_vassal_title = {
-									location = {
-										any_neighbor_province = {
-											has_owner = yes
-											duchy = { NOT = { title = PREVPREVPREVPREV } }
-										}
-									}
-								}
-							}
-							OR = {
-								AND = {
-									kingdom = { has_holder = no }
-									empire = { has_holder = no }
-								}
-								kingdom = { holder_scope = { character = FROM } }
-								empire = { holder_scope = { character = FROM } }
-							}
-						}
-						preferred_limit = { holder_scope = { character = ROOT } }
-						preferred_limit = { duchy = { ROOT = { completely_controls = PREV } } }
-						preferred_limit = { duchy = { holder_scope = { character = ROOT } } }
-						preferred_limit = { duchy = { holder_scope = { is_vassal_or_below_of = ROOT } } }
-						preferred_limit = { duchy = { any_direct_de_jure_vassal_title = { holder_scope = { character = ROOT } } } }
-						preferred_limit = { duchy = { any_direct_de_jure_vassal_title = { holder_scope = { is_vassal_or_below_of = ROOT } } } }
-						duchy = { save_event_target_as = rh_new_duchy }
-					}
-				}
-			}
-
-			else_if = {  # Other duchies must border "de jure" church lands.
-				limit = {
-					OR = {  # Second duchy unlocks empowerment (if not autocephalous) which is required to go further.
-						NOT = { event_target:rh_duchy_2 = { always = yes } }
-						AND = {  # Empowered heads can have up to 4 duchies in their church lands.
-							persistent_event_target:rh_kingdom = { holder_scope = { character = ROOT } }
-							NAND = {
-								event_target:rh_duchy_3 = { always = yes }
-								event_target:rh_duchy_4 = { always = yes }
-							}
+					primary_title = {
+						capital_scope = {
+							duchy = { save_event_target_as = from_de_jure_capital_duchy }
 						}
 					}
 				}
-				set_variable = { which = local_can_expand_church_lands value = 1 }
-			}
 
-			while = {  # Check for each church land duchy, by order of acquisition.
-				count = 4
-				drd_rh_title_iter_duchy = yes  #SEE DRD_church_land_effects.txt
-				event_target:iter_duchy = {
-					any_direct_de_jure_vassal_title = {  # First, calculate values based on the current church lands.
-
-						if = {  # Provinces held by RH across all duchies. Recovering lands gets higher priority back if very low.
+				if = {  # First duchy must contain a holy site and not be completely isolated.
+					limit = { NOT = { persistent_event_target:rh_duchy_1 = { always = yes } } }
+					FROM = {
+						random_realm_province = {
 							limit = {
-								holder_scope = {
-									OR = {
-										character = ROOT
-										is_vassal_or_below_of = ROOT
-									}
-								}
-							}
-							change_variable = { which = local_root_held_church_lands value = 1 }
-							if = {  # Seat is worth 3 provinces, so anything under that is unacceptably low.
-								limit = { title = event_target:rh_seat }
-								change_variable = { which = local_root_held_church_lands value = 2 }
-							}
-						}
-
-						else_if = {  # Provinces held by FROM across all duchies. The higher, the more likely RH is to ask them back.
-							limit = {
-								holder_scope = {
-									OR = {
-										character = FROM
-										is_vassal_or_below_of = FROM
-									}
-								}
-							}
-							change_variable = { which = local_from_held_church_lands value = 1 }
-							if = {  # Seat is worth 6 provinces here as FROM should definitely NOT be withholding it.
-								limit = { title = event_target:rh_seat }
-								change_variable = { which = local_from_held_church_lands value = 5 }
-							}
-						}
-
-						else = {  # For EACH duchy, provinces held by EACH foreign top liege. Keep the highest priority target.
-							holder_scope = { top_liege = { save_event_target_as = foreign_top_liege } }
-							if = {  
-								limit = {  # Only if this top liege was NOT already checked for this duchy.
-									NOT = { ROOT = { has_flag = tmp_foreign_top_liege_@event_target:foreign_top_liege } }
-								}
-								event_target:iter_duchy = {  # No arrays in PDX script = we have to iterate AGAIN from the duchy.
-									any_direct_de_jure_vassal_title = {
-										limit = { same_realm = event_target:foreign_top_liege }
-										change_variable = { which = local_foreign_held_church_lands value = 1 }
-										if = {
-											limit = { title = event_target:rh_seat }
-											change_variable = { which = local_foreign_held_church_lands value = 2 }
-										}
-									}
-								}
-								ROOT = {  # Religion-based multipliers.
-									if = {  # Not a factor if Cosmopolitan.
-										limit = { has_religion_feature = feature_cosmopolitan }
-									}
-									else_if = {  # Doubled against infidels and heretics.
-										limit = {
-											OR = {
-												NOT = { religion_group = event_target:foreign_top_liege }
-												is_heresy_of = event_target:foreign_top_liege
-												is_parent_religion = event_target:foreign_top_liege
-											}
-										}
-										multiply_variable = { which = local_foreign_held_church_lands value = 2 }
-									}
-									else_if = {  # x1.5 for "religious differences".
-										limit = { NOT = { religion = event_target:foreign_top_liege } }
-										multiply_variable = { which = local_foreign_held_church_lands value = 1.5 }
-									}
-								}
-								if = {  # Becomes new target if score is STRICTLY higher than the previous one.
-									limit = {
-										NOT = {
-											check_variable = {
-												which = local_target_held_church_lands
-												which = local_foreign_held_church_lands
-											}
-										}
-									}
-									set_variable = { which = local_target_held_church_lands which = local_foreign_held_church_lands }
-									event_target:iter_duchy = { save_event_target_as = rh_target_duchy }
-									event_target:foreign_top_liege = { save_event_target_as = rh_target_ruler }
-								}
-								set_variable = { which = local_foreign_held_church_lands value = 0 }
-							}
-						}
-					}
-					ROOT = { clear_flags_with_prefix = tmp_foreign_top_liege_ }
-					clear_event_target = foreign_top_liege
-
-					if = {  # Then, if possible, find another duchy they can be expanded to.
-						limit = {
-							is_variable_equal = { which = local_can_expand_church_lands value = 1 }
-							NOT = { event_target:rh_new_duchy = { always = yes } }
-						}
-						random_direct_de_jure_vassal_title = {
-							limit = {
-								location = {
-									any_neighbor_province = {
-										owner = {
-											OR = {
+								any_province_holding = { is_holy_site = ROOT }
+								duchy = {
+									NOR = {
+										title = event_target:from_de_facto_capital_duchy
+										title = event_target:from_de_jure_capital_duchy
+										holder_scope = {  # No holder OR holder is (a vassal of) ROOT or FROM.
+											NOR = {
+												character = ROOT
 												character = FROM
+												is_vassal_or_below_of = ROOT
 												is_vassal_or_below_of = FROM
 											}
 										}
-										duchy = {
-											NOR = {
-												title = event_target:from_de_facto_capital_duchy
-												title = event_target:from_de_jure_capital_duchy
-												title = event_target:rh_duchy_1
-												title = event_target:rh_duchy_2
-												title = event_target:rh_duchy_3
+									}
+									FROM = { completely_controls = PREV }
+									any_direct_de_jure_vassal_title = {
+										location = {
+											any_neighbor_province = {
+												has_owner = yes
+												duchy = { NOT = { title = PREVPREVPREVPREV } }
+											}
+										}
+									}
+								}
+								OR = {
+									AND = {
+										kingdom = { has_holder = no }
+										empire = { has_holder = no }
+									}
+									kingdom = { holder_scope = { character = FROM } }
+									empire = { holder_scope = { character = FROM } }
+								}
+							}
+							preferred_limit = { holder_scope = { character = ROOT } }
+							preferred_limit = { duchy = { ROOT = { completely_controls = PREV } } }
+							preferred_limit = { duchy = { holder_scope = { character = ROOT } } }
+							preferred_limit = { duchy = { holder_scope = { is_vassal_or_below_of = ROOT } } }
+							preferred_limit = { duchy = { any_direct_de_jure_vassal_title = { holder_scope = { character = ROOT } } } }
+							preferred_limit = { duchy = { any_direct_de_jure_vassal_title = { holder_scope = { is_vassal_or_below_of = ROOT } } } }
+							duchy = { save_event_target_as = rh_new_duchy }
+						}
+					}
+				}
+
+				else_if = {  # Other duchies must border "de jure" church lands.
+					limit = {
+						OR = {  # Second duchy unlocks empowerment (if not autocephalous) which is required to go further.
+							NOT = { persistent_event_target:rh_duchy_2 = { always = yes } }
+							AND = {  # Empowered heads can have up to 4 duchies in their church lands.
+								persistent_event_target:rh_kingdom = { holder_scope = { character = ROOT } }
+								NAND = {
+									persistent_event_target:rh_duchy_3 = { always = yes }
+									persistent_event_target:rh_duchy_4 = { always = yes }
+								}
+							}
+						}
+					}
+					set_variable = { which = local_can_expand_church_lands value = 1 }
+					log = "OK can expand"
+				}
+
+				while = {  # Check for each church land duchy, by order of acquisition.
+					count = 4
+					drd_rh_title_iter_duchy = yes  #SEE DRD_church_land_effects.txt
+					event_target:iter_duchy = {
+						any_direct_de_jure_vassal_title = {  # First, calculate values based on the current church lands.
+
+							if = {  # Provinces held by RH across all duchies. Recovering lands gets higher priority back if very low.
+								limit = {
+									holder_scope = {
+										OR = {
+											character = ROOT
+											is_vassal_or_below_of = ROOT
+										}
+									}
+								}
+								change_variable = { which = local_root_held_church_lands value = 1 }
+								if = {  # Seat is worth 3 provinces, so anything under that is unacceptably low.
+									limit = { title = event_target:rh_seat }
+									change_variable = { which = local_root_held_church_lands value = 2 }
+								}
+							}
+
+							else_if = {  # Provinces held by FROM across all duchies. The higher, the more likely the RH is to ask them back.
+								limit = {
+									holder_scope = {
+										OR = {
+											character = FROM
+											is_vassal_or_below_of = FROM
+										}
+									}
+									OR = {  # Do not count capitals of rulers that cannot be vassalized, since they wouldn't be returned.
+										location = { is_capital = no }
+										holder_scope = { lower_tier_than = ROOT }
+										any_direct_de_jure_vassal_title = { is_holy_site = FROM }  # Unless they contain a holy site.
+									}
+								}
+								change_variable = { which = local_from_held_church_lands value = 1 }
+								if = {  # Seat is worth 6 provinces here as FROM should definitely NOT be withholding it.
+									limit = { title = event_target:rh_seat }
+									change_variable = { which = local_from_held_church_lands value = 5 }
+								}
+							}
+
+							else = {  # For EACH duchy, provinces held by EACH foreign top liege. Keep the highest priority target.
+								holder_scope = { top_liege = { save_event_target_as = foreign_top_liege } }
+								if = {  
+									limit = {  # Only if this top liege was NOT already checked for this duchy.
+										NOT = { ROOT = { has_flag = tmp_foreign_top_liege_@event_target:foreign_top_liege } }
+									}
+									event_target:iter_duchy = {  # No arrays in PDX script = we have to iterate AGAIN from the duchy.
+										any_direct_de_jure_vassal_title = {
+											limit = { same_realm = event_target:foreign_top_liege }
+											change_variable = { which = local_foreign_held_church_lands value = 1 }
+											if = {
+												limit = { title = event_target:rh_seat }
+												change_variable = { which = local_foreign_held_church_lands value = 2 }
+											}
+										}
+									}
+									ROOT = {  # Religion-based multipliers.
+										if = {  # Not a factor if Cosmopolitan.
+											limit = { has_religion_feature = feature_cosmopolitan }
+										}
+										else_if = {  # Doubled against infidels and heretics.
+											limit = {
+												OR = {
+													NOT = { religion_group = event_target:foreign_top_liege }
+													is_heresy_of = event_target:foreign_top_liege
+													is_parent_religion = event_target:foreign_top_liege
+												}
+											}
+											multiply_variable = { which = local_foreign_held_church_lands value = 2 }
+										}
+										else_if = {  # x1.5 for "religious differences".
+											limit = { NOT = { religion = event_target:foreign_top_liege } }
+											multiply_variable = { which = local_foreign_held_church_lands value = 1.5 }
+										}
+									}
+									if = {  # Becomes new target if score is STRICTLY higher than the previous one.
+										limit = {
+											NOT = {
+												check_variable = {
+													which = local_target_held_church_lands
+													which = local_foreign_held_church_lands
+												}
+											}
+										}
+										set_variable = { which = local_target_held_church_lands which = local_foreign_held_church_lands }
+										event_target:iter_duchy = { save_event_target_as = rh_target_duchy }
+										event_target:foreign_top_liege = { save_event_target_as = rh_target_ruler }
+									}
+									set_variable = { which = local_foreign_held_church_lands value = 0 }
+								}
+							}
+						}
+						ROOT = { clear_flags_with_prefix = tmp_foreign_top_liege_ }
+						clear_event_target = foreign_top_liege
+						log = "OK [This.GetFullName] [local_root_held_church_lands.GetValue] [local_from_held_church_lands.GetValue]"
+
+						if = {  # Then, if possible, find another duchy they can be expanded to.
+							limit = {
+								is_variable_equal = { which = local_can_expand_church_lands value = 1 }
+								NOT = { event_target:rh_new_duchy = { always = yes } }
+							}
+							log = "Search Begin"
+							random_direct_de_jure_vassal_title = {
+								limit = {
+									location = {
+										any_neighbor_province = {
+											owner = {
+												OR = {
+													character = FROM
+													is_vassal_or_below_of = FROM
+												}
+											}
+											duchy = {
+												drd_duchy_in_rh_title_church_lands = no  #SEE DRD_church_land_events.txt
+												NOR = {
+													title = event_target:from_de_facto_capital_duchy
+													title = event_target:from_de_jure_capital_duchy
+												}
 												holder_scope = {
-													NOR = {
+													OR = {
 														character = ROOT
 														character = FROM
 														is_vassal_or_below_of = ROOT
 														is_vassal_or_below_of = FROM
 													}
 												}
+												FROM = { completely_controls = PREV }
 											}
-											FROM = { completely_controls = PREV }
 										}
 									}
 								}
-							}
-							location = {
-								random_neighbor_province = {
-									limit = {
-										owner = {
-											OR = {
-												character = FROM
-												is_vassal_or_below_of = FROM
+								log = "Search [This.GetFullName]"
+								location = {
+									random_neighbor_province = {
+										limit = {
+											owner = {
+												OR = {
+													character = FROM
+													is_vassal_or_below_of = FROM
+												}
+											}
+											duchy = {
+												drd_duchy_in_rh_title_church_lands = no  #SEE DRD_church_land_events.txt
+												NOR = {
+													title = event_target:from_de_facto_capital_duchy
+													title = event_target:from_de_jure_capital_duchy
+												}
+												FROM = { completely_controls = PREV }
 											}
 										}
-										duchy = {
-											NOR = {
-												title = event_target:from_de_facto_capital_duchy
-												title = event_target:from_de_jure_capital_duchy
-												title = event_target:rh_duchy_1
-												title = event_target:rh_duchy_2
-												title = event_target:rh_duchy_3
-											}
-											FROM = { completely_controls = PREV }
-										}
+										log = "Found [This.GetName]"
+										duchy = { save_event_target_as = rh_new_duchy }
 									}
-									duchy = { save_event_target_as = rh_new_duchy }
 								}
 							}
 						}
 					}
 				}
+				clear_event_target = from_de_facto_capital_duchy
+				clear_event_target = from_de_jure_capital_duchy
+				clear_event_target = rh_seat
+				clear_event_target = rh_iter_duchy
+				set_variable = { which = local_can_expand_church_lands value = 0 }
+				set_variable = { which = local_duchy_count value = 0 }
 			}
-			clear_event_target = from_de_facto_capital_duchy
-			clear_event_target = from_de_jure_capital_duchy
-			clear_event_target = rh_seat
-			clear_event_target = rh_kingdom
-			clear_event_target = rh_duchy_1
-			clear_event_target = rh_duchy_2
-			clear_event_target = rh_duchy_3
-			clear_event_target = rh_duchy_4
-			clear_event_target = rh_iter_duchy
-			set_variable = { which = local_can_expand_church_lands value = 0 }
-			set_variable = { which = local_duchy_count value = 0 }
 		}
 	}
 	

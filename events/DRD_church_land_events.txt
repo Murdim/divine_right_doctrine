@@ -9,30 +9,39 @@ character_event = {  # ROOT = RH, event_target:rh_title = RH title, event_target
 	picture = GFX_evt_church_council
 	border = GFX_event_normal_frame_religion
 
+	major = yes
 	is_triggered_only = yes
+	show_root = yes
 
-	immediate = {
-		any_player = {
-			limit = {
-				NOT = { character = ROOT }
-				OR = {
-					religion_group = ROOT
-					is_heresy_of = ROOT
-					is_parent_religion = ROOT
-				}
-			}
-			character_event = { id = DRD.501 }
+	major_trigger = {
+		OR = {
+			religion_group = ROOT
+			is_heresy_of = ROOT
+			is_parent_religion = ROOT
 		}
 	}
 
 	option = {
-		name = EVTOPTADRD500
+		name = {
+			trigger = { character = ROOT }
+			text = EVTOPTADRD500_head
+		}
+		name = {
+			trigger = {
+				NOT = { character = ROOT }
+				religion = ROOT
+			}
+			text = EVTOPTADRD500_same_religion
+		}
+		name = {
+			trigger = { NOT = { religion = ROOT } }
+			text = EVTOPTADRD500_other_religion
+		}
 	}
 }
 
-character_event = {  # FROM = RH, event_target:rh_title = RH title, event_target:rh_kingdom = new Kingdom
+character_event = {  # FROM = liege, FROMFROM = RH, event_target:rh_title = RH title, event_target:(donated|returned)_title = lost title.
 	id = DRD.501
-	title = EVTTITLEDRD500
 	desc = EVTDESCDRD501
 	picture = GFX_evt_church_council
 	border = GFX_event_normal_frame_religion
@@ -40,13 +49,24 @@ character_event = {  # FROM = RH, event_target:rh_title = RH title, event_target
 	is_triggered_only = yes
 
 	option = {
-		name = {
-			trigger = { religion = FROM }
-			text = EVTOPTADRD501_same_religion
+		name = EVTOPTADRD501
+		if = {  # Donated duchy = 4x base penalty.
+			limit = { event_target:donated_title = { tier = DUKE } }
+			tooltip = { opinion = { who = FROM modifier = drd_gave_land_to_church_duchy } }
+			while = { count = 4 opinion = { who = FROM modifier = drd_gave_land_to_church } }
 		}
-		name = {
-			trigger = { NOT = { religion = FROM } }
-			text = EVTOPTADRD501_other_religion
+		else_if = {  # Donated county OR returned duchy = 2x base penalty.
+			limit = {
+				OR = {
+					event_target:donated_title = { tier = COUNT }
+					event_target:returned_title = { tier = DUKE }
+				}
+			}
+			tooltip = { opinion = { who = FROM modifier = drd_gave_land_to_church_county } }
+			while = { count = 2 opinion = { who = FROM modifier = drd_gave_land_to_church } }
+		}
+		else = {  # Donated barony OR returned county = base penalty.
+			opinion = { who = FROM modifier = drd_gave_land_to_church }
 		}
 	}
 }
@@ -65,12 +85,8 @@ character_event = {  # On usurping an empowered RH's special King-tier title. RO
 
 	immediate = {  # Give it back to the RH, but one of its de jure duchies is transferred to another kingdom.
 		FROM = {  # First of all, give it back to the RH. 
-			persistent_event_target:rh_title = {
-				holder_scope = {
-					save_event_target_as = usurped_head
-					grant_title_no_opinion = FROM
-				}
-			}
+			persistent_event_target:rh_title = { holder_scope = { save_event_target_as = usurped_head } }
+			grant_title_no_opinion = event_target:usurped_head
 
 			if = {  # If the usurper is de jure liege AND of the right religion, RH becomes their vassal.
 				limit = {
@@ -295,3 +311,4 @@ letter_event = {
 		} 
 		ai_chance = { factor = 0 }
 	}
+}
