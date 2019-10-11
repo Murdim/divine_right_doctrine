@@ -940,7 +940,14 @@ letter_event = {
 						OR = {  # Second duchy unlocks empowerment (if not autocephalous) which is required to go further.
 							NOT = { persistent_event_target:rh_duchy_2 = { always = yes } }
 							AND = {  # Empowered heads can have up to 4 duchies in their church lands.
-								persistent_event_target:rh_kingdom = { holder_scope = { character = ROOT } }
+								OR = {  # Also available if the donation would empower ROOT.
+									persistent_event_target:rh_kingdom = { holder_scope = { character = ROOT } }
+									ROOT = { independent = yes }
+									FROM = {
+										tier = EMPEROR
+										is_liege_or_above_of = ROOT
+									}
+								}
 								NAND = {
 									persistent_event_target:rh_duchy_3 = { always = yes }
 									persistent_event_target:rh_duchy_4 = { always = yes }

@@ -225,9 +225,12 @@ drd_expand_church_lands = {  # THIS = ROOT = ruler, FROM = RH (holder of event_t
 	if = {
 		limit = {
 			OR = {
-				tier = EMPEROR
+				AND = {
+					tier = EMPEROR
+					is_liege_or_above_of = FROM
+				}
 				FROM = { independent = yes }
-			}	
+			}
 			event_target:rh_title = {
 				persistent_event_target:rh_duchy_1 = { NOT = { title = rh_new_duchy } }
 				NOT = { persistent_event_target:rh_kingdom = { always = yes } }
