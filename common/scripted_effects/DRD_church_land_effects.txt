@@ -177,6 +177,7 @@ drd_expand_church_lands = {  # THIS = ROOT = ruler, FROM = RH (holder of event_t
 					limit = { is_capital = no }
 					holder_scope = {
 						show_scope_change = no
+						PREV = { grant_title_no_opinion = FROM }
 						if = {
 							limit = { NOT = { character = ROOT } }
 							tooltip = { opinion = { who = ROOT modifier = drd_gave_land_to_church } }
@@ -184,7 +185,6 @@ drd_expand_church_lands = {  # THIS = ROOT = ruler, FROM = RH (holder of event_t
 							hidden_tooltip = { character_event = { id = DRD.501 } }
 						}
 					}
-					grant_title_no_opinion = FROM
 				}
 			}
 		}
@@ -242,6 +242,161 @@ drd_expand_church_lands = {  # THIS = ROOT = ruler, FROM = RH (holder of event_t
 			}
 		}
 	}
+}
+
+drd_return_church_lands = {  # THIS = ROOT = ruler, FROM = RH (holder of event_target:rh_title).
+	custom_tooltip = { text = tooltip_return_church_lands }
+	while = {
+		count = 4
+		event_target:rh_title = { drd_rh_title_iter_duchy = yes }
+		event_target:iter_duchy = {
+			show_scope_change = no
+			if = {  # Only grant the duchy title if held by ROOT or a vassal that isn't FROM or one of their vassals.
+				limit = {
+					holder_scope = {
+						OR = {
+							character = ROOT
+							is_vassal_or_below_of = ROOT
+						}
+						NOR = {
+							character = FROM
+							is_vassal_or_below_of = FROM
+						}
+					}
+				}
+				holder_scope = {
+					show_scope_change = no
+					PREV = { grant_title_no_opinion = FROM }
+					if = {
+						limit = { NOT = { character = ROOT } }
+						tooltip = { opinion = { who = ROOT modifier = drd_gave_land_to_church_county } }
+						PREV = { save_event_target_as = returned_title }
+						hidden_tooltip = { character_event = { id = DRD.501 } }
+					}
+				}
+			}
+			any_direct_de_jure_vassal_title = {
+				if = {
+					limit = {
+						holder_scope = {
+							OR = {
+								character = ROOT
+								is_vassal_or_below_of = ROOT
+							}
+						}
+					}
+					if = {  # Always take holy site provinces and holdings, even from vassals, with no opinion penalty for ROOT.
+						limit = { any_direct_de_jure_vassal_title = { is_holy_site = FROM } }
+						grant_title_no_opinion = FROM
+						any_direct_de_jure_vassal_title = {
+							limit = { is_holy_site = FROM }
+							hidden_tooltip = { grant_title_no_opinion = FROM }
+							make_capital_holding = yes
+						}
+					}
+					else_if = {  # If not a holy site and already held by FROM or one of their vassals, do nothing.
+						limit = {
+							holder_scope = {
+								OR = {
+									character = FROM
+									is_vassal_or_below_of = FROM
+									AND = {  # Tooltip fix, former duchy holders will be vassalized.
+										tier = DUKE
+										NOT = {
+											any_demesne_title = {
+												tier = DUKE
+												drd_duchy_in_rh_title_church_lands = no  #SEE DRD_church_land_triggers.txt
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+					else_if = {  # Vassalize Count-tier rulers whose capital is within the church lands.
+						limit = {
+							holder_scope = {
+								tier = COUNT
+								capital_scope = { duchy = { drd_duchy_in_rh_title_church_lands = yes } }  #SEE DRD_church_land_triggers.txt
+							}
+						}
+						hidden_tooltip = {
+							holder_scope = {
+								set_defacto_liege = FROM
+								emf_liege_change = yes  #MOD HIP/EMF: compatibilty, no effect otherwise.
+							}
+						}
+					}
+					else_if = {  # Otherwise, take the province unless it is their capital.
+						limit = { location = { is_capital = no } }
+						holder_scope = {
+							show_scope_change = no
+							PREV = { grant_title_no_opinion = FROM }
+							if = {
+								limit = { NOT = { character = ROOT } }
+								tooltip = { opinion = { who = ROOT modifier = drd_gave_land_to_church } }
+								PREV = { save_event_target_as = returned_title }
+								hidden_tooltip = { character_event = { id = DRD.501 } }
+							}
+						}
+					}
+				}
+				any_direct_de_jure_vassal_title = {  # Same logic for holdings and Barons.
+					limit = {
+						holder_scope = {
+							OR = {
+								character = ROOT
+								is_vassal_or_below_of = ROOT
+							}
+							NOR = {
+								character = FROM
+								is_vassal_or_below_of = FROM
+							}
+							NAND = {  # Tooltip fix, former duchy holders will be vassalized.
+								tier = DUKE
+								NOT = {
+									any_demesne_title = {
+										tier = DUKE
+										drd_duchy_in_rh_title_church_lands = no  #SEE DRD_church_land_triggers.txt
+									}
+								}
+							}
+							NAND = {  # Tooltip fix, de jure vassal counts should ALREADY be vassals.
+								tier = COUNT
+								capital_scope = {
+									duchy = {
+										event_target:rh_title = {
+											OR = {
+												persistent_event_target:rh_duchy_1 = { title = PREVPREV }
+												persistent_event_target:rh_duchy_2 = { title = PREVPREV }
+												persistent_event_target:rh_duchy_3 = { title = PREVPREV }
+												persistent_event_target:rh_duchy_4 = { title = PREVPREV }
+											}
+										}
+									}
+								}
+							}
+						}
+						NOT = { is_holy_site = FROM }  # Tooltip fix, already given to FROM.
+					}
+					if = {
+						limit = { holder_scope = { tier = BARON } }
+						hidden_tooltip = {
+							holder_scope = {
+								set_defacto_liege = FROM
+								emf_liege_change = yes  #MOD HIP/EMF: compatibilty, no effect otherwise.
+							}
+						}
+					}
+					else_if = {  # Non-vassalizable baronies are "silently" returned with no opinion penalty towards ROOT.
+						limit = { is_capital = no }
+						hidden_tooltip = { grant_title_no_opinion = FROM }
+					}
+				}
+			}
+		}
+	}
+	clear_event_target = returned_title
 }
 
 drd_religious_head_create_state = {  # event_target:rh_title = THIS' RH title.
