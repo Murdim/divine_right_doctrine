@@ -30,7 +30,7 @@ character_event = {  #MOD HIP/EMF compatibility: dethroned (Eastern) Roman emper
 				limit = { trait = strong_basileus }
 				set_flag = was_strong_basileus_byz
 			}
-			if = {
+			else_if = {
 				limit = { trait = weak_basileus }
 				set_flag = was_weak_basileus_byz
 			}
