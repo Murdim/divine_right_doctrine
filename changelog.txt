@@ -1,3 +1,9 @@
+2019-11-14 v0.4.1
+-----------------
+
+- Fix Strong/Weak Basileus trait being lost on losing any King+ tier title.
+
+
 2019-10-09 v0.4
 ---------------
 

@@ -7,5 +7,7 @@ emf_uses_native_coronation = {  #SEE EMF/HIP emf_coronation_triggers.txt: disabl
 		trait = crowned_by_bishop
 		trait = crowned_by_priest
 		trait = crowned_by_myself
+		trait = strong_basileus
+		trait = weak_basileus
 	}
 }
